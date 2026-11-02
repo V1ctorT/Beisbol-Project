@@ -1,37 +1,56 @@
+/* 
+-----------------------------------------------------------------------------------------
+  OpenGL 3.3 Proyecto Final
+  Beisbol -
+  
+  Funciones Principales
+  Bateo de la Pelota
+
+  Modo Espectador desde el Estadio
+
+  Minijuegos de Practica
+
+Creado por:
+	Guadalupe Isabela De la Fuente Flores
+	Victor Manuel Torres Martinez
+-----------------------------------------------------------------------------------------
+*/
+
+//Librerias de OpenGL y GLFW ------------------------------------------------------------
 #include <iostream>
 #include <cmath>
-
 // GLEW
 #include <GL/glew.h>
-
 // GLFW
 #include <GLFW/glfw3.h>
-
 // Other Libs
 #include "stb_image.h"
-
 // GLM Mathematics
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
 //Load Models
 #include "SOIL2/SOIL2.h"
 
-
-// Other includes
+//Librerias para Carga de modelos y camara-----------------------------------------------
 #include "Shader.h"
 #include "Camera.h"
 #include "Model.h"
 
-// Function prototypes
+
+// Function prototypes-------------------------------------------------------------------
+//Entradas del teclado y mouse
 void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode);
 void MouseCallback(GLFWwindow *window, double xPos, double yPos);
+//Funciones para de camara y movimientos
 void DoMovement();
+//Reajustar espacio de Renderizado
+void resize(GLFWwindow *window, int width, int height);
+void imprimirPosicion(glm::vec3 posiciones[], int size);
 
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
-int SCREEN_WIDTH, SCREEN_HEIGHT;
+int SCREEN_WIDTH = WIDTH, SCREEN_HEIGHT = HEIGHT;
 
 // Camera
 Camera  camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -43,14 +62,57 @@ bool firstMouse = true;
 glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
 bool active;
 
-// Positions of the point lights
+// Posiciones de Las Luces
 glm::vec3 pointLightPositions[] = {
-	glm::vec3(0.0f,0.0f, 0.0f),
-	glm::vec3(0.0f,0.0f, 0.0f),
-	glm::vec3(0.0f,0.0f,  0.0f),
-	glm::vec3(0.0f,0.0f, 0.0f)
+	//Lampara1
+	glm::vec3(73.534f, 49.302f, 20.756f),
+
+	glm::vec3(-65.747f,46.411f ,27.069f ),
+
+	glm::vec3(-35.122f, 40.505f, -100.63f),
+
+
+	glm::vec3(73.534f, 46.536f, 20.756f),
+	glm::vec3(73.534f, 43.771f, 20.756f),
+
+	glm::vec3(71.347f, 49.302f, 22.178f),
+	glm::vec3(71.347f, 46.536f, 22.178f),
+	glm::vec3(71.347f, 43.771f, 22.178f),
+
+	glm::vec3(69.144f, 49.302f, 23.600f),
+	glm::vec3(69.144f, 46.536f, 23.600f),
+	glm::vec3(69.144f, 43.771f, 23.600f),
+
+	glm::vec3(67.441f, 49.302f, 25.163f),
+	glm::vec3(67.441f, 46.536f, 25.163f),
+	glm::vec3(67.441f, 43.771f, 25.163f),
+
+	glm::vec3(65.753f, 49.302f, 27.100f),
+	glm::vec3(65.753f, 46.536f, 27.100f),
+	glm::vec3(65.753f, 43.771f, 27.100f),
+
+	glm::vec3(64.050f, 49.302f, 29.053f),
+	glm::vec3(64.050f, 46.536f, 29.053f),
+	glm::vec3(64.050f, 43.771f, 29.053f),
+
+	glm::vec3(62.378f, 49.302f, 30.991f),
+	glm::vec3(62.378f, 46.536f, 30.991f),
+	glm::vec3(62.378f, 43.771f, 30.991f),
+
+	glm::vec3(61.066f, 49.302f, 32.944f),
+	glm::vec3(61.066f, 46.536f, 32.944f),
+	glm::vec3(61.066f, 43.771f, 32.944f),
+
+	glm::vec3(59.987f, 49.302f, 35.288f),
+	glm::vec3(59.987f, 46.536f, 35.288f),
+	glm::vec3(59.987f, 43.771f, 35.288f),
+
+	glm::vec3(58.909f, 49.302f, 37.647f),
+	glm::vec3(58.909f, 46.536f, 37.647f),
+	glm::vec3(58.909f, 43.771f, 37.647f)
 };
 
+//Cubo Unitario para los modelos
 float vertices[] = {
 	 -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 		0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
@@ -99,6 +161,8 @@ float vertices[] = {
 
 glm::vec3 Light1 = glm::vec3(0);
 
+//Variables de Iluminacion
+int ambiente = 2;
 
 // Deltatime
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
@@ -114,9 +178,9 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);*/
 	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
-
 	// Create a GLFWwindow object that we can use for GLFW's functions
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Fuentes de luz", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Beisbol Proyecto", nullptr, nullptr);
+	glfwSetFramebufferSizeCallback(window, resize);
 
 	if (nullptr == window)
 	{
@@ -159,8 +223,14 @@ int main()
 
 	//-------------------------------------------------------------------------
 	//Carga de Modelos
+	
+	//Model pisooo((char*)"Modelos/Estadio/PisoBase.obj");
+	//Model base((char*)"Modelos/Bases/Base.obj");
+	//Model base2((char*)"Modelos/Bases/Base2.obj");
+	//Model base0((char*)"Modelos/Bases/BaseOg.obj");
+	Model estadio((char*)"Modelos/Stadium/SMestadio.obj");
+
 	//-------------------------------------------------------------------------
-	Model pisooo((char*)"Modelos/Estadio/piso.obj");
 
 
 	// First, set the container's VAO (and VBO)
@@ -182,11 +252,11 @@ int main()
 	glUniform1i(glGetUniformLocation(lightingShader.Program, "Material.difuse"), 0);
 	glUniform1i(glGetUniformLocation(lightingShader.Program, "Material.specular"), 1);
 
-	glm::mat4 projection = glm::perspective(camera.GetZoom(), (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 100.0f);
-
+	
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
+		glm::mat4 projection = glm::perspective(camera.GetZoom(), (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 500.0f);
 
 		// Calculate deltatime of current frame
 		GLfloat currentFrame = glfwGetTime();
@@ -204,6 +274,8 @@ int main()
 		// OpenGL options
 		glEnable(GL_DEPTH_TEST);
 
+		//Imprime en pantalla posiciones
+		imprimirPosicion(pointLightPositions, 4);
 		
 		
 		//Load Model
@@ -212,7 +284,7 @@ int main()
 		// Use cooresponding shader when setting uniforms/drawing objects
 		lightingShader.Use();
 
-                  glUniform1i(glGetUniformLocation(lightingShader.Program, "diffuse"), 0);
+        glUniform1i(glGetUniformLocation(lightingShader.Program, "diffuse"), 0);
 		//glUniform1i(glGetUniformLocation(lightingShader.Program, "specular"),1);
 
 		GLint viewPosLoc = glGetUniformLocation(lightingShader.Program, "viewPos");
@@ -220,10 +292,40 @@ int main()
 
 
 		// Directional light
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.direction"), -0.2f, -1.0f, -0.3f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.ambient"),0.0f,0.0f,0.0f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.diffuse"), 0.0f, 0.0f, 0.0f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.specular"),0.0f, 0.0f, 0.0f);
+
+		//Luces para cada momento del dia
+		// Direccion de la luz
+		glm::vec3 direcciones[] = {
+			glm::vec3(-0.3f, -0.8f,  0.2f),  // Noche
+			glm::vec3(0.4f, -0.5f, -0.7f),  // Tarde
+			glm::vec3(-0.2f, -1.0f, -0.3f)   // Dia
+		};
+
+		// Luz ambiental
+		glm::vec3 ambient[] = {
+			glm::vec3(0.08f, 0.09f, 0.15f),
+			glm::vec3(0.20f, 0.13f, 0.08f),
+			glm::vec3(0.30f, 0.30f, 0.30f)
+		};
+
+		// Luz difusa
+		glm::vec3 diffuse[] = {
+			glm::vec3(0.18f, 0.22f, 0.38f),
+			glm::vec3(0.95f, 0.55f, 0.30f),
+			glm::vec3(0.85f, 0.82f, 0.75f)
+		};
+
+		// Luz especular
+		glm::vec3 specular[] = {
+			glm::vec3(0.25f, 0.28f, 0.40f),
+			glm::vec3(0.75f, 0.45f, 0.25f),
+			glm::vec3(0.90f, 0.90f, 0.85f)
+		};
+
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.direction"), direcciones[ambiente].x, direcciones[ambiente].y, direcciones[ambiente].z);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.ambient"), ambient[ambiente].x, ambient[ambiente].y, ambient[ambiente].z);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.diffuse"), diffuse[ambiente].x, diffuse[ambiente].y, diffuse[ambiente].z);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.specular"), specular[ambiente].x, specular[ambiente].y, specular[ambiente].z);
 
 
 		// Point light 1
@@ -238,28 +340,28 @@ int main()
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].diffuse"), lightColor.x,lightColor.y,lightColor.z);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].specular"), 1.0f, 1.0f, 0.0f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].constant"), 1.0f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].linear"), 0.045f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].quadratic"),0.075f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].linear"), 0.007f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].quadratic"),0.001f);
 
 
 
 		// Point light 2
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].position"), pointLightPositions[1].x, pointLightPositions[1].y, pointLightPositions[1].z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].ambient"), 0.05f, 0.05f, 0.05f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].diffuse"), 0.0f, 0.0f, 0.0f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].specular"), 0.0f, 0.0f, 0.0f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].ambient"), lightColor.x, lightColor.y, lightColor.z);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].diffuse"), lightColor.x, lightColor.y, lightColor.z);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].specular"), 1.0f, 1.0f, 1.0f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[1].constant"), 1.0f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[1].linear"), 0.0f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[1].quadratic"), 0.0f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[1].linear"), 0.007f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[1].quadratic"), 0.001f);
 
 		// Point light 3
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].position"), pointLightPositions[2].x, pointLightPositions[2].y, pointLightPositions[2].z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].ambient"), 0.0f, 0.0f, 0.0f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].diffuse"), 0.0f, 0.0f, 0.0f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].specular"), 0.0f, 0.0f, 0.0f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].ambient"), lightColor.x, lightColor.y, lightColor.z);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].diffuse"), lightColor.x, lightColor.y, lightColor.z);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].specular"), 1.0f, 1.0f, 1.0f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[2].constant"), 1.0f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[2].linear"), 0.0f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[2].quadratic"), 0.0f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[2].linear"), 0.007f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[2].quadratic"), 0.001f);
 
 		// Point light 4
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[3].position"), pointLightPositions[3].x, pointLightPositions[3].y, pointLightPositions[3].z);
@@ -307,19 +409,30 @@ int main()
         view = camera.GetViewMatrix();	
 		model = glm::mat4(1);
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		Piso.Draw(lightingShader);
-		pisooo.Draw(lightingShader);	
 
-	
-		model = glm::mat4(1);
-		//glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 0);
-	    Dog.Draw(lightingShader);
-		//glDisable(GL_BLEND);  //Desactiva el canal alfa 
+		estadio.Draw(lightingShader);
+
+		//model = glm::mat4(1);
+		////glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
+		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 0);
+	 //   Dog.Draw(lightingShader);
+		//model = glm::translate(model, glm::vec3(0.0f, 2.0f, 0.0f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 0);
+	 //   base.Draw(lightingShader);
+		//base2.Draw(lightingShader);
+
+		////Modelado de las Bases
+		//model = glm::mat4(1);
+		//model = glm::translate(model, glm::vec3(-4.27f, 0.06f, 4.05f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 0);
+		//base0.Draw(lightingShader);
+
 		glBindVertexArray(0);
-	
+			//glDisable(GL_BLEND);  //Desactiva el canal alfa 
 
 		// Also draw the lamp object, again binding the appropriate shader
 		lampShader.Use();
@@ -336,7 +449,7 @@ int main()
 		model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		// Draw the light object (using light's vertex attributes)
-		for (GLuint i = 0; i < 4; i++)
+		for (GLuint i = 0; i < 30; i++)
 		{
 			model = glm::mat4(1);
 			model = glm::translate(model, pointLightPositions[i]);
@@ -362,9 +475,38 @@ int main()
 	return 0;
 }
 
+void resize(GLFWwindow* window, int width, int height)
+{
+	SCREEN_HEIGHT = height;
+	SCREEN_WIDTH = width;
+	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+}
+
+void imprimirPosicion(glm::vec3 posiciones[], int size)
+{
+	//system("cls");
+	for (int i = 0; i < size; i++)
+	{
+		std::cout << "Posicion " << i << ": (" << posiciones[i].x << ", " << posiciones[i].y << ", " << posiciones[i].z << ")" << std::endl;
+	}
+}
+
 // Moves/alters the camera positions based on user input
 void DoMovement()
 {
+	//Ambiente
+	if (keys[GLFW_KEY_1])
+	{
+		ambiente = 0;
+	}
+	if (keys[GLFW_KEY_2])
+	{
+		ambiente = 1;
+	}
+	if (keys[GLFW_KEY_3])
+	{
+		ambiente = 2;
+	}
 
 	// Camera controls
 	if (keys[GLFW_KEY_W] || keys[GLFW_KEY_UP])
@@ -390,6 +532,19 @@ void DoMovement()
 	if (keys[GLFW_KEY_D] || keys[GLFW_KEY_RIGHT])
 	{
 		camera.ProcessKeyboard(RIGHT, deltaTime);
+
+
+	}
+	if (keys[GLFW_KEY_Q] || keys[GLFW_KEY_LEFT])
+	{
+		camera.ProcessKeyboard(DOWN, deltaTime);
+
+
+	}
+
+	if (keys[GLFW_KEY_E] || keys[GLFW_KEY_RIGHT])
+	{
+		camera.ProcessKeyboard(UP, deltaTime);
 
 
 	}
