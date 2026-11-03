@@ -1,6 +1,50 @@
 # Blender 5.2.3 LTS MTL File: 'SMestadio.blend'
 # www.blender.org
 
+newmtl DefaultMaterial
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.500000
+illum 2
+map_Kd C:/DefaultMaterial_baseColor.png
+map_Ke C:/DefaultMaterial_emissive.jpg
+map_d C:/DefaultMaterial_baseColor.png
+map_Bump -bm 1.000000 C:/DefaultMaterial_normal.jpg
+
+newmtl DefaultMaterial.001
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.500000
+illum 2
+map_Kd C:/DefaultMaterial_baseColor.png
+map_Ke C:/DefaultMaterial_emissive.jpg
+map_d C:/DefaultMaterial_baseColor.png
+map_Bump -bm 1.000000 C:/DefaultMaterial_normal.jpg
+
+newmtl DefaultMaterial.002
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.500000
+illum 2
+map_Kd textures/DefaultMaterial_baseColor.png
+map_Ke textures/DefaultMaterial_emissive.jpg
+map_d textures/DefaultMaterial_baseColor.png
+map_Bump -bm 1.000000 textures/DefaultMaterial_normal.jpg
+
+newmtl DefaultMaterial.003
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.500000
+illum 2
+map_Kd textures/DefaultMaterial_baseColor.png
+map_Ke textures/DefaultMaterial_emissive.jpg
+map_d textures/DefaultMaterial_baseColor.png
+map_Bump -bm 1.000000 textures/DefaultMaterial_normal.jpg
+
 newmtl GroundSand005_2K.001
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
@@ -10,6 +54,46 @@ Ni 1.500000
 d 1.000000
 illum 2
 map_Kd Arena.jpg
+
+newmtl Material
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd ../Bates/bate/source/Bate_BateMaterial_AlbedoTransparency.png
+
+newmtl Material.001
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd ../Bates/bate/source/Bate_BateMaterial_AlbedoTransparency.png
+
+newmtl Material.002
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd ../Bates/bate/source/Bate_BateMaterial_AlbedoTransparency.png
+
+newmtl Material.003
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd ../Bates/bate/source/Bate_BateMaterial_AlbedoTransparency.png
 
 newmtl Pasto.002
 Ns 250.000000
@@ -920,3 +1004,439 @@ Ni 1.500000
 d 1.000000
 illum 2
 map_Kd TowelCotton001.png
+
+newmtl acmat_0
+Ns 128.000031
+Ka 1.000000 1.000000 1.000000
+Ks 0.200000 0.200000 0.200000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd ../Publico/Gorras/Don_Ramon.png
+
+newmtl black
+Ns 0.015069
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd sta01b_84.png
+
+newmtl green
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd textures/green_baseColor.jpg
+
+newmtl lambert1
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd C:/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 C:/lambert1_normal.jpg
+
+newmtl lambert1.001
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd C:/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 C:/lambert1_normal.jpg
+
+newmtl lambert1.002
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd C:/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 C:/lambert1_normal.jpg
+
+newmtl lambert1.003
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd C:/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 C:/lambert1_normal.jpg
+
+newmtl lambert1.004
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
+
+newmtl lambert1.005
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
+
+newmtl material
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd textures/material_baseColor.jpg
+
+newmtl mc_001_referee__4_-_Default
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/referee-minion/mc_referee_df.png
+
+newmtl mc_001_referee_cloth
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/referee-minion/mc_001_df.png
+
+newmtl mc_001_referee_eyes
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+
+newmtl mc_001_referee_metal
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/referee-minion/mc_001_df.png
+
+newmtl mc_001_referee_pelo
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+
+newmtl mc_001_referee_plastic
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/referee-minion/mc_001_df.png
+
+newmtl mc_001_referee_skin
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/referee-minion/mc_001_df.png
+
+newmtl mssbMtl_1
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../YoshiOBJ/yoshi_1.png
+
+newmtl mssbMtl_150
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../YoshiOBJ/Blue Dry Bones/karon_2.png
+
+newmtl mssbMtl_151
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../YoshiOBJ/Blue Dry Bones/karon_2.png
+
+newmtl mssbMtl_152
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../YoshiOBJ/Blue Dry Bones/karon_1.png
+
+newmtl mssbMtl_153
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../YoshiOBJ/Blue Dry Bones/karon_2.png
+
+newmtl mssbMtl_154
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../YoshiOBJ/Blue Dry Bones/karon_2.png
+
+newmtl mssbMtl_155
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../YoshiOBJ/Blue Dry Bones/karon_3.png
+
+newmtl mssbMtl_156
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../YoshiOBJ/Blue Dry Bones/karon_3.png
+
+newmtl mssbMtl_157
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../YoshiOBJ/Blue Dry Bones/karon_3.png
+
+newmtl mssbMtl_158
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../YoshiOBJ/Blue Dry Bones/karon_3.png
+
+newmtl mssbMtl_159
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../YoshiOBJ/Blue Dry Bones/karon_3.png
+
+newmtl mssbMtl_160
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../YoshiOBJ/Blue Dry Bones/karon_3.png
+
+newmtl mssbMtl_163
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../YoshiOBJ/Blue Dry Bones/karon_3.png
+
+newmtl mssbMtl_164
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../YoshiOBJ/Blue Dry Bones/karon_3.png
+
+newmtl mssbMtl_182
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../YoshiOBJ/Blue Dry Bones/karon_3.png
+
+newmtl mssbMtl_184
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../YoshiOBJ/Blue Dry Bones/karon_3.png
+
+newmtl mssbMtl_2
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../YoshiOBJ/yoshi_1.png
+
+newmtl mssbMtl_3
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../YoshiOBJ/yoshi_1.png
+
+newmtl mssbMtl_5
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../YoshiOBJ/yoshi_1.png
+
+newmtl mssbMtl_6
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../YoshiOBJ/ysohi_2.png
+
+newmtl mssbMtl_7
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../YoshiOBJ/Blue Dry Bones/karon_3.png
+
+newmtl 球棒.001
+Ns 201.339569
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd ../Bates/StellesBat/武器.png
+
+newmtl 球棒.002
+Ns 201.339569
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd ../Bates/StellesBat/武器.png
+
+newmtl 球棒.003
+Ns 201.339569
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd ../Bates/StellesBat/武器.png
+
+newmtl 球棒.004
+Ns 201.339569
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd ../Bates/StellesBat/武器.png
+
+newmtl 球棒.005
+Ns 201.339569
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd ../Bates/StellesBat/st.png

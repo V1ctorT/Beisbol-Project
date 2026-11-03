@@ -44,15 +44,23 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode
 void MouseCallback(GLFWwindow *window, double xPos, double yPos);
 //Funciones para de camara y movimientos
 void DoMovement();
+void ambientacion();
 //Reajustar espacio de Renderizado
 void resize(GLFWwindow *window, int width, int height);
 void imprimirPosicion(glm::vec3 posiciones[], int size);
+//Limite de movimiento de la camara
+void limiteCamara();
+int modoC = 0;
+GLfloat cameraDistance = 5.0f;
+GLfloat cameraHeight = 2.0f;
 
-// Window dimensions
-const GLuint WIDTH = 800, HEIGHT = 600;
+void mainMovement(GLint modelLoc, Model& modelo, Shader& shader, glm::mat4 model);
+
+// Window dimensions---------------------------------------------------------------------
+const GLuint WIDTH = 1080, HEIGHT = 720;
 int SCREEN_WIDTH = WIDTH, SCREEN_HEIGHT = HEIGHT;
 
-// Camera
+// Camera--------------------------------------------------------------------------------
 Camera  camera(glm::vec3(0.0f, 0.0f, 3.0f));
 GLfloat lastX = WIDTH / 2.0;
 GLfloat lastY = HEIGHT / 2.0;
@@ -62,7 +70,7 @@ bool firstMouse = true;
 glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
 bool active;
 
-// Posiciones de Las Luces
+// Posiciones de Las Luces---------------------------------------------------------------
 glm::vec3 pointLightPositions[] = {
 	//Lampara1
 	glm::vec3(73.534f, 49.302f, 20.756f),
@@ -112,7 +120,7 @@ glm::vec3 pointLightPositions[] = {
 	glm::vec3(58.909f, 43.771f, 37.647f)
 };
 
-//Cubo Unitario para los modelos
+//Cubo Unitario para los modelos---------------------------------------------------------
 float vertices[] = {
 	 -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 		0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
@@ -157,19 +165,21 @@ float vertices[] = {
 	   -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
 };
 
-
+glm::vec3 posicionPersonaje(0.0f, 0.0f, 0.0f);
 
 glm::vec3 Light1 = glm::vec3(0);
 
-//Variables de Iluminacion
+//Variables de Iluminacion--------------------------------------------------------------
 int ambiente = 2;
 
 // Deltatime
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
 GLfloat lastFrame = 0.0f;  	// Time of last frame
 
+//Main Function--------------------------------------------------------------------------
 int main()
 {
+	//Creacion del contexto de OpenGL y GLFW---------------------------------------------
 	// Init GLFW
 	glfwInit();
 	// Set all the required options for GLFW
@@ -199,7 +209,8 @@ int main()
 	glfwSetCursorPosCallback(window, MouseCallback);
 
 	// GLFW Options
-	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	//Ocultar el cursor del mouse
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	// Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
 	glewExperimental = GL_TRUE;
@@ -214,23 +225,27 @@ int main()
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 
-
+	//Carga de Shaders ------------------------------------------------------------------
 	Shader lightingShader("Shader/lighting.vs", "Shader/lighting.frag");
 	Shader lampShader("Shader/lamp.vs", "Shader/lamp.frag");
 	
 	Model Dog((char*)"ModelsEjemplos/RedDog.obj");
 	Model Piso((char*)"ModelsEjemplos/piso.obj");
 
-	//-------------------------------------------------------------------------
+	//-----------------------------------------------------------------------------------
 	//Carga de Modelos
 	
 	//Model pisooo((char*)"Modelos/Estadio/PisoBase.obj");
 	//Model base((char*)"Modelos/Bases/Base.obj");
 	//Model base2((char*)"Modelos/Bases/Base2.obj");
 	//Model base0((char*)"Modelos/Bases/BaseOg.obj");
-	Model estadio((char*)"Modelos/Stadium/SMestadio.obj");
+	Model estadio((char*)"Modelos/Stadium/Escenario.obj");
 
-	//-------------------------------------------------------------------------
+
+	//Personajes-------------------------------------------------------------------------
+	Model yoshis((char*)"Modelos/YoshiOBJ/yoshi.obj");
+	Model huesittos2((char*)"Modelos/YoshiOBJ/Red Dry Bones/bloody_karon.obj");
+	
 
 
 	// First, set the container's VAO (and VBO)
@@ -253,7 +268,7 @@ int main()
 	glUniform1i(glGetUniformLocation(lightingShader.Program, "Material.specular"), 1);
 
 	
-	// Game loop
+	// Game loop-------------------------------------------------------------------------
 	while (!glfwWindowShouldClose(window))
 	{
 		glm::mat4 projection = glm::perspective(camera.GetZoom(), (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 500.0f);
@@ -266,6 +281,14 @@ int main()
 		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
 		glfwPollEvents();
 		DoMovement();
+		ambientacion();
+		if (modoC == 1) {
+			camera.UpdatePivote(posicionPersonaje, 5.0f, 1.5f);
+		}
+		else
+		{
+			camera.PrimeraPersona(posicionPersonaje);
+		}
 
 		// Clear the colorbuffer
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -291,7 +314,7 @@ int main()
 		glUniform3f(viewPosLoc, camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 
 
-		// Directional light
+		// Directional light-------------------------------------------------------------
 
 		//Luces para cada momento del dia
 		// Direccion de la luz
@@ -372,7 +395,7 @@ int main()
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[3].linear"), 0.0f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[3].quadratic"), 0.0f);
 
-		// SpotLight
+		// SpotLight---------------------------------------------------------------------
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.position"), camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.direction"), camera.GetFront().x, camera.GetFront().y, camera.GetFront().z);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.ambient"), 0.0f, 0.0f, 0.0f);
@@ -405,19 +428,29 @@ int main()
 
 	
 
-		//Carga de modelo 
+		//Carga de escena----------------------------------------------------------------------
         view = camera.GetViewMatrix();	
 		model = glm::mat4(1);
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
 		estadio.Draw(lightingShader);
 
-		//model = glm::mat4(1);
-		////glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
+		
+		//glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
 		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 0);
-	 //   Dog.Draw(lightingShader);
+
+		//Yoshi, personaje principal------------------------------------------------------
+		model = glm::mat4(1);
+		mainMovement(modelLoc, yoshis, lightingShader, model);
+
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 0);
+	    huesittos2.Draw(lightingShader);
+
+		model = glm::translate(model, glm::vec3(0.0f, 2.44f, 0.0f));
+
+		//huesittos2.Draw(lightingShader);
+
 		//model = glm::translate(model, glm::vec3(0.0f, 2.0f, 0.0f));
 		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		//glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 0);
@@ -475,25 +508,7 @@ int main()
 	return 0;
 }
 
-void resize(GLFWwindow* window, int width, int height)
-{
-	SCREEN_HEIGHT = height;
-	SCREEN_WIDTH = width;
-	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-}
-
-void imprimirPosicion(glm::vec3 posiciones[], int size)
-{
-	//system("cls");
-	for (int i = 0; i < size; i++)
-	{
-		std::cout << "Posicion " << i << ": (" << posiciones[i].x << ", " << posiciones[i].y << ", " << posiciones[i].z << ")" << std::endl;
-	}
-}
-
-// Moves/alters the camera positions based on user input
-void DoMovement()
-{
+void ambientacion() {
 	//Ambiente
 	if (keys[GLFW_KEY_1])
 	{
@@ -507,31 +522,66 @@ void DoMovement()
 	{
 		ambiente = 2;
 	}
+}
 
-	// Camera controls
+void resize(GLFWwindow* window, int width, int height)
+{
+	SCREEN_HEIGHT = height;
+	SCREEN_WIDTH = width;
+	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+}
+
+void imprimirPosicion(glm::vec3 posiciones[], int size)
+{
+	//system("cls");
+	for (int i = 0; i < size; i++)
+	{
+		std::cout << "Posicion Camara" << camera.GetPosition().x << ", " << camera.GetPosition().y << ", " << camera.GetPosition().z << ", " << camera.GetYaw() << std::endl;
+	}
+}
+
+// Moves/alters the camera positions based on user input
+void DoMovement()
+{
+	// Camera controls--------------------------------------------------------------
+
+	glm::vec3 direccion = camera.GetFront();
+	direccion.y = 0.0f;
+	direccion = glm::normalize(direccion);
+	glm::vec3 derecha = glm::normalize(glm::cross(direccion, glm::vec3(0.0f, 1.0f, 0.0f)));
+	GLfloat velocity = 5.0f * deltaTime;
+
+	if(keys[GLFW_KEY_R])
+	{
+		camera.ProcessKeyboard(RESET, deltaTime);
+	}
 	if (keys[GLFW_KEY_W] || keys[GLFW_KEY_UP])
 	{
-		camera.ProcessKeyboard(FORWARD, deltaTime);
+		posicionPersonaje += direccion * velocity;
+		//camera.ProcessKeyboard(FORWARD, deltaTime);
 
 	}
 
 	if (keys[GLFW_KEY_S] || keys[GLFW_KEY_DOWN])
 	{
-		camera.ProcessKeyboard(BACKWARD, deltaTime);
+		posicionPersonaje -= direccion * velocity;
+		//camera.ProcessKeyboard(BACKWARD, deltaTime);
 
 
 	}
 
 	if (keys[GLFW_KEY_A] || keys[GLFW_KEY_LEFT])
 	{
-		camera.ProcessKeyboard(LEFT, deltaTime);
+		posicionPersonaje -= derecha * velocity;
+		//camera.ProcessKeyboard(LEFT, deltaTime);
 
 
 	}
 
 	if (keys[GLFW_KEY_D] || keys[GLFW_KEY_RIGHT])
 	{
-		camera.ProcessKeyboard(RIGHT, deltaTime);
+		posicionPersonaje += derecha * velocity;
+		//camera.ProcessKeyboard(RIGHT, deltaTime);
 
 
 	}
@@ -549,32 +599,6 @@ void DoMovement()
 
 	}
 
-	if (keys[GLFW_KEY_T])
-	{
-		pointLightPositions[0].x += 0.01f;
-	}
-	if (keys[GLFW_KEY_G])
-	{
-		pointLightPositions[0].x -= 0.01f;
-	}
-
-	if (keys[GLFW_KEY_Y])
-	{
-		pointLightPositions[0].y += 0.01f;
-	}
-
-	if (keys[GLFW_KEY_H])
-	{
-		pointLightPositions[0].y -= 0.01f;
-	}
-	if (keys[GLFW_KEY_U])
-	{
-		pointLightPositions[0].z -= 0.1f;
-	}
-	if (keys[GLFW_KEY_J])
-	{
-		pointLightPositions[0].z += 0.01f;
-	}
 	
 }
 
@@ -598,18 +622,33 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode
 		}
 	}
 
-	if (keys[GLFW_KEY_SPACE])
+	// Encender y apagar luz con SPACE---------------------------------------------------
+	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
 	{
 		active = !active;
+
 		if (active)
 		{
 			Light1 = glm::vec3(1.0f, 1.0f, 0.0f);
 		}
 		else
 		{
-			Light1 = glm::vec3(0);//Cuado es solo un valor en los 3 vectores pueden dejar solo una componente
+			Light1 = glm::vec3(0.0f);
 		}
 	}
+	//Cambiar de modo de camara con C----------------------------------------------------
+	if (keys[GLFW_KEY_C] && action == GLFW_PRESS)
+	{
+		if (modoC == 0)
+		{
+			modoC = 1;
+		}else if (modoC == 1)
+			{
+				modoC = 0;
+			}	
+		
+	}
+
 }
 
 void MouseCallback(GLFWwindow *window, double xPos, double yPos)
@@ -627,5 +666,17 @@ void MouseCallback(GLFWwindow *window, double xPos, double yPos)
 	lastX = xPos;
 	lastY = yPos;
 
-	camera.ProcessMouseMovement(xOffset, yOffset);
+	camera.ProcessMouseMovement(xOffset, yOffset, true, modoC, posicionPersonaje);
+}
+
+
+void mainMovement(GLint modelLoc, Model& modelo, Shader& shader, glm::mat4 model) 
+{
+
+	shader.Use();
+	model = glm::translate(model, posicionPersonaje);
+	model = glm::rotate(model, glm::radians(-camera.GetYaw() + 90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+	glUniform1i(glGetUniformLocation(shader.Program, "transparency"), 0);
+	modelo.Draw(shader);
 }

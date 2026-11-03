@@ -18,7 +18,9 @@ enum Camera_Movement
 	LEFT,
 	RIGHT,
 	UP,
-	DOWN
+	DOWN,
+	RESET,
+	MODO
 };
 
 // Default camera values
@@ -28,12 +30,13 @@ const GLfloat SPEED = 6.0f;
 const GLfloat SENSITIVTY = 0.25f;
 const GLfloat ZOOM = 90.0f;
 
+
 // An abstract camera class that processes input and calculates the corresponding Eular Angles, Vectors and Matrices for use in OpenGL
 class Camera
 {
 public:
 	// Constructor with vectors
-	Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), GLfloat yaw = YAW, GLfloat pitch = PITCH) : front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED), mouseSensitivity(SENSITIVTY), zoom(ZOOM)
+	Camera(glm::vec3 position = glm::vec3(0.0f,0.0f,0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), GLfloat yaw = YAW, GLfloat pitch = PITCH) : front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED), mouseSensitivity(SENSITIVTY), zoom(ZOOM)
 	{
 		this->position = position;
 		this->worldUp = up;
@@ -65,12 +68,16 @@ public:
 
 		if (direction == FORWARD)
 		{
-			this->position += this->front * velocity;
+			//this->position += this->front * velocity;
+			glm::vec3 horizontal = glm::normalize(glm::vec3(this->front.x, 0.0f, this->front.z));
+			this->position += horizontal * velocity;
 		}
 
 		if (direction == BACKWARD)
 		{
-			this->position -= this->front * velocity;
+			//this->position -= this->front * velocity;
+			glm::vec3 horizontal = glm::normalize(glm::vec3(this->front.x, 0.0f, this->front.z));
+			this->position -= horizontal * velocity;
 		}
 
 		if (direction == LEFT)
@@ -90,10 +97,38 @@ public:
 		{
 			this->position -= this->up * velocity;
 		}
+		if (direction == RESET)
+		{
+			this->position = glm::vec3(0.0f, 1.5f, 0.0f);
+			this->yaw = YAW;
+			this->pitch = PITCH;
+			this->updateCameraVectors();
+		}
+		
 	}
 
+	//Modifica la posicion de la camara segun un objeto
+	//Seguimiento
+	void Seguir(glm::vec3 newPosition)
+	{
+		this->position = newPosition;
+	}
+
+	//Primera Persona
+	void PrimeraPersona(glm::vec3 modelPosition)
+	{
+		this->position = modelPosition + glm::vec3(0.0f, 2.3f, 0.0f);
+	}
+
+	//Tercera Persona
+	void TerceraPersona(glm::vec3 modelPosition)
+	{
+		this->position = modelPosition + glm::vec3(-1.0f, 1.9f, 0.0f);
+	}
+
+
 	// Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
-	void ProcessMouseMovement(GLfloat xOffset, GLfloat yOffset, GLboolean constrainPitch = true)
+	void ProcessMouseMovement(GLfloat xOffset, GLfloat yOffset, GLboolean constrainPitch = true, int modC = 0, glm::vec3 posic = glm::vec3(0.0f))
 	{
 		xOffset *= this->mouseSensitivity;
 		yOffset *= this->mouseSensitivity;
@@ -115,14 +150,20 @@ public:
 			}
 		}
 
+		if (modC == 0) {
+			this->updateCameraVectors();
+		}
+		else if (modC == 1)
+		{
+			this->UpdatePivote(posic, 5.0f, 1.5f);
+		}
 		// Update Front, Right and Up Vectors using the updated Eular angles
-		this->updateCameraVectors();
 	}
 
 	// Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
 	void ProcessMouseScroll(GLfloat yOffset)
 	{
-
+		
 	}
 
 	GLfloat GetZoom()
@@ -138,6 +179,42 @@ public:
 	glm::vec3 GetFront()
 	{
 		return this->front;
+	}
+	GLfloat GetYaw()
+	{
+		return this->yaw;
+	}
+	//GLfloat GetRight()
+	//{
+	//	return this->right.x;
+	//}
+
+	void UpdatePivote(glm::vec3 tarjet, GLfloat distance, GLfloat height)
+	{
+		//Pivote
+		glm::vec3 pivot = tarjet + glm::vec3(0.0f, height, 0.0f);
+		//Conversion a radianes
+		GLfloat yawRad = glm::radians(this->yaw);
+		GLfloat pitchRad = glm::radians(this->pitch);
+
+		//Desplazamiento orbital
+		glm::vec3 offset;
+		offset.x = distance * cos(pitchRad) * cos(yawRad);
+		offset.y = distance * sin(pitchRad);
+		offset.z = distance * cos(pitchRad) * sin(yawRad);
+
+		//Actualizar posicion de la camara
+		this->position = pivot - offset;
+
+		//Camara al persnaje
+		front = glm::normalize(pivot - this->position);
+		//Actualizar vectores de la camara
+		right = glm::normalize(glm::cross(front, worldUp));
+		up = glm::normalize(glm::cross(right, front));
+	}
+
+	void UpdateCameraVectors() {
+		updateCameraVectors();
 	}
 
 private:
