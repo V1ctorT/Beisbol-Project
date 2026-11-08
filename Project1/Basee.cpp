@@ -17,6 +17,8 @@ Creado por:
 */
 
 //Librerias de OpenGL y GLFW ------------------------------------------------------------
+#include <string>
+#include <vector>
 #include <iostream>
 #include <cmath>
 // GLEW
@@ -36,7 +38,12 @@ Creado por:
 #include "Shader.h"
 #include "Camera.h"
 #include "Model.h"
-
+//Animaciones de publico y corredores
+#include "Publico.h"
+#include "Corredores.h"
+Publico publico;
+Corredores corredoresA, corredoresB;
+Corredores* ajuste = &corredoresA;   // el que se mueve con el teclado
 
 // Function prototypes-------------------------------------------------------------------
 //Entradas del teclado y mouse
@@ -178,6 +185,9 @@ glm::vec3 posicionPersonaje(0.0f, 0.5f, 0.0f);
 GLfloat rotPierna = 0.0f;
 GLfloat rotacionBrazo = 0.0f;
 GLfloat rotCabeza = 0.0f;
+//Caminar
+GLfloat fasePaso = 0.0f;          // avanza solo mientras caminas
+GLfloat intensidadCorrer = 0.0f;  // 0 = quieto, 1 = corriendo (transición suave)
 
 glm::vec3 posicionHuesitos(15.547f,0.47702f,-16.07f);
 glm::vec3 posicionToad(3.0f, 0.43065f, -3.0f);
@@ -185,7 +195,33 @@ glm::vec3 posicionToad(3.0f, 0.43065f, -3.0f);
 glm::vec3 Light1 = glm::vec3(0);
 
 //Variables de Iluminacion--------------------------------------------------------------
+int estadoLuces = 0;   // 0 apagado, 1 lámparas, 2 spotlights, 3 luz general
 int ambiente = 2;
+glm::vec3 colorLamparas(1.0f, 1.0f, 0.0f);
+
+struct ConfigFiesta
+{
+	glm::vec3 postes[3] = {
+	glm::vec3(70.768f,  7.6772f, -112.43f),
+	glm::vec3(88.346f,  7.6772f, -100.52f),
+	glm::vec3(106.8f,   7.6772f, -88.04f)
+	};
+	glm::vec3 colores[3] = {
+		glm::vec3(1.0f, 0.1f, 0.1f),   // poste 1: rojo
+		glm::vec3(0.1f, 1.0f, 0.2f),   // poste 2: verde
+		glm::vec3(0.2f, 0.3f, 1.0f)    // poste 3: azul
+	};
+	glm::vec3 objetivo = glm::vec3(23.0f, 2.911f, -17.0f); // centro del campo
+	GLfloat radioBarrido = 20.0f;
+	GLfloat velocidadGiro = 1.0f;
+	GLfloat intensidad = 1.5f;
+	GLfloat suavizado = 6.0f;
+	GLfloat apertura = 10.0f;
+	GLfloat linear = 0.002f;
+	GLfloat quadratic = 0.00002f;
+	GLfloat opacidadHaz = 0.3f;
+	GLfloat aperturaHaz = 3.0f;
+} fiesta;
 
 // Deltatime
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
@@ -265,9 +301,7 @@ int main()
 	//Carga de Shaders ------------------------------------------------------------------
 	Shader lightingShader("Shader/lighting.vs", "Shader/lighting.frag");
 	Shader lampShader("Shader/lamp.vs", "Shader/lamp.frag");
-
-	Model Dog((char*)"ModelsEjemplos/RedDog.obj");
-	Model Piso((char*)"ModelsEjemplos/piso.obj");
+	Shader beamShader("Shader/beam.vs", "Shader/beam.frag");
 
 	//-----------------------------------------------------------------------------------
 	//Carga de Modelos
@@ -280,23 +314,8 @@ int main()
 
 
 	//Personajes-------------------------------------------------------------------------
-	Model yoshis((char*)"Modelos/YoshiOBJ/yoshi.obj");
-	Model huesittos2((char*)"Modelos/YoshiOBJ/Red Dry Bones/bloody_karon.obj");
-
-
-
-	//Inicializamos yoshi Structura
-	//modeloPartes Yooshi;
-
-	////Modelo Yoshi
-	//Yooshi.Cabeza = Model((char*)"Modelos/YoshiOBJ/yoshi_Partes/YCabeza.obj");
-	//Yooshi.Cuerpo = Model((char*)"Modelos/YoshiOBJ/yoshi_Partes/YCuerpo.obj");
-	//Yooshi.ManoIzq = Model((char*)"Modelos/YoshiOBJ/yoshi_Partes/YoL_Hand.obj");
-	//Yooshi.BrazoDer = Model((char*)"Modelos/YoshiOBJ/yoshi_Partes/YD_Brazo.obj");
-	//Yooshi.BrazoIzq = Model((char*)"Modelos/YoshiOBJ/yoshi_Partes/YL_Brazo.obj");
-	//Yooshi.ManoDer = Model((char*)"Modelos/YoshiOBJ/yoshi_Partes/YoD_Hand.obj");
-	//Yooshi.PiernaIzq = Model((char*)"Modelos/YoshiOBJ/yoshi_Partes/Y_LegI.obj");
-	//Yooshi.PiernaDer = Model((char*)"Modelos/YoshiOBJ/yoshi_Partes/YoLegDer.obj");
+	Model yoshis((char*)"Modelos/YoshiOBJ/yoshi.obj"); //Completo
+	Model huesittos2((char*)"Modelos/YoshiOBJ/Red Dry Bones/bloody_karon.obj"); //Completo
 	//Yoshi------------------------------------------------------------------------------
 	Model yoshiH((char*)"Modelos/YoshiOBJ/yoshi_Partes/YCabeza.obj");
 	Model yoshiCuerpo((char*)"Modelos/YoshiOBJ/yoshi_Partes/YCuerpo.obj");
@@ -306,6 +325,8 @@ int main()
 	Model yoD_hand((char*)"Modelos/YoshiOBJ/yoshi_Partes/YoD_Hand.obj");
 	Model yoPierna_L((char*)"Modelos/YoshiOBJ/yoshi_Partes/Y_LegI.obj");
 	Model yoPierna_R((char*)"Modelos/YoshiOBJ/yoshi_Partes/YoLegDer.obj");
+	PartesYoshi partes = { &yoshiCuerpo, &yoshiH, &yoBrazo_L, &yoL_hand,
+					   &yoBrazo_R, &yoD_hand, &yoPierna_L, &yoPierna_R };
 	//Huesitos---------------------------------------------------------------------------
 	Model hCabeza((char*)"Modelos/YoshiOBJ/huesitos_Partes/HCabeza.obj");
 	Model hCuerpo((char*)"Modelos/YoshiOBJ/huesitos_Partes/HCuerpo.obj");
@@ -323,6 +344,53 @@ int main()
 	Model tPataD((char*)"Modelos/Publico/Toad/Toad_DLeg.obj");
 	Model tPataI((char*)"Modelos/Publico/Toad/Toad_ILeg.obj");
 
+	//Bloques de Publico-----------------------------------------------------------------
+	 // piso 1 (4.83f para el piso 2)
+	const GLfloat YC = 1.0f;           // altura del Yoshi corriendo sobre el piso 1
+	publico.init(partes);
+
+	// ---- BLOQUE 1 ----
+	publico.bloque4(glm::vec3(36.2f, 2.911f, 31.77f),
+		glm::vec3(55.0f, 2.911f, 27.0f),25.0f);
+	// ---- BLOQUE 2 ----
+	publico.bloque4(glm::vec3(58.739f, 2.911f, 25.083f),
+		glm::vec3(75.16f, 2.911f, 12.428f),35.0f);
+	// ---- BLOQUE 3 ----
+	publico.bloque4(glm::vec3(85.908f, 2.911f, -9.8168f),
+		glm::vec3(90.346f, 2.911f, -28.475f),80.0f);
+	// ---- BLOQUE 4 ----
+	publico.bloque4(glm::vec3(90.3434f, 2.911f, -32.85f),
+		glm::vec3(84.047f, 2.911f, -57.923f),100.0f);
+	// ---- BLOQUE 5 ----
+	publico.bloque4(glm::vec3(42.786f, 2.911f, -89.643f),
+		glm::vec3(2.7034f, 2.911f, -82.71f),200.0f);
+	// ---- BLOQUE 6 ----
+	publico.bloque4(glm::vec3(-4.93f, 2.911f, -78.154f),
+		glm::vec3(-29.234f, 2.911f, -45.706f),230.0f);
+	// ---- BLOQUE 7 ----
+	publico.bloque4(glm::vec3(-32.327f, 2.911f, -9.921f),
+		glm::vec3(-21.9118f, 2.911f, 19.766f),300.0f);
+	// ---- BLOQUE 8 ----
+	publico.bloque4(glm::vec3(-18.508f, 2.911f, 22.85f),
+		glm::vec3(10.161f, 2.911f, 33.105f),0.0f);
+
+	// Banca 1 (frente a z ≈ 30, recorrido a lo largo de X)
+	corredoresA.init(partes);
+	corredoresA.centro = glm::vec3(22.5f, YC, 19.0f);
+	corredoresA.rotPista = 0.0f;
+	corredoresA.radioX = 8.0f;
+	corredoresA.radioZ = 1.5f;
+	corredoresA.exponente = 4.0f;          // 2 = elipse, 4-8 = más cuadrado
+	corredoresA.agregar(3);
+
+	// Banca 2 (frente a x ≈ -29.3, recorrido a lo largo de Z)
+	corredoresB.init(partes);
+	corredoresB.centro = glm::vec3(-18.0f, YC, -22.5f);
+	corredoresB.rotPista = 90.0f;
+	corredoresB.radioX = 8.0f;
+	corredoresB.radioZ = 1.5f;
+	corredoresB.exponente = 4.0f;
+	corredoresB.agregar(3);
 
 	// First, set the container's VAO (and VBO)
 	GLuint VBO, VAO;
@@ -338,6 +406,28 @@ int main()
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
+	//Configuracion de luces tipo spootlight---------------------------------------------
+	// Cono para los haces: punta en (0,0,0), base en y = -1 con radio 1
+	std::vector<float> cono;
+	const int SEG = 24;
+	for (int i = 0; i < SEG; i++)
+	{
+		float a0 = glm::two_pi<float>() * i / SEG;
+		float a1 = glm::two_pi<float>() * (i + 1) / SEG;
+		cono.insert(cono.end(), { 0.0f, 0.0f, 0.0f,
+								  cosf(a0), -1.0f, sinf(a0),
+								  cosf(a1), -1.0f, sinf(a1) });
+	}
+	GLuint coneVAO, coneVBO;
+	glGenVertexArrays(1, &coneVAO);
+	glGenBuffers(1, &coneVBO);
+	glBindVertexArray(coneVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, coneVBO);
+	glBufferData(GL_ARRAY_BUFFER, cono.size() * sizeof(float), cono.data(), GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	glBindVertexArray(0);
+
 	// Set texture units
 	lightingShader.Use();
 	glUniform1i(glGetUniformLocation(lightingShader.Program, "Material.difuse"), 0);
@@ -347,11 +437,6 @@ int main()
 	GLfloat tiempoAnterior = glfwGetTime();
 	GLfloat intervalo = 0.7f;
 
-	//Proyeccion para la interfaz--------------------------------------------------------
-	glm::mat4 projectionUI = glm::ortho(
-		0.0f, 1920.0f,
-		0.0f, 1080.0f
-	);
 	//Posiciones UVs---------------------------------------------------------------------
 	float verticesUI[] = {
 			// Posiciones (X, Y, Z)   // Coordenadas UV (S, T)
@@ -464,14 +549,9 @@ int main()
 	   
 		// OpenGL options
 		glEnable(GL_DEPTH_TEST);
-		
-		
-		//Load Model
-	
 
 		// Use cooresponding shader when setting uniforms/drawing objects
 		lightingShader.Use();
-
         glUniform1i(glGetUniformLocation(lightingShader.Program, "diffuse"), 0);
 		//glUniform1i(glGetUniformLocation(lightingShader.Program, "specular"),1);
 
@@ -491,9 +571,9 @@ int main()
 
 		// Luz ambiental
 		glm::vec3 ambient[] = {
-			glm::vec3(0.08f, 0.09f, 0.15f), //Noche
-			glm::vec3(0.20f, 0.13f, 0.08f), //Tarde 
-			glm::vec3(0.30f, 0.30f, 0.30f) //Dia
+			glm::vec3(0.08f, 0.09f, 0.15f),
+			glm::vec3(0.20f, 0.13f, 0.08f),
+			glm::vec3(0.30f, 0.30f, 0.30f)
 		};
 
 		// Luz difusa
@@ -510,26 +590,36 @@ int main()
 			glm::vec3(0.90f, 0.90f, 0.85f)
 		};
 
+		bool lamparasOn = (estadoLuces == 1);
+		bool spotOn = (estadoLuces == 2);
+		bool generalOn = (estadoLuces == 3);
+
+		glm::vec3 lightColor = lamparasOn ? colorLamparas : glm::vec3(0.0f);
+
+		glm::vec3 amb = ambient[ambiente];
+		glm::vec3 dif = diffuse[ambiente];
+		glm::vec3 spe = specular[ambiente];
+
+		if (generalOn)
+		{
+			amb = glm::vec3(0.45f);
+			dif = glm::vec3(0.55f);
+			spe = glm::vec3(0.5f);
+		}
+
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.direction"), direcciones[ambiente].x, direcciones[ambiente].y, direcciones[ambiente].z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.ambient"), ambient[ambiente].x, ambient[ambiente].y, ambient[ambiente].z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.diffuse"), diffuse[ambiente].x, diffuse[ambiente].y, diffuse[ambiente].z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.specular"), specular[ambiente].x, specular[ambiente].y, specular[ambiente].z);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.ambient"), amb.x, amb.y, amb.z);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.diffuse"), dif.x, dif.y, dif.z);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.specular"), spe.x, spe.y, spe.z);
 
 
-		// Point light 1
-	    glm::vec3 lightColor;
-		lightColor.x= abs(sin(glfwGetTime() *Light1.x));
-		lightColor.y= abs(sin(glfwGetTime() *Light1.y));
-		lightColor.z= sin(glfwGetTime() *Light1.z);
-
-		
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].position"), pointLightPositions[0].x, pointLightPositions[0].y, pointLightPositions[0].z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].ambient"), lightColor.x,lightColor.y, lightColor.z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].diffuse"), lightColor.x,lightColor.y,lightColor.z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].specular"), 1.0f, 1.0f, 0.0f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].ambient"), lightColor.x, lightColor.y, lightColor.z);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].diffuse"), lightColor.x, lightColor.y, lightColor.z);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].specular"), lightColor.x, lightColor.y, lightColor.z);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].constant"), 1.0f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].linear"), 0.007f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].quadratic"),0.001f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].quadratic"), 0.001f);
 
 
 
@@ -537,7 +627,7 @@ int main()
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].position"), pointLightPositions[1].x, pointLightPositions[1].y, pointLightPositions[1].z);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].ambient"), lightColor.x, lightColor.y, lightColor.z);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].diffuse"), lightColor.x, lightColor.y, lightColor.z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].specular"), 1.0f, 1.0f, 1.0f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].specular"), lightColor.x, lightColor.y, lightColor.z);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[1].constant"), 1.0f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[1].linear"), 0.007f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[1].quadratic"), 0.001f);
@@ -546,7 +636,7 @@ int main()
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].position"), pointLightPositions[2].x, pointLightPositions[2].y, pointLightPositions[2].z);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].ambient"), lightColor.x, lightColor.y, lightColor.z);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].diffuse"), lightColor.x, lightColor.y, lightColor.z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].specular"), 1.0f, 1.0f, 1.0f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].specular"), lightColor.x, lightColor.y, lightColor.z);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[2].constant"), 1.0f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[2].linear"), 0.007f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[2].quadratic"), 0.001f);
@@ -560,20 +650,40 @@ int main()
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[3].linear"), 0.0f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[3].quadratic"), 0.0f);
 
-		// SpotLight---------------------------------------------------------------------
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.position"), camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.direction"), camera.GetFront().x, camera.GetFront().y, camera.GetFront().z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.ambient"), 0.0f, 0.0f, 0.0f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.diffuse"), 0.0f, 0.0f, 0.0f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.specular"),0.0f, 0.0f, 0.0f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.constant"), 1.0f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.linear"), 0.0f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.quadratic"), 0.0f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.cutOff"), glm::cos(glm::radians(0.0f)));
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.outerCutOff"), glm::cos(glm::radians(0.0f)));
+		glm::vec3 dirsHaz[3];
+		GLfloat largoHaz[3];
+
+		// SpotLights de fiesta (3 postes)
+		for (int i = 0; i < 3; i++)
+		{
+			std::string s = "spotLights[" + std::to_string(i) + "].";
+
+			GLfloat ang = tiempoActual * fiesta.velocidadGiro + i * 2.094f;
+			glm::vec3 punto = fiesta.objetivo + glm::vec3(cos(ang) * fiesta.radioBarrido, 0.0f,
+				sin(ang) * fiesta.radioBarrido);
+			glm::vec3 dirSpot = glm::normalize(punto - fiesta.postes[i]);
+
+			glm::vec3 colorSpot = fiesta.colores[i] * fiesta.intensidad;
+			if (!spotOn) colorSpot = glm::vec3(0.0f);
+
+			dirsHaz[i] = dirSpot;
+			largoHaz[i] = glm::length(punto - fiesta.postes[i]);
+
+			glUniform3f(glGetUniformLocation(lightingShader.Program, (s + "position").c_str()), fiesta.postes[i].x, fiesta.postes[i].y, fiesta.postes[i].z);
+			glUniform3f(glGetUniformLocation(lightingShader.Program, (s + "direction").c_str()), dirSpot.x, dirSpot.y, dirSpot.z);
+			glUniform3f(glGetUniformLocation(lightingShader.Program, (s + "ambient").c_str()), 0.0f, 0.0f, 0.0f);
+			glUniform3f(glGetUniformLocation(lightingShader.Program, (s + "diffuse").c_str()), colorSpot.x, colorSpot.y, colorSpot.z);
+			glUniform3f(glGetUniformLocation(lightingShader.Program, (s + "specular").c_str()), colorSpot.x, colorSpot.y, colorSpot.z);
+			glUniform1f(glGetUniformLocation(lightingShader.Program, (s + "constant").c_str()), 1.0f);
+			glUniform1f(glGetUniformLocation(lightingShader.Program, (s + "linear").c_str()), fiesta.linear);
+			glUniform1f(glGetUniformLocation(lightingShader.Program, (s + "quadratic").c_str()), fiesta.quadratic);
+			glUniform1f(glGetUniformLocation(lightingShader.Program, (s + "cutOff").c_str()), glm::cos(glm::radians(fiesta.apertura)));
+			glUniform1f(glGetUniformLocation(lightingShader.Program, (s + "outerCutOff").c_str()), glm::cos(glm::radians(fiesta.apertura + fiesta.suavizado)));
+		}
 
 		// Set material properties
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 16.0f);
+
 
 		// Create camera transformations
 		glm::mat4 view;
@@ -612,87 +722,142 @@ int main()
 		*/
 
 		//Yoshi, personaje principal-----------------------------------------------------------
-		model = glm::mat4(1);
-		mainMovement(modelLoc, yoshis, lightingShader, model);
-		//model = glm::translate(model, glm::vec3((sin(tiempoActual * 4.0f)) * 5.0f ,2.0f,0.0f));
-		model = glm::translate(model, glm::vec3(0.0f, 2.0f, 0.0f));
+		// Correr solo cuando se presiona una tecla de movimiento
+		bool moviendo = keys[GLFW_KEY_W] || keys[GLFW_KEY_A] || keys[GLFW_KEY_S] || keys[GLFW_KEY_D]
+			|| keys[GLFW_KEY_UP] || keys[GLFW_KEY_DOWN] || keys[GLFW_KEY_LEFT] || keys[GLFW_KEY_RIGHT];
+		GLfloat objetivoCorrer = moviendo ? 1.0f : 0.0f;
+		intensidadCorrer += (objetivoCorrer - intensidadCorrer) * glm::min(1.0f, 10.0f * deltaTime);
+		if (moviendo) fasePaso += deltaTime * 8.0f;
 
-
-		//Rotacion de Brazos
-		rotacionBrazo = sin(tiempoActual * 4.0f) * 25.0f;
-		rotCabeza = sin(tiempoActual * 4.0f) * 30.0f;
-
-		//Cuerpo de Yoshi
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		yoshiCuerpo.Draw(lightingShader);
-
-		//Cabeza de Yoshi Tienen el mismo lugar de pivote
-		modelCuerpo = modelTemp = model;
-		model = glm::rotate(model, glm::radians(rotCabeza), glm::vec3(0.0f, 1.0f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		yoshiH.Draw(lightingShader);
-
-		//Gorro
-		// Model = translare 0,0.5,0
-		//Gorro.Draw(lightingShader);
-
-		//Brazo Izquierdo de Yoshi
-		model = glm::translate(modelTemp, glm::vec3(-0.26443f, -0.12442f, -0.015195f));//pivote
-		model = glm::rotate(model, glm::radians(rotacionBrazo), glm::vec3(0.0f, 1.0f, 0.0f));
-		//-0.41714f, -0.12442f, -0.052828f Centro del modelo
-		modelTemp = model = glm::translate(model, glm::vec3(-0.15271f, 0.0f, -0.037633f));//centro
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		yoBrazo_L.Draw(lightingShader);
-
-		//Mano Izquierda de Yoshi
-		model = glm::translate(modelTemp, glm::vec3(-0.12210f,-0.00470f,-0.037183f));
-		model = glm::rotate(model, glm::radians(rotacionBrazo), glm::vec3(1.0f, 0.0f, 0.0f));
-		//-0.71842, -0.17623, -0.178 Centro del modelo
-		model = glm::translate(model, glm::vec3(-0.17918f,-0.04711f,-0.087989f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		yoL_hand.Draw(lightingShader);
-
-		model = modelCuerpo;
-
-		//Brazo Derecho de Yoshi
-		model = glm::translate(modelCuerpo, glm::vec3(0.23581f,-0.14962f,0.11884f));//pivote
-		model = glm::rotate(model, glm::radians(rotacionBrazo), glm::vec3(0.0f, -1.0f, 0.0f));
-		//0.36386f, -0.13042f,0.17549f Centro del modelo
-		modelTemp = model = glm::translate(model, glm::vec3(0.12805f,0.01920f,0.05665f));//centro
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		yoBrazo_R.Draw(lightingShader);
-
-		//Mano Derecha de Yoshi
-		model = glm::translate(modelTemp, glm::vec3(0.13382f, 0.00130f, 0.05046f)); //Pivote de la mano
-		model = glm::rotate(model, glm::radians(rotacionBrazo), glm::vec3(1.0f, 0.0f, 0.0f));
-		//0.22834f, -0.06276f, 0.02576f
-		model = glm::translate(model, glm::vec3(0.22834f, -0.06276f, 0.02576f)); //Centro de la mano
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		yoD_hand.Draw(lightingShader);
-
-		model = modelCuerpo;
-
+		GLfloat rotacionBrazo = sin(fasePaso) * 25.0f * intensidadCorrer;
 		rotPierna = rotacionBrazo * 3.0f;
-		//Piernas de Yoshi
-		//Izquierda
-		model = glm::translate(model, glm::vec3(-0.25734f, -0.70411f, 0.066808f));
-		model = glm::rotate(model, glm::radians(rotPierna), glm::vec3(1.0f, 0.0f, 0.0f));
-		//-0.27725, -1.0203, -0.024045
-		model = glm::translate(model, glm::vec3(-0.01991f, -0.31619f, -0.090853f)); //Centro de la pierna
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		yoPierna_L.Draw(lightingShader);
 
-		//Derecha
-		model = modelCuerpo;
-		model = glm::translate(model, glm::vec3(0.17779f,-0.68234f,0.21343f));
-		model = glm::rotate(model, glm::radians(-rotPierna), glm::vec3(1.0f, 0.0f, 0.0f));
-		//0.24268, -1.018, 0.13401 
-		model = glm::translate(model, glm::vec3(0.06489f, -0.33566f, -0.07942f)); //Centro de la pierna
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		yoPierna_R.Draw(lightingShader);
+		glm::mat4 baseJugador(1.0f);
+		baseJugador = glm::translate(baseJugador, posicionPersonaje + glm::vec3(0.0f, 1.159f, 0.0f));
+		baseJugador = glm::rotate(baseJugador, glm::radians(-camera.GetYaw() + 90.0f + 200.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+		dibujarYoshi(modelLoc, lightingShader, partes, baseJugador, rotacionBrazo, 0.0f, rotacionBrazo, rotPierna);
+
+
+		//model = glm::mat4(1);
+		//mainMovement(modelLoc, yoshis, lightingShader, model);
+		////model = glm::translate(model, glm::vec3((sin(tiempoActual * 4.0f)) * 5.0f ,2.0f,0.0f));
+		//model = glm::translate(model, glm::vec3(0.0f, 2.0f, 0.0f));
+
+
+		////Rotacion de Brazos
+		//rotacionBrazo = sin(tiempoActual * 4.0f) * 25.0f;
+		//rotCabeza = sin(tiempoActual * 4.0f) * 30.0f;
+
+		////Cuerpo de Yoshi
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//yoshiCuerpo.Draw(lightingShader);
+
+		////Cabeza de Yoshi Tienen el mismo lugar de pivote
+		//modelCuerpo = modelTemp = model;
+		//model = glm::rotate(model, glm::radians(rotCabeza), glm::vec3(0.0f, 1.0f, 0.0f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//yoshiH.Draw(lightingShader);
+
+		////Gorro
+		//// Model = translare 0,0.5,0
+		////Gorro.Draw(lightingShader);
+
+		////Brazo Izquierdo de Yoshi
+		//model = glm::translate(modelTemp, glm::vec3(-0.26443f, -0.12442f, -0.015195f));//pivote
+		//model = glm::rotate(model, glm::radians(rotacionBrazo), glm::vec3(0.0f, 1.0f, 0.0f));
+		////-0.41714f, -0.12442f, -0.052828f Centro del modelo
+		//modelTemp = model = glm::translate(model, glm::vec3(-0.15271f, 0.0f, -0.037633f));//centro
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//yoBrazo_L.Draw(lightingShader);
+
+		////Mano Izquierda de Yoshi
+		//model = glm::translate(modelTemp, glm::vec3(-0.12210f,-0.00470f,-0.037183f));
+		//model = glm::rotate(model, glm::radians(rotacionBrazo), glm::vec3(1.0f, 0.0f, 0.0f));
+		////-0.71842, -0.17623, -0.178 Centro del modelo
+		//model = glm::translate(model, glm::vec3(-0.17918f,-0.04711f,-0.087989f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//yoL_hand.Draw(lightingShader);
+
+		//model = modelCuerpo;
+
+		////Brazo Derecho de Yoshi
+		//model = glm::translate(modelCuerpo, glm::vec3(0.23581f,-0.14962f,0.11884f));//pivote
+		//model = glm::rotate(model, glm::radians(rotacionBrazo), glm::vec3(0.0f, -1.0f, 0.0f));
+		////0.36386f, -0.13042f,0.17549f Centro del modelo
+		//modelTemp = model = glm::translate(model, glm::vec3(0.12805f,0.01920f,0.05665f));//centro
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//yoBrazo_R.Draw(lightingShader);
+
+		////Mano Derecha de Yoshi
+		//model = glm::translate(modelTemp, glm::vec3(0.13382f, 0.00130f, 0.05046f)); //Pivote de la mano
+		//model = glm::rotate(model, glm::radians(rotacionBrazo), glm::vec3(1.0f, 0.0f, 0.0f));
+		////0.22834f, -0.06276f, 0.02576f
+		//model = glm::translate(model, glm::vec3(0.22834f, -0.06276f, 0.02576f)); //Centro de la mano
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//yoD_hand.Draw(lightingShader);
+
+		//model = modelCuerpo;
+
+		//rotPierna = rotacionBrazo * 3.0f;
+		////Piernas de Yoshi
+		////Izquierda
+		//model = glm::translate(model, glm::vec3(-0.25734f, -0.70411f, 0.066808f));
+		//model = glm::rotate(model, glm::radians(rotPierna), glm::vec3(1.0f, 0.0f, 0.0f));
+		////-0.27725, -1.0203, -0.024045
+		//model = glm::translate(model, glm::vec3(-0.01991f, -0.31619f, -0.090853f)); //Centro de la pierna
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//yoPierna_L.Draw(lightingShader);
+
+		////Derecha
+		//model = modelCuerpo;
+		//model = glm::translate(model, glm::vec3(0.17779f,-0.68234f,0.21343f));
+		//model = glm::rotate(model, glm::radians(-rotPierna), glm::vec3(1.0f, 0.0f, 0.0f));
+		////0.24268, -1.018, 0.13401 
+		//model = glm::translate(model, glm::vec3(0.06489f, -0.33566f, -0.07942f)); //Centro de la pierna
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//yoPierna_R.Draw(lightingShader);
 
 		if (lanzar) {
 
+		}
+		if (spotOn) //Animacion de luz spotlight-----------------------------------------
+		{
+			beamShader.Use();
+			glUniformMatrix4fv(glGetUniformLocation(beamShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+			glUniformMatrix4fv(glGetUniformLocation(beamShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE);   // suma de luz
+			glDepthMask(GL_FALSE);               // no tapa lo que está detrás
+
+			glBindVertexArray(coneVAO);
+			for (int i = 0; i < 3; i++)
+			{
+				// girar el cono (que apunta a -Y) hacia dirsHaz[i]
+				glm::vec3 eje = glm::cross(glm::vec3(0, -1, 0), dirsHaz[i]);
+				GLfloat ang = acos(glm::clamp(glm::dot(glm::vec3(0, -1, 0), dirsHaz[i]), -1.0f, 1.0f));
+
+				GLfloat radio = largoHaz[i] * tan(glm::radians(fiesta.aperturaHaz));
+
+				glm::mat4 m(1.0f);
+				m = glm::translate(m, fiesta.postes[i]);
+				if (glm::length(eje) > 0.0001f)
+					m = glm::rotate(m, ang, glm::normalize(eje));
+				m = glm::scale(m, glm::vec3(radio, largoHaz[i], radio));
+
+
+				glUniformMatrix4fv(glGetUniformLocation(beamShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(m));
+				glUniform3f(glGetUniformLocation(beamShader.Program, "beamColor"),
+					fiesta.colores[i].x, fiesta.colores[i].y, fiesta.colores[i].z);
+				glUniform1f(glGetUniformLocation(beamShader.Program, "opacidad"), fiesta.opacidadHaz);
+				glDrawArrays(GL_TRIANGLES, 0, SEG * 3);
+
+			}
+			glBindVertexArray(0);
+
+			glDepthMask(GL_TRUE);
+			glDisable(GL_BLEND);
 		}
 
 		//Huesitos-----------------------------------------------------------------------
@@ -835,9 +1000,6 @@ int main()
 		}
 		glBindVertexArray(0);
 
-
-		
-
 		// Swap the screen buffers
 		glfwSwapBuffers(window);
 	}
@@ -979,16 +1141,7 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode
 	// Encender y apagar luz con SPACE---------------------------------------------------
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
 	{
-		active = !active;
-
-		if (active)
-		{
-			Light1 = glm::vec3(1.0f, 1.0f, 0.0f);
-		}
-		else
-		{
-			Light1 = glm::vec3(0.0f);
-		}
+		estadoLuces = (estadoLuces + 1) % 4;
 	}
 	//Cambiar de modo de camara con C----------------------------------------------------
 	if (keys[GLFW_KEY_C] && action == GLFW_PRESS)
@@ -1001,7 +1154,20 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode
 				modoC = 0;
 			}	
 	}
-	//Zonas
+	//Accionar el publico----------------------------------------------------------------
+	if (key == GLFW_KEY_P && action == GLFW_PRESS)
+	{
+		publico.alternar();
+	}
+	//Ajuste de Corredores---------------------------------------------------------------
+	if (key == GLFW_KEY_TAB && action == GLFW_PRESS)
+		ajuste = (ajuste == &corredoresA) ? &corredoresB : &corredoresA;
+	//Imprime centro corredores----------------------------------------------------------
+	if (key == GLFW_KEY_F && action == GLFW_PRESS)
+		std::cout << "centro: " << ajuste->centro.x << ", " << ajuste->centro.y << ", "
+		<< ajuste->centro.z << std::endl;
+
+	//Zonas------------------------------------------------------------------------------
 	if (keys[GLFW_KEY_ENTER] && action == GLFW_PRESS)
 	{
 		//Zona Para Lanzar
