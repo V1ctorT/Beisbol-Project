@@ -42,9 +42,17 @@
     <None Include="Shader\modelLoading.vs">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="beam.vs" />
+    <None Include="beam.frag" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Publico.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Corredores.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
