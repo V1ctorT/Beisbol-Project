@@ -180,6 +180,7 @@ GLfloat rotacionBrazo = 0.0f;
 GLfloat rotCabeza = 0.0f;
 
 glm::vec3 posicionHuesitos(15.547f,0.47702f,-16.07f);
+glm::vec3 posicionToad(3.0f, 0.43065f, -3.0f);
 
 glm::vec3 Light1 = glm::vec3(0);
 
@@ -264,7 +265,7 @@ int main()
 	//Carga de Shaders ------------------------------------------------------------------
 	Shader lightingShader("Shader/lighting.vs", "Shader/lighting.frag");
 	Shader lampShader("Shader/lamp.vs", "Shader/lamp.frag");
-	
+
 	Model Dog((char*)"ModelsEjemplos/RedDog.obj");
 	Model Piso((char*)"ModelsEjemplos/piso.obj");
 
@@ -296,7 +297,7 @@ int main()
 	//Yooshi.ManoDer = Model((char*)"Modelos/YoshiOBJ/yoshi_Partes/YoD_Hand.obj");
 	//Yooshi.PiernaIzq = Model((char*)"Modelos/YoshiOBJ/yoshi_Partes/Y_LegI.obj");
 	//Yooshi.PiernaDer = Model((char*)"Modelos/YoshiOBJ/yoshi_Partes/YoLegDer.obj");
-
+	//Yoshi------------------------------------------------------------------------------
 	Model yoshiH((char*)"Modelos/YoshiOBJ/yoshi_Partes/YCabeza.obj");
 	Model yoshiCuerpo((char*)"Modelos/YoshiOBJ/yoshi_Partes/YCuerpo.obj");
 	Model yoL_hand((char*)"Modelos/YoshiOBJ/yoshi_Partes/YoL_Hand.obj");
@@ -305,7 +306,7 @@ int main()
 	Model yoD_hand((char*)"Modelos/YoshiOBJ/yoshi_Partes/YoD_Hand.obj");
 	Model yoPierna_L((char*)"Modelos/YoshiOBJ/yoshi_Partes/Y_LegI.obj");
 	Model yoPierna_R((char*)"Modelos/YoshiOBJ/yoshi_Partes/YoLegDer.obj");
-
+	//Huesitos---------------------------------------------------------------------------
 	Model hCabeza((char*)"Modelos/YoshiOBJ/huesitos_Partes/HCabeza.obj");
 	Model hCuerpo((char*)"Modelos/YoshiOBJ/huesitos_Partes/HCuerpo.obj");
 	Model hManoD((char*)"Modelos/YoshiOBJ/huesitos_Partes/HManoD.obj");
@@ -314,6 +315,13 @@ int main()
 	Model hManoI((char*)"Modelos/YoshiOBJ/huesitos_Partes/HManoI.obj");
 	Model hPataI((char*)"Modelos/YoshiOBJ/huesitos_Partes/HPataI.obj");
 	Model hPataD((char*)"Modelos/YoshiOBJ/huesitos_Partes/HPataD.obj");
+	//Toad-------------------------------------------------------------------------------
+	Model tBody((char*)"Modelos/Publico/Toad/Toad_Body.obj");
+	Model tCabeza((char*)"Modelos/Publico/Toad/Toad_Head.obj");
+	Model tManoD((char*)"Modelos/Publico/Toad/Toad_BArm.obj");
+	Model tManoI((char*)"Modelos/Publico/Toad/Toad_LArm.obj");
+	Model tPataD((char*)"Modelos/Publico/Toad/Toad_DLeg.obj");
+	Model tPataI((char*)"Modelos/Publico/Toad/Toad_ILeg.obj");
 
 
 	// First, set the container's VAO (and VBO)
@@ -335,12 +343,88 @@ int main()
 	glUniform1i(glGetUniformLocation(lightingShader.Program, "Material.difuse"), 0);
 	glUniform1i(glGetUniformLocation(lightingShader.Program, "Material.specular"), 1);
 
-
-
 	//Intervalos de Tiempo
 	GLfloat tiempoAnterior = glfwGetTime();
 	GLfloat intervalo = 0.7f;
-	
+
+	//Proyeccion para la interfaz--------------------------------------------------------
+	glm::mat4 projectionUI = glm::ortho(
+		0.0f, 1920.0f,
+		0.0f, 1080.0f
+	);
+	//Posiciones UVs---------------------------------------------------------------------
+	float verticesUI[] = {
+			// Posiciones (X, Y, Z)   // Coordenadas UV (S, T)
+			0.0f, 1.0f, 0.0f,         0.0f, 1.0f, // Superior izquierda
+			1.0f, 1.0f, 0.0f,         1.0f, 1.0f, // Superior derecha
+			1.0f, 0.0f, 0.0f,         1.0f, 0.0f, // Inferior derecha
+			0.0f, 0.0f, 0.0f,         0.0f, 0.0f  // Inferior izquierda
+	};
+
+	GLuint indicesUI[] = {
+		0, 1, 3,
+		1, 2, 3
+	};
+	//Atributos de imagen----------------------------------------------------------------
+	GLuint VBO_UI, VAO_UI, EBO_UI;
+	glGenVertexArrays(1, &VAO_UI);
+	glGenBuffers(1, &VBO_UI);
+	glGenBuffers(1, &EBO_UI);
+
+	glBindVertexArray(VAO_UI);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_UI);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(verticesUI), verticesUI, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_UI);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesUI), indicesUI, GL_STATIC_DRAW);
+
+	// Posición
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	// Color
+	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,
+	//	8 * sizeof(float), (void*)(3 * sizeof(float)));
+	//glEnableVertexAttribArray(1);
+
+	// Coordenadas de textura
+	glVertexAttribPointer(1,2, GL_FLOAT, GL_FALSE,
+		5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+	glBindVertexArray(0);
+
+	//Carga de Imagen -------------------------------------------------------------------
+		// Load textures
+	GLuint texture1;
+	glGenTextures(1, &texture1);
+	glBindTexture(GL_TEXTURE_2D, texture1);
+	int textureWidth, textureHeight, nrChannels;
+	stbi_set_flip_vertically_on_load(true);
+	unsigned char* image;
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	float borderColor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	// Diffuse map
+	image = stbi_load("Interfaz/Interfaz.png", &textureWidth, &textureHeight, &nrChannels, 0);
+	glBindTexture(GL_TEXTURE_2D, texture1);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	if (image)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+	stbi_image_free(image);
+
+
 	// Game loop-------------------------------------------------------------------------
 	while (!glfwWindowShouldClose(window))
 	{
@@ -611,7 +695,7 @@ int main()
 
 		}
 
-		//Huesitos
+		//Huesitos-----------------------------------------------------------------------
 		model = glm::mat4(1);
 		model = glm::translate(model, posicionHuesitos); //Posicion inicial
 
@@ -684,15 +768,45 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		hPataD.Draw(lightingShader);
 
+		//Toad Referee-------------------------------------------------------------------
+		model = glm::mat4(1);
+		modelCuerpo = model = translate(model, posicionToad);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		tBody.Draw(lightingShader);
 
+		//Cabeza
+		model = translate(modelCuerpo, glm::vec3(0.0f,0.5323f,0.0f));
+		model = rotate(model, glm::radians(rotCabeza), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		tCabeza.Draw(lightingShader);
 
+		//Patas
+		//Derecha
+		model = translate(modelCuerpo, glm::vec3(-0.23112f,0.18446f,0.094799f));
+		model = rotate(model, glm::radians(rotPierna), glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		tPataD.Draw(lightingShader);
+		//Izquierda
+		model = translate(modelCuerpo, glm::vec3(0.23112f, 0.18446f, -0.094799f));
+		model = rotate(model, glm::radians(rotPierna), glm::vec3(-1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		tPataI.Draw(lightingShader);
+
+		//Brazos
+		//Derecho
+		model = translate(modelCuerpo, glm::vec3(-0.16343f, 0.46262f, 0.0f));
+		model = rotate(model, glm::radians(rotacionBrazo), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		tManoD.Draw(lightingShader);
+		//Izquierda
+		model = translate(modelCuerpo, glm::vec3(0.16343f, 0.46262f, 0.0f));
+		model = rotate(model, glm::radians(rotacionBrazo), glm::vec3(0.0f, -1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		tManoI.Draw(lightingShader);
 
 		glBindVertexArray(0);
 		//glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
 		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		//glm::mat4 projectionUI = glm::ortho();
-
 		//glDisable(GL_BLEND);  //Desactiva el canal alfa 
 
 		// Also draw the lamp object, again binding the appropriate shader
@@ -722,12 +836,17 @@ int main()
 		glBindVertexArray(0);
 
 
+		
 
 		// Swap the screen buffers
 		glfwSwapBuffers(window);
 	}
 
-
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO_UI);
+	glDeleteVertexArrays(1, &VAO_UI);
+	glDeleteBuffers(1, &VBO_UI);
 	// Terminate GLFW, clearing any resources allocated by GLFW.
 	glfwTerminate();
 
