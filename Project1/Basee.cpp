@@ -38,7 +38,7 @@ Creado por:
 #include "Shader.h"
 #include "Camera.h"
 #include "Model.h"
-//Animaciones de publico y corredores
+//Animaciones de publico y corredores----------------------------------------------------
 #include "Publico.h"
 #include "Corredores.h"
 Publico publico;
@@ -245,7 +245,7 @@ struct modeloPartes
 //void dibujarPublico();
 
 //Posiciones Publico
-glm::vec3 publico[] = {
+glm::vec3 publicos[] = {
 	glm::vec3(0.0f, 0.0f, 0.0f)
 };
 
@@ -711,7 +711,12 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		estadio.Draw(lightingShader);
 
-		
+		publico.actualizar(deltaTime);
+		publico.dibujar(modelLoc, lightingShader, camera.GetPosition(), camera.GetFront(), tiempoActual);
+
+		corredoresA.dibujar(modelLoc, lightingShader, tiempoActual);
+		corredoresB.dibujar(modelLoc, lightingShader, tiempoActual);
+
 		/*
 		Si gorro = 1
 			Yoshi Gorra de kiko
@@ -821,44 +826,7 @@ int main()
 		if (lanzar) {
 
 		}
-		if (spotOn) //Animacion de luz spotlight-----------------------------------------
-		{
-			beamShader.Use();
-			glUniformMatrix4fv(glGetUniformLocation(beamShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
-			glUniformMatrix4fv(glGetUniformLocation(beamShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE);   // suma de luz
-			glDepthMask(GL_FALSE);               // no tapa lo que está detrás
-
-			glBindVertexArray(coneVAO);
-			for (int i = 0; i < 3; i++)
-			{
-				// girar el cono (que apunta a -Y) hacia dirsHaz[i]
-				glm::vec3 eje = glm::cross(glm::vec3(0, -1, 0), dirsHaz[i]);
-				GLfloat ang = acos(glm::clamp(glm::dot(glm::vec3(0, -1, 0), dirsHaz[i]), -1.0f, 1.0f));
-
-				GLfloat radio = largoHaz[i] * tan(glm::radians(fiesta.aperturaHaz));
-
-				glm::mat4 m(1.0f);
-				m = glm::translate(m, fiesta.postes[i]);
-				if (glm::length(eje) > 0.0001f)
-					m = glm::rotate(m, ang, glm::normalize(eje));
-				m = glm::scale(m, glm::vec3(radio, largoHaz[i], radio));
-
-
-				glUniformMatrix4fv(glGetUniformLocation(beamShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(m));
-				glUniform3f(glGetUniformLocation(beamShader.Program, "beamColor"),
-					fiesta.colores[i].x, fiesta.colores[i].y, fiesta.colores[i].z);
-				glUniform1f(glGetUniformLocation(beamShader.Program, "opacidad"), fiesta.opacidadHaz);
-				glDrawArrays(GL_TRIANGLES, 0, SEG * 3);
-
-			}
-			glBindVertexArray(0);
-
-			glDepthMask(GL_TRUE);
-			glDisable(GL_BLEND);
-		}
+		
 
 		//Huesitos-----------------------------------------------------------------------
 		model = glm::mat4(1);
@@ -999,6 +967,45 @@ int main()
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 		glBindVertexArray(0);
+
+		if (spotOn) //Animacion de luz spotlight-----------------------------------------
+		{
+			beamShader.Use();
+			glUniformMatrix4fv(glGetUniformLocation(beamShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+			glUniformMatrix4fv(glGetUniformLocation(beamShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE);   // suma de luz
+			glDepthMask(GL_FALSE);               // no tapa lo que está detrás
+
+			glBindVertexArray(coneVAO);
+			for (int i = 0; i < 3; i++)
+			{
+				// girar el cono (que apunta a -Y) hacia dirsHaz[i]
+				glm::vec3 eje = glm::cross(glm::vec3(0, -1, 0), dirsHaz[i]);
+				GLfloat ang = acos(glm::clamp(glm::dot(glm::vec3(0, -1, 0), dirsHaz[i]), -1.0f, 1.0f));
+
+				GLfloat radio = largoHaz[i] * tan(glm::radians(fiesta.aperturaHaz));
+
+				glm::mat4 m(1.0f);
+				m = glm::translate(m, fiesta.postes[i]);
+				if (glm::length(eje) > 0.0001f)
+					m = glm::rotate(m, ang, glm::normalize(eje));
+				m = glm::scale(m, glm::vec3(radio, largoHaz[i], radio));
+
+
+				glUniformMatrix4fv(glGetUniformLocation(beamShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(m));
+				glUniform3f(glGetUniformLocation(beamShader.Program, "beamColor"),
+					fiesta.colores[i].x, fiesta.colores[i].y, fiesta.colores[i].z);
+				glUniform1f(glGetUniformLocation(beamShader.Program, "opacidad"), fiesta.opacidadHaz);
+				glDrawArrays(GL_TRIANGLES, 0, SEG * 3);
+
+			}
+			glBindVertexArray(0);
+
+			glDepthMask(GL_TRUE);
+			glDisable(GL_BLEND);
+		}
 
 		// Swap the screen buffers
 		glfwSwapBuffers(window);
