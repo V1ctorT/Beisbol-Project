@@ -42,6 +42,8 @@
     <None Include="Shader\modelLoading.vs">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="beam.vs" />
+    <None Include="beam.frag" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">

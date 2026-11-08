@@ -110,7 +110,6 @@ public:
     }
 
     void alternar() { aplaudiendo = !aplaudiendo; }
-    void setAplaudiendo(bool v) { aplaudiendo = v; }
 
     void actualizar(GLfloat dt)
     {

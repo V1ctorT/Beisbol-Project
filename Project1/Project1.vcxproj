@@ -151,6 +151,8 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="beam.frag" />
+    <None Include="beam.vs" />
     <None Include="Shader\core.frag" />
     <None Include="Shader\core.vs" />
     <None Include="Shader\lamp.frag" />
