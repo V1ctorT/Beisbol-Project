@@ -162,6 +162,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Corredores.h" />
+    <ClInclude Include="Publico.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Basee.cpp" />

@@ -37,6 +37,11 @@ Creado por:
 #include "Camera.h"
 #include "Model.h"
 
+#include "Publico.h"
+#include "Corredores.h"
+Publico publico;
+Corredores corredoresA, corredoresB;
+Corredores* ajuste = &corredoresA;   // el que se mueve con el teclado
 
 // Function prototypes-------------------------------------------------------------------
 //Entradas del teclado y mouse
@@ -278,6 +283,68 @@ int main()
 	Model yoPierna_L((char*)"Modelos/YoshiOBJ/yoshi_Partes/Y_LegI.obj");
 	Model yoPierna_R((char*)"Modelos/YoshiOBJ/yoshi_Partes/YoLegDer.obj");
 
+	PartesYoshi partes = { &yoshiCuerpo, &yoshiH, &yoBrazo_L, &yoL_hand,
+					   &yoBrazo_R, &yoD_hand, &yoPierna_L, &yoPierna_R };
+
+	const GLfloat SUELO = 2.911f;          // piso 1 (usa 4.83f para el piso 2)
+	const GLfloat YC = 1.0f;           // altura del Yoshi corriendo sobre el piso 1
+	glm::vec3 centroCampo(23.0f, SUELO, -17.0f);
+	GLfloat inset = 3.0f;
+
+	publico.init(partes);
+	
+	// ---- BLOQUE 1 ----
+	publico.bloque4(glm::vec3(36.2f, 2.911f, 31.77f),
+		glm::vec3(55.0f, 2.911f, 27.0f),
+		25.0f);
+	// ---- BLOQUE 2 ----
+	publico.bloque4(glm::vec3(58.739f, 2.911f, 25.083f),
+		glm::vec3(75.16f, 2.911f, 12.428f),
+		35.0f);
+	// ---- BLOQUE 3 ----
+	publico.bloque4(glm::vec3(85.908f, 2.911f, -9.8168f),
+		glm::vec3(90.346f, 2.911f, -28.475f),
+		80.0f);
+	// ---- BLOQUE 4 ----
+	publico.bloque4(glm::vec3(90.3434f, 2.911f, -32.85f),
+		glm::vec3(84.047f, 2.911f, -57.923f),
+		100.0f);
+	// ---- BLOQUE 5 ----
+	publico.bloque4(glm::vec3(42.786f, 2.911f, -89.643f),
+		glm::vec3(2.7034f, 2.911f, -82.71f),
+		200.0f);
+	// ---- BLOQUE 6 ----
+	publico.bloque4(glm::vec3(-4.93f, 2.911f, -78.154f),
+		glm::vec3(-29.234f, 2.911f, -45.706f),
+		230.0f);
+	// ---- BLOQUE 7 ----
+	publico.bloque4(glm::vec3(-32.327f, 2.911f, -9.921f),
+		glm::vec3(-21.9118f, 2.911f, 19.766f),
+		300.0f);
+	// ---- BLOQUE 8 ----
+	publico.bloque4(glm::vec3(-18.508f, 2.911f, 22.85f),
+		glm::vec3(10.161f, 2.911f, 33.105f),
+		0.0f);
+
+	// Banca 1 (frente a z ≈ 30, recorrido a lo largo de X)
+	corredoresA.init(partes);
+	corredoresA.centro = glm::vec3(22.5f, YC, 19.0f);
+	corredoresA.rotPista = 0.0f;
+	corredoresA.radioX = 8.0f;
+	corredoresA.radioZ = 1.5f;
+	corredoresA.exponente = 4.0f;          // 2 = elipse, 4-8 = más cuadrado
+	corredoresA.agregar(3);
+
+	// Banca 2 (frente a x ≈ -29.3, recorrido a lo largo de Z)
+	corredoresB.init(partes);
+	corredoresB.centro = glm::vec3(-18.0f, YC, -22.5f);
+	corredoresB.rotPista = 90.0f;
+	corredoresB.radioX = 8.0f;
+	corredoresB.radioZ = 1.5f;
+	corredoresB.exponente = 4.0f;
+	corredoresB.agregar(3);
+
+
 	// First, set the container's VAO (and VBO)
 	GLuint VBO, VAO;
 	glGenVertexArrays(1, &VAO);
@@ -395,10 +462,7 @@ int main()
 
 
 		// Point light 1
-	    glm::vec3 lightColor;
-		lightColor.x= abs(sin(glfwGetTime() *Light1.x));
-		lightColor.y= abs(sin(glfwGetTime() *Light1.y));
-		lightColor.z= sin(glfwGetTime() *Light1.z);
+		glm::vec3 lightColor = Light1;   // fijo: encendido o apagado, sin variar con el tiempo
 
 		
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].position"), pointLightPositions[0].x, pointLightPositions[0].y, pointLightPositions[0].z);
@@ -479,8 +543,12 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		estadio.Draw(lightingShader);
 
-		
 
+		publico.actualizar(deltaTime);
+		publico.dibujar(modelLoc, lightingShader, camera.GetPosition(), camera.GetFront(), tiempoActual);
+
+		corredoresA.dibujar(modelLoc, lightingShader, tiempoActual);
+		corredoresB.dibujar(modelLoc, lightingShader, tiempoActual);
 
 		//Yoshi, personaje principal-----------------------------------------------------------
 		model = glm::mat4(1);
@@ -705,6 +773,14 @@ void DoMovement()
 	{
 
 	}
+
+	GLfloat vMov = 5.0f * deltaTime;
+	if (keys[GLFW_KEY_J]) ajuste->centro.x -= vMov;
+	if (keys[GLFW_KEY_L]) ajuste->centro.x += vMov;
+	if (keys[GLFW_KEY_I]) ajuste->centro.z -= vMov;
+	if (keys[GLFW_KEY_K]) ajuste->centro.z += vMov;
+	if (keys[GLFW_KEY_U]) ajuste->centro.y += vMov;
+	if (keys[GLFW_KEY_O]) ajuste->centro.y -= vMov;
 	
 }
 
@@ -753,6 +829,19 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode
 				modoC = 0;
 			}	
 	}
+
+	if (key == GLFW_KEY_P && action == GLFW_PRESS)
+	{
+		publico.alternar();
+	}
+
+	if (key == GLFW_KEY_TAB && action == GLFW_PRESS)
+		ajuste = (ajuste == &corredoresA) ? &corredoresB : &corredoresA;
+
+	if (key == GLFW_KEY_F && action == GLFW_PRESS)
+		std::cout << "centro: " << ajuste->centro.x << ", " << ajuste->centro.y << ", "
+		<< ajuste->centro.z << std::endl;
+
 	//Zonas
 	if (keys[GLFW_KEY_ENTER] && action == GLFW_PRESS)
 	{

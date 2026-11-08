@@ -47,6 +47,12 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Publico.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Corredores.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Basee.cpp">
