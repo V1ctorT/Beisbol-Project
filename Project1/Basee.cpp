@@ -65,7 +65,7 @@ GLfloat cameraHeight = 2.0f;
 void mainMovement(GLint modelLoc, Model& modelo, Shader& shader, glm::mat4 model);
 
 // Window dimensions---------------------------------------------------------------------
-const GLuint WIDTH = 1080, HEIGHT = 720;
+const GLuint WIDTH = 1920, HEIGHT = 1080;
 int SCREEN_WIDTH = WIDTH, SCREEN_HEIGHT = HEIGHT;
 
 // Camera--------------------------------------------------------------------------------
@@ -176,6 +176,10 @@ float vertices[] = {
 //Posicion del Personaje Principal------------------------------------------------------
 glm::vec3 posicionPersonaje(0.0f, 0.5f, 0.0f);
 GLfloat rotPierna = 0.0f;
+GLfloat rotacionBrazo = 0.0f;
+GLfloat rotCabeza = 0.0f;
+
+glm::vec3 posicionHuesitos(15.547f,0.47702f,-16.07f);
 
 glm::vec3 Light1 = glm::vec3(0);
 
@@ -197,6 +201,15 @@ struct modeloPartes
 	Model ManoIzq;
 	Model PiernaIzq;
 	Model PiernaDer;
+};
+
+//Publico
+//void publicodf(GLint modelLoc, Model& modelo, Shader& shader, glm::mat4 model);
+//void dibujarPublico();
+
+//Posiciones Publico
+glm::vec3 publico[] = {
+	glm::vec3(0.0f, 0.0f, 0.0f)
 };
 
 //Main Function--------------------------------------------------------------------------
@@ -269,6 +282,21 @@ int main()
 	Model yoshis((char*)"Modelos/YoshiOBJ/yoshi.obj");
 	Model huesittos2((char*)"Modelos/YoshiOBJ/Red Dry Bones/bloody_karon.obj");
 
+
+
+	//Inicializamos yoshi Structura
+	//modeloPartes Yooshi;
+
+	////Modelo Yoshi
+	//Yooshi.Cabeza = Model((char*)"Modelos/YoshiOBJ/yoshi_Partes/YCabeza.obj");
+	//Yooshi.Cuerpo = Model((char*)"Modelos/YoshiOBJ/yoshi_Partes/YCuerpo.obj");
+	//Yooshi.ManoIzq = Model((char*)"Modelos/YoshiOBJ/yoshi_Partes/YoL_Hand.obj");
+	//Yooshi.BrazoDer = Model((char*)"Modelos/YoshiOBJ/yoshi_Partes/YD_Brazo.obj");
+	//Yooshi.BrazoIzq = Model((char*)"Modelos/YoshiOBJ/yoshi_Partes/YL_Brazo.obj");
+	//Yooshi.ManoDer = Model((char*)"Modelos/YoshiOBJ/yoshi_Partes/YoD_Hand.obj");
+	//Yooshi.PiernaIzq = Model((char*)"Modelos/YoshiOBJ/yoshi_Partes/Y_LegI.obj");
+	//Yooshi.PiernaDer = Model((char*)"Modelos/YoshiOBJ/yoshi_Partes/YoLegDer.obj");
+
 	Model yoshiH((char*)"Modelos/YoshiOBJ/yoshi_Partes/YCabeza.obj");
 	Model yoshiCuerpo((char*)"Modelos/YoshiOBJ/yoshi_Partes/YCuerpo.obj");
 	Model yoL_hand((char*)"Modelos/YoshiOBJ/yoshi_Partes/YoL_Hand.obj");
@@ -277,6 +305,16 @@ int main()
 	Model yoD_hand((char*)"Modelos/YoshiOBJ/yoshi_Partes/YoD_Hand.obj");
 	Model yoPierna_L((char*)"Modelos/YoshiOBJ/yoshi_Partes/Y_LegI.obj");
 	Model yoPierna_R((char*)"Modelos/YoshiOBJ/yoshi_Partes/YoLegDer.obj");
+
+	Model hCabeza((char*)"Modelos/YoshiOBJ/huesitos_Partes/HCabeza.obj");
+	Model hCuerpo((char*)"Modelos/YoshiOBJ/huesitos_Partes/HCuerpo.obj");
+	Model hManoD((char*)"Modelos/YoshiOBJ/huesitos_Partes/HManoD.obj");
+	Model hBrazoI((char*)"Modelos/YoshiOBJ/huesitos_Partes/HBrazoI.obj");
+	Model hBrazoD((char*)"Modelos/YoshiOBJ/huesitos_Partes/HBrazoD.obj");
+	Model hManoI((char*)"Modelos/YoshiOBJ/huesitos_Partes/HManoI.obj");
+	Model hPataI((char*)"Modelos/YoshiOBJ/huesitos_Partes/HPataI.obj");
+	Model hPataD((char*)"Modelos/YoshiOBJ/huesitos_Partes/HPataD.obj");
+
 
 	// First, set the container's VAO (and VBO)
 	GLuint VBO, VAO;
@@ -369,9 +407,9 @@ int main()
 
 		// Luz ambiental
 		glm::vec3 ambient[] = {
-			glm::vec3(0.08f, 0.09f, 0.15f),
-			glm::vec3(0.20f, 0.13f, 0.08f),
-			glm::vec3(0.30f, 0.30f, 0.30f)
+			glm::vec3(0.08f, 0.09f, 0.15f), //Noche
+			glm::vec3(0.20f, 0.13f, 0.08f), //Tarde 
+			glm::vec3(0.30f, 0.30f, 0.30f) //Dia
 		};
 
 		// Luz difusa
@@ -480,7 +518,14 @@ int main()
 		estadio.Draw(lightingShader);
 
 		
-
+		/*
+		Si gorro = 1
+			Yoshi Gorra de kiko
+			Huesitos Gorra azul don ramon
+		sino 
+			Yoshi Gorra azul don ramon
+			Huesitos Gorra de kiko
+		*/
 
 		//Yoshi, personaje principal-----------------------------------------------------------
 		model = glm::mat4(1);
@@ -490,15 +535,22 @@ int main()
 
 
 		//Rotacion de Brazos
-		GLfloat rotacionBrazo = sin(tiempoActual * 4.0f) * 25.0f;
+		rotacionBrazo = sin(tiempoActual * 4.0f) * 25.0f;
+		rotCabeza = sin(tiempoActual * 4.0f) * 30.0f;
+
 		//Cuerpo de Yoshi
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		yoshiCuerpo.Draw(lightingShader);
 
 		//Cabeza de Yoshi Tienen el mismo lugar de pivote
 		modelCuerpo = modelTemp = model;
+		model = glm::rotate(model, glm::radians(rotCabeza), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		yoshiH.Draw(lightingShader);
+
+		//Gorro
+		// Model = translare 0,0.5,0
+		//Gorro.Draw(lightingShader);
 
 		//Brazo Izquierdo de Yoshi
 		model = glm::translate(modelTemp, glm::vec3(-0.26443f, -0.12442f, -0.015195f));//pivote
@@ -559,11 +611,88 @@ int main()
 
 		}
 
+		//Huesitos
+		model = glm::mat4(1);
+		model = glm::translate(model, posicionHuesitos); //Posicion inicial
+
+		//Cuerpo
+		//0.0f,0.68843f,0.0f
+		modelCuerpo = model = glm::translate(model, glm::vec3(0.0f,0.68843f,0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		hCuerpo.Draw(lightingShader);
+
+		//Cabeza
+		model = glm::translate(modelCuerpo, glm::vec3(0.031647f,0.39327f,0.19935));//Pivote
+		model = glm::rotate(model, glm::radians(rotCabeza), glm::vec3(0.0f,1.0f,0.0f));
+		//Centro 0.042193,1.432,0.082021
+		model = glm::translate(model,glm::vec3(0.0f, 0.35028f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		hCabeza.Draw(lightingShader);
+
+		//Brazo Derecho
+		model = glm::mat4(1);
+		model = translate(modelCuerpo, glm::vec3(-0.14468f,0.22898f,0.16496f));//Pivote
+		model = glm::rotate(model, glm::radians(rotacionBrazo), glm::vec3(0.0f, 1.0f, 0.0f));
+		//Centro -0.32961,0.91783,-0.063774
+		modelTemp = model = glm::translate(model, glm::vec3(-0.17352f,0.000422f,0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		hBrazoD.Draw(lightingShader);
+
+		//Mano Derecha
+		model = translate(modelTemp, glm::vec3(0.0f, 0.000422f, 0.0f));//Pivote
+		model = rotate(model, glm::radians(rotacionBrazo), glm::vec3(1.0f, 1.0f, 0.0f));
+		//Centro -0.60577,0.91575,0.003662
+		model = glm::translate(model,glm::vec3(-0.27616f, -0.00208f, 0.067436f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		hManoD.Draw(lightingShader);
+
+		//Brazo Izquierdo
+		model = glm::mat4(1);
+		model = translate(modelCuerpo, glm::vec3(0.18415f, 0.22898f, 0.11287f));//Pivote
+		model = glm::rotate(model, glm::radians(rotacionBrazo), glm::vec3(0.0f, 1.0f, 0.0f));
+		//Centro 0.34683,0.17093,0.91783
+		modelTemp = model = glm::translate(model, glm::vec3(0.17352f, 0.000422f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		hBrazoI.Draw(lightingShader);
+		
+		//Mano Izquierda
+		model = translate(modelTemp, glm::vec3(0.0756f, 0.0f, 0.0f));//Pivote
+		model = rotate(model, glm::radians(rotacionBrazo), glm::vec3(1.0f, 1.0f, 0.0f));
+		//Centro 0.60577,0.91575,0.003662
+		model = glm::translate(model, glm::vec3(0.24735f, -0.010089f, -0.001561f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		hManoI.Draw(lightingShader);
+
+		//Piernas
+		//Derecha
+		model = glm::mat4(1);
+		//0.0f,0.68843f,0.0f a -0.17231,0.63268,0.043567
+		model = translate(modelCuerpo, glm::vec3(-0.17231f,-0.05575f,0.04356f));
+		model = rotate(model, glm::radians(rotPierna), glm::vec3(1.0f, 0.0f, 0.0f));
+		//Centro 0.60577,0.91575,0.003662
+		model = glm::translate(model, glm::vec3(0.0f, -0.38253f, 0.075f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		hPataD.Draw(lightingShader);
+
+		//Izquierda
+		model = glm::mat4(1);
+		//0.0f,0.68843f,0.0f a 0.17747,0.63268,-0.011843
+		model = translate(modelCuerpo, glm::vec3(0.17747f, -0.05575f, -0.011843f));
+		model = rotate(model, glm::radians(rotPierna), glm::vec3(-1.0f, 0.0f, 0.0f));
+		//Centro 0.60577,0.91575,0.003662
+		model = glm::translate(model, glm::vec3(0.0f, -0.32620f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		hPataD.Draw(lightingShader);
+
+
 
 
 		glBindVertexArray(0);
 		//glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
 		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		//glm::mat4 projectionUI = glm::ortho();
+
 		//glDisable(GL_BLEND);  //Desactiva el canal alfa 
 
 		// Also draw the lamp object, again binding the appropriate shader
@@ -794,3 +923,19 @@ void mainMovement(GLint modelLoc, Model& modelo, Shader& shader, glm::mat4 model
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 	modelo.Draw(shader);
 }
+
+//Animaciones
+/*
+	Correr -\
+	
+	Lanzar Pelota
+
+	Recoger Pelota
+
+	Isa
+	Publico J Bandera que acciona el publico
+		Salten J
+		Aplaudan J
+
+
+*/

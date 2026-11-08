@@ -150,10 +150,10 @@ public:
 			}
 		}
 
-		if (modC == 0) {
+		if (modC == 0) { //Primera Persona
 			this->updateCameraVectors();
 		}
-		else if (modC == 1)
+		else if (modC == 1) //Tercera Persona
 		{
 			this->UpdatePivote(posic, 5.0f, 1.5f);
 		}

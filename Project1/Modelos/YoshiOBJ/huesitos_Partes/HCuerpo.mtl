@@ -1,0 +1,32 @@
+# Blender 5.2.3 LTS MTL File: 'SMestadio.blend'
+# www.blender.org
+
+newmtl mssbMtl_150
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../Blue Dry Bones/karon_2.png
+
+newmtl mssbMtl_151
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../Blue Dry Bones/karon_2.png
+
+newmtl mssbMtl_7
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd ../Blue Dry Bones/karon_3.png
