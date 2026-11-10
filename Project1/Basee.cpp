@@ -41,9 +41,15 @@ Creado por:
 //Animaciones de publico y corredores----------------------------------------------------
 #include "Publico.h"
 #include "Corredores.h"
+int estado = 0; //0 - Caminar, 1 - Bateo, 2 - Atrapar 3 - Lanzar
+//Rutinas y Utilerias
+#include "Bateo.h"
+
 Publico publico;
 Corredores corredoresA, corredoresB;
 Corredores* ajuste = &corredoresA;   // el que se mueve con el teclado
+int noCorrA = 3;
+int noCorrB = 3;
 
 // Function prototypes-------------------------------------------------------------------
 //Entradas del teclado y mouse
@@ -182,9 +188,47 @@ float vertices[] = {
 
 //Posicion del Personaje Principal------------------------------------------------------
 glm::vec3 posicionPersonaje(0.0f, 0.5f, 0.0f);
+int corredor = -1;
+#include "Limites.h"
 GLfloat rotPierna = 0.0f;
 GLfloat rotacionBrazo = 0.0f;
 GLfloat rotCabeza = 0.0f;
+
+//Valores de rotaciones y posicion sin incrementos
+struct valoresYoshi {
+	float rotHead;
+	float rotBody;
+
+	float rotArmD_Y;
+	float rotArmD_Z;
+
+	float rotArmI_Y;
+	float rotArmI_Z;
+
+	float rotLegD;
+	float rotLegI;
+
+	float rotHandD;
+	float rotHandI;
+};
+int playIndex = 0; //KeyFrame Actual
+float tiempoAnimacion = 0.0f;
+bool play = false; //Indica si esta ocurriendo la animacion
+int pasoActual = 0; //Conteo de los pasos de interpolacioon
+double tiempoInicio = 0.0f; //Momento de inicio de animacion
+double tiempoUltimoPaso = 0.0f; //Momento del ultimo keyframe
+bool teclaFAnterior = false; //Para accionar la animacion
+
+//Variable global------------------------------------------------------------------------
+valoresYoshi rotsYoshi = 
+{
+	0.0f,0.0f,
+	0.0f,0.0f,
+	0.0f,0.0f,
+	0.0f,0.0f,
+	0.0f,0.0f
+};
+#include "KeyframeYoshis.h"
 //Caminar
 GLfloat fasePaso = 0.0f;          // avanza solo mientras caminas
 GLfloat intensidadCorrer = 0.0f;  // 0 = quieto, 1 = corriendo (transición suave)
@@ -198,6 +242,9 @@ glm::vec3 Light1 = glm::vec3(0);
 int estadoLuces = 0;   // 0 apagado, 1 lámparas, 2 spotlights, 3 luz general
 int ambiente = 2;
 glm::vec3 colorLamparas(1.0f, 1.0f, 0.0f);
+
+//Bate Actual
+int noBate = -1;
 
 struct ConfigFiesta
 {
@@ -227,18 +274,6 @@ struct ConfigFiesta
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
 GLfloat lastFrame = 0.0f;  	// Time of last frame
 
-//Estructura Basica de Modelos
-struct modeloPartes
-{
-	Model Cabeza;
-	Model Cuerpo;
-	Model BrazoDer;
-	Model BrazoIzq;
-	Model ManoDer;
-	Model ManoIzq;
-	Model PiernaIzq;
-	Model PiernaDer;
-};
 
 //Publico
 //void publicodf(GLint modelLoc, Model& modelo, Shader& shader, glm::mat4 model);
@@ -336,6 +371,8 @@ int main()
 	Model hManoI((char*)"Modelos/YoshiOBJ/huesitos_Partes/HManoI.obj");
 	Model hPataI((char*)"Modelos/YoshiOBJ/huesitos_Partes/HPataI.obj");
 	Model hPataD((char*)"Modelos/YoshiOBJ/huesitos_Partes/HPataD.obj");
+	PartesYoshi huesitos = {&hCuerpo,&hCabeza,&hBrazoI,&hManoI,&hBrazoD,
+		&hManoD,&hPataI,& hPataD};
 	//Toad-------------------------------------------------------------------------------
 	Model tBody((char*)"Modelos/Publico/Toad/Toad_Body.obj");
 	Model tCabeza((char*)"Modelos/Publico/Toad/Toad_Head.obj");
@@ -343,6 +380,14 @@ int main()
 	Model tManoI((char*)"Modelos/Publico/Toad/Toad_LArm.obj");
 	Model tPataD((char*)"Modelos/Publico/Toad/Toad_DLeg.obj");
 	Model tPataI((char*)"Modelos/Publico/Toad/Toad_ILeg.obj");
+	
+	//Modelos de ambientacion y utileria-------------------------------------------------
+	//Bates
+	Model bateStel((char*)"Modelos/Bates/StellesBat/bate.obj");
+	Model bateAl((char*)"Modelos/Bates/Aluminio/bateAl.obj");
+	Model bateMadera((char*)"Modelos/Bates/Madera/MaderaBate.obj");
+	Model bateHmmm((char*)"Modelos/Bates/bate/bateHmm.obj");
+	Bates bates = { &bateStel ,&bateAl ,&bateMadera ,&bateHmmm };
 
 	//Bloques de Publico-----------------------------------------------------------------
 	 // piso 1 (4.83f para el piso 2)
@@ -381,16 +426,17 @@ int main()
 	corredoresA.radioX = 8.0f;
 	corredoresA.radioZ = 1.5f;
 	corredoresA.exponente = 4.0f;          // 2 = elipse, 4-8 = más cuadrado
-	corredoresA.agregar(3);
+	corredoresA.agregar(noCorrA);
 
 	// Banca 2 (frente a x ≈ -29.3, recorrido a lo largo de Z)
-	corredoresB.init(partes);
+	noCorrB = 3;
+	corredoresB.init(huesitos);
 	corredoresB.centro = glm::vec3(-18.0f, YC, -22.5f);
 	corredoresB.rotPista = 90.0f;
 	corredoresB.radioX = 8.0f;
 	corredoresB.radioZ = 1.5f;
 	corredoresB.exponente = 4.0f;
-	corredoresB.agregar(3);
+	corredoresB.agregar(noCorrB);
 
 	// First, set the container's VAO (and VBO)
 	GLuint VBO, VAO;
@@ -509,7 +555,7 @@ int main()
 	}
 	stbi_image_free(image);
 
-
+	bateoAqui(); //Carga la animacion
 	// Game loop-------------------------------------------------------------------------
 	while (!glfwWindowShouldClose(window))
 	{
@@ -714,8 +760,8 @@ int main()
 		publico.actualizar(deltaTime);
 		publico.dibujar(modelLoc, lightingShader, camera.GetPosition(), camera.GetFront(), tiempoActual);
 
-		corredoresA.dibujar(modelLoc, lightingShader, tiempoActual);
-		corredoresB.dibujar(modelLoc, lightingShader, tiempoActual);
+
+
 
 		/*
 		Si gorro = 1
@@ -740,8 +786,25 @@ int main()
 		glm::mat4 baseJugador(1.0f);
 		baseJugador = glm::translate(baseJugador, posicionPersonaje + glm::vec3(0.0f, 1.159f, 0.0f));
 		baseJugador = glm::rotate(baseJugador, glm::radians(-camera.GetYaw() + 90.0f + 200.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glm::mat4 modelMano(1.0f);
+		corredoresA.agregar(noCorrA);
+		corredoresB.agregar(noCorrB);
 
-		dibujarYoshi(modelLoc, lightingShader, partes, baseJugador, rotacionBrazo, 0.0f, rotacionBrazo, rotPierna);
+		corredoresA.dibujar(modelLoc, lightingShader, tiempoActual, baseJugador, 1);
+		corredoresB.dibujar(modelLoc, lightingShader, tiempoActual, baseJugador, 2);
+
+		if (!play) {
+			dibujarYoshi(modelLoc, lightingShader, partes, baseJugador, rotacionBrazo, 0.0f,
+				rotacionBrazo, rotPierna, modelMano);
+		}
+		else
+		{
+			dibujarYoshiKeyframe(modelLoc, lightingShader,partes,baseJugador,modelMano);
+			playAnimation();
+		}
+
+
+		dibujarBates(modelLoc, lightingShader, modelMano, noBate, bates);
 
 
 		//model = glm::mat4(1);
@@ -1068,51 +1131,21 @@ void DoMovement()
 	glm::vec3 derecha = glm::normalize(glm::cross(direccion, glm::vec3(0.0f, 1.0f, 0.0f)));
 	GLfloat velocity = 5.0f * deltaTime;
 
+	moverPersonaje(direccion,derecha);
+
+
 	if(keys[GLFW_KEY_R])
 	{
 		camera.ProcessKeyboard(RESET, deltaTime);
 	}
-	if (keys[GLFW_KEY_W] || keys[GLFW_KEY_UP])
-	{
-		posicionPersonaje += direccion * velocity;
-		//camera.ProcessKeyboard(FORWARD, deltaTime);
-
-	}
-
-	if (keys[GLFW_KEY_S] || keys[GLFW_KEY_DOWN])
-	{
-		posicionPersonaje -= direccion * velocity;
-		//camera.ProcessKeyboard(BACKWARD, deltaTime);
-
-
-	}
-
-	if (keys[GLFW_KEY_A] || keys[GLFW_KEY_LEFT])
-	{
-		posicionPersonaje -= derecha * velocity;
-		//camera.ProcessKeyboard(LEFT, deltaTime);
-
-
-	}
-
-	if (keys[GLFW_KEY_D] || keys[GLFW_KEY_RIGHT])
-	{
-		posicionPersonaje += derecha * velocity;
-		//camera.ProcessKeyboard(RIGHT, deltaTime);
-
-
-	}
+	
 	if (keys[GLFW_KEY_Q] || keys[GLFW_KEY_LEFT])
 	{
 		camera.ProcessKeyboard(DOWN, deltaTime);
 
 	}
 
-	if (keys[GLFW_KEY_E] || keys[GLFW_KEY_RIGHT])
-	{
-		camera.ProcessKeyboard(UP, deltaTime);
 
-	}
 	if (keys[GLFW_KEY_T] )
 	{
 
@@ -1126,7 +1159,7 @@ void DoMovement()
 }
 
 // Is called whenever a key is pressed/released via GLFW
-void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode)
+void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
 	if (GLFW_KEY_ESCAPE == key && GLFW_PRESS == action)
 	{
@@ -1156,10 +1189,11 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode
 		if (modoC == 0)
 		{
 			modoC = 1;
-		}else if (modoC == 1)
-			{
-				modoC = 0;
-			}	
+		}
+		else if (modoC == 1)
+		{
+			modoC = 0;
+		}
 	}
 	//Accionar el publico----------------------------------------------------------------
 	if (key == GLFW_KEY_P && action == GLFW_PRESS)
@@ -1170,21 +1204,68 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode
 	if (key == GLFW_KEY_TAB && action == GLFW_PRESS)
 		ajuste = (ajuste == &corredoresA) ? &corredoresB : &corredoresA;
 	//Imprime centro corredores----------------------------------------------------------
-	if (key == GLFW_KEY_F && action == GLFW_PRESS)
-		std::cout << "centro: " << ajuste->centro.x << ", " << ajuste->centro.y << ", "
-		<< ajuste->centro.z << std::endl;
+	if (key == GLFW_KEY_F)
+	{
+		if (action == GLFW_PRESS && !teclaFAnterior && !play)
+		{
+			std::cout << "centro: " << ajuste->centro.x << ", " << ajuste->centro.y << ", "
+				<< ajuste->centro.z << "Inicia Bateo" << endl;
+			estado = 1;
+			startAnimation();
+			//estado = 0;
+		}
+		if (action == GLFW_PRESS)
+			teclaFAnterior = true;
 
+		if (action == GLFW_RELEASE)
+			teclaFAnterior = false;
+	}
+	
 	//Zonas------------------------------------------------------------------------------
 	if (keys[GLFW_KEY_ENTER] && action == GLFW_PRESS)
 	{
 		//Zona Para Lanzar
-		if (posicionPersonaje.x >= 11.47f && posicionPersonaje.x <= 15.94f 
+		if (posicionPersonaje.x >= 11.47f && posicionPersonaje.x <= 15.94f
 			&& posicionPersonaje.z >= -15.758f && posicionPersonaje.z <= -11.374f)
 		{
 			lanzar = true;
 		}
+		corredor = dentroCorredores(
+			glm::vec2(posicionPersonaje.x,posicionPersonaje.z));
+		if (corredor == 1) {
+			noCorrA += 1;
+		}
+		else if (corredor == 2)
+		{
+			noCorrB += 1;
+		}
 	}
+	//Agarrar Bate-----------------------------------------------------------------------
+	if (keys[GLFW_KEY_E] && action == GLFW_PRESS)
+	{
+		//camera.ProcessKeyboard(UP, deltaTime);
+		if (noBate == -1)
+		{
+			int bateCercano = detectarBate(posicionPersonaje);
 
+			if (bateCercano != -1)
+			{
+				noBate = bateCercano;
+
+				printf("Agarraste el bate %d\n", noBate);
+			}
+		}
+		else {
+			soltarBate(noBate);
+		}
+	}
+	if (keys[GLFW_KEY_0] && action == GLFW_PRESS) 
+	{
+		estado = 0;
+		soltarBate(noBate);
+	}
+	//Animacion de Bateo
+	
 }
 
 void MouseCallback(GLFWwindow *window, double xPos, double yPos)

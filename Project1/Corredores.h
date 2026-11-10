@@ -26,7 +26,7 @@ public:
     }
 
     // Llamar con el shader de iluminación ya activo
-    void dibujar(GLint modelLoc, Shader& shader, GLfloat t)
+    void dibujar(GLint modelLoc, Shader& shader, GLfloat t, glm::mat4& base, int yh)
     {
         // perímetro aproximado (Ramanujan) para que la velocidad sea más o menos constante
         GLfloat a = radioX, b = radioZ;
@@ -50,8 +50,14 @@ public:
             m = glm::translate(m, centro + p + glm::vec3(0.0f, rebote, 0.0f));
             m = glm::rotate(m, glm::radians(rotY), glm::vec3(0.0f, 1.0f, 0.0f));
             m = glm::scale(m, glm::vec3(escala));
+            glm::mat4 modelMano(1);
+            if (yh == 1) {
+                dibujarYoshi(modelLoc, shader, partes, m, swing, 0.0f, swing, swing * 3.0f, modelMano);
+            }
+            else {
+                dibujarHuesitos(modelLoc, shader, partes, m, swing, 0.0f, swing, swing * 3.0f, modelMano);
+            }
 
-            dibujarYoshi(modelLoc, shader, partes, m, swing, 0.0f, swing, swing * 3.0f);
         }
     }
 

@@ -19,7 +19,7 @@ struct PartesYoshi {
 // swingBrazo: balanceo adelante/atrás (correr)   alzarBrazo: levantar brazos (0 = a los lados, 90 = rectos hacia arriba)
 inline void dibujarYoshi(GLint modelLoc, Shader& shader, const PartesYoshi& p, const glm::mat4& base,
     GLfloat swingBrazo, GLfloat alzarBrazo, GLfloat rotMano, GLfloat rotPierna,
-    bool simple = false)
+    glm::mat4& modelMano,bool simple = false)
 {
     const glm::mat4 modelCuerpo = base;
     glm::mat4 model = base, modelTemp;
@@ -55,7 +55,7 @@ inline void dibujarYoshi(GLint modelLoc, Shader& shader, const PartesYoshi& p, c
 
     model = glm::translate(modelTemp, glm::vec3(0.13382f, 0.00130f, 0.05046f));
     model = glm::rotate(model, glm::radians(rotMano), glm::vec3(1.0f, 0.0f, 0.0f));
-    model = glm::translate(model, glm::vec3(0.22834f, -0.06276f, 0.02576f));
+    modelMano = model = glm::translate(model, glm::vec3(0.22834f, -0.06276f, 0.02576f));
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
     p.manoR->Draw(shader);
 
@@ -71,6 +71,193 @@ inline void dibujarYoshi(GLint modelLoc, Shader& shader, const PartesYoshi& p, c
     model = glm::translate(model, glm::vec3(0.06489f, -0.33566f, -0.07942f));
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
     p.piernaR->Draw(shader);
+
+}
+inline void dibujarHuesitos(
+    GLint modelLoc,
+    Shader& shader,
+    const PartesYoshi& p,
+    glm::mat4& base,
+    GLfloat rotCabeza,
+    GLfloat rotacionBrazo,
+    GLfloat rotMano,
+    GLfloat rotPierna,
+    glm::mat4& modelMano,
+    bool simple = false)
+{
+
+    glm::mat4 modelCuerpo = base;
+    glm::mat4 model = base, modelTemp;
+
+    //// CUERPO
+    modelCuerpo = glm::rotate(
+        model,
+        glm::radians(180.0f),
+        glm::vec3(0.0f, 1.0f, 0.0f)
+    );
+
+    glUniformMatrix4fv(
+        modelLoc, 1, GL_FALSE, glm::value_ptr(modelCuerpo)
+    );
+    p.cuerpo->Draw(shader);
+
+    // CABEZA
+    model = glm::translate(
+        modelCuerpo,
+        glm::vec3(0.031647f, 0.39327f, 0.19935f)
+    );
+
+    model = glm::rotate(
+        model,
+        glm::radians(rotCabeza),
+        glm::vec3(0.0f, 1.0f, 0.0f)
+    );
+
+    model = glm::translate(
+        model,
+        glm::vec3(0.0f, 0.35028f, 0.0f)
+    );
+
+    glUniformMatrix4fv(
+        modelLoc, 1, GL_FALSE, glm::value_ptr(model)
+    );
+    p.cabeza->Draw(shader);
+
+    if (simple) return;
+
+    // BRAZO DERECHO
+    model = glm::translate(
+        modelCuerpo,
+        glm::vec3(-0.14468f, 0.22898f, 0.16496f)
+    );
+
+    model = glm::rotate(
+        model,
+        glm::radians(rotacionBrazo),
+        glm::vec3(0.0f, 1.0f, 0.0f)
+    );
+
+    modelTemp = model = glm::translate(
+        model,
+        glm::vec3(-0.17352f, 0.000422f, 0.0f)
+    );
+
+    glUniformMatrix4fv(
+        modelLoc, 1, GL_FALSE, glm::value_ptr(model)
+    );
+    p.brazoR->Draw(shader);
+
+    // MANO DERECHA
+    model = glm::translate(
+        modelTemp,
+        glm::vec3(0.0f, 0.000422f, 0.0f)
+    );
+
+    model = glm::rotate(
+        model,
+        glm::radians(rotMano),
+        glm::vec3(1.0f, 1.0f, 0.0f)
+    );
+
+    model = glm::translate(
+        model,
+        glm::vec3(-0.27616f, -0.00208f, 0.067436f)
+    );
+
+    modelMano = model;
+
+    glUniformMatrix4fv(
+        modelLoc, 1, GL_FALSE, glm::value_ptr(model)
+    );
+    p.manoR->Draw(shader);
+
+    // BRAZO IZQUIERDO
+    model = glm::translate(
+        modelCuerpo,
+        glm::vec3(0.18415f, 0.22898f, 0.11287f)
+    );
+
+    model = glm::rotate(
+        model,
+        glm::radians(rotacionBrazo),
+        glm::vec3(0.0f, 1.0f, 0.0f)
+    );
+
+    modelTemp = model = glm::translate(
+        model,
+        glm::vec3(0.17352f, 0.000422f, 0.0f)
+    );
+
+    glUniformMatrix4fv(
+        modelLoc, 1, GL_FALSE, glm::value_ptr(model)
+    );
+    p.brazoL->Draw(shader);
+
+    // MANO IZQUIERDA
+    model = glm::translate(
+        modelTemp,
+        glm::vec3(0.0756f, 0.0f, 0.0f)
+    );
+
+    model = glm::rotate(
+        model,
+        glm::radians(rotMano),
+        glm::vec3(1.0f, 1.0f, 0.0f)
+    );
+
+    model = glm::translate(
+        model,
+        glm::vec3(0.24735f, -0.010089f, -0.001561f)
+    );
+
+    glUniformMatrix4fv(
+        modelLoc, 1, GL_FALSE, glm::value_ptr(model)
+    );
+    p.manoL->Draw(shader);
+
+    // PIERNA DERECHA
+    model = glm::translate(
+        modelCuerpo,
+        glm::vec3(-0.17231f, -0.05575f, 0.04356f)
+    );
+
+    model = glm::rotate(
+        model,
+        glm::radians(rotPierna),
+        glm::vec3(1.0f, 0.0f, 0.0f)
+    );
+
+    model = glm::translate(
+        model,
+        glm::vec3(0.0f, -0.38253f, 0.075f)
+    );
+
+    glUniformMatrix4fv(
+        modelLoc, 1, GL_FALSE, glm::value_ptr(model)
+    );
+    p.piernaR->Draw(shader);
+
+    // PIERNA IZQUIERDA
+    model = glm::translate(
+        modelCuerpo,
+        glm::vec3(0.17747f, -0.05575f, -0.011843f)
+    );
+
+    model = glm::rotate(
+        model,
+        glm::radians(rotPierna),
+        glm::vec3(-1.0f, 0.0f, 0.0f)
+    );
+
+    model = glm::translate(
+        model,
+        glm::vec3(0.0f, -0.32620f, 0.0f)
+    );
+
+    glUniformMatrix4fv(
+        modelLoc, 1, GL_FALSE, glm::value_ptr(model)
+    );
+    p.piernaL->Draw(shader);
 }
 
 struct Espectador {
@@ -144,8 +331,8 @@ public:
             m = glm::translate(m, e.pos + glm::vec3(0.0f, salto, 0.0f));
             m = glm::rotate(m, glm::radians(e.rotY), glm::vec3(0.0f, 1.0f, 0.0f));
             m = glm::scale(m, glm::vec3(e.escala));
-
-            dibujarYoshi(modelLoc, shader, partes, m, 0.0f, alzar, 0.0f, 0.0f, simple);
+            glm::mat4 modelMano(1);
+            dibujarYoshi(modelLoc, shader, partes, m, 0.0f, alzar, 0.0f, 0.0f, modelMano,simple);
         }
     }
 

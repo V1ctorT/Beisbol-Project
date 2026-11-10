@@ -42,8 +42,12 @@
     <None Include="Shader\modelLoading.vs">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="beam.vs" />
-    <None Include="beam.frag" />
+    <None Include="beam.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="beam.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -53,6 +57,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Corredores.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bateo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Limites.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyframeYoshis.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

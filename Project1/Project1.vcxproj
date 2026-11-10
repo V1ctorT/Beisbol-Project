@@ -163,8 +163,11 @@
     <None Include="Shader\modelLoading.vs" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bateo.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Corredores.h" />
+    <ClInclude Include="KeyframeYoshis.h" />
+    <ClInclude Include="Limites.h" />
     <ClInclude Include="Publico.h" />
   </ItemGroup>
   <ItemGroup>
