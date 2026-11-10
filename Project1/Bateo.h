@@ -94,3 +94,10 @@ void soltarBate(int& noBate)
     return;
 }
 
+void dibujarPelota(GLint modelLoc, Shader& shader, glm::mat4& mano, Model& pelota)
+{
+    mano = glm::translate(mano,glm::vec3(0.0f,-0.2f,0.0f));
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE,
+        glm::value_ptr(mano));
+    pelota.Draw(shader);
+}

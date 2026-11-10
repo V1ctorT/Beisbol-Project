@@ -90,9 +90,9 @@ inline void dibujarHuesitos(
     glm::mat4 model = base, modelTemp;
 
     //// CUERPO
-    modelCuerpo = glm::rotate(
-        model,
-        glm::radians(180.0f),
+    model = modelCuerpo = glm::rotate(
+        base,
+        glm::radians(-180.0f),
         glm::vec3(0.0f, 1.0f, 0.0f)
     );
 

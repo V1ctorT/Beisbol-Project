@@ -42,6 +42,8 @@ Creado por:
 #include "Publico.h"
 #include "Corredores.h"
 int estado = 0; //0 - Caminar, 1 - Bateo, 2 - Atrapar 3 - Lanzar
+//Posicion pelota
+glm::vec3 pelota(0.0f, 0.0f, 0.0f);
 //Rutinas y Utilerias
 #include "Bateo.h"
 
@@ -189,6 +191,8 @@ float vertices[] = {
 //Posicion del Personaje Principal------------------------------------------------------
 glm::vec3 posicionPersonaje(0.0f, 0.5f, 0.0f);
 int corredor = -1;
+glm::vec3 posicionHuesitos(15.547f, 3.47702f, -16.07f);
+
 #include "Limites.h"
 GLfloat rotPierna = 0.0f;
 GLfloat rotacionBrazo = 0.0f;
@@ -211,14 +215,24 @@ struct valoresYoshi {
 	float rotHandD;
 	float rotHandI;
 };
-int playIndex = 0; //KeyFrame Actual
-float tiempoAnimacion = 0.0f;
-bool play = false; //Indica si esta ocurriendo la animacion
-int pasoActual = 0; //Conteo de los pasos de interpolacioon
-double tiempoInicio = 0.0f; //Momento de inicio de animacion
-double tiempoUltimoPaso = 0.0f; //Momento del ultimo keyframe
+//Animacion Keyframe Yoshi---------------------------------------------------------------
+int playIndexYoshi = 0; //KeyFrame Actual
+float tiempoAnimacionYoshi = 0.0f;
+bool playYoshi = false; //Indica si esta ocurriendo la animacion
+int pasoActualYoshi = 0; //Conteo de los pasos de interpolacioon
+double tiempoInicioYoshi = 0.0f; //Momento de inicio de animacion
+double tiempoUltimoPasoYoshi = 0.0f; //Momento del ultimo keyframe
 bool teclaFAnterior = false; //Para accionar la animacion
-
+//Animacion KeyFrame Huesitos------------------------------------------------------------
+int playIndexHuesitos = 0; //KeyFrame Actual
+float tiempoAnimacionHuesitos = 0.0f;
+bool playHuesitos = false; //Indica si esta ocurriendo la animacion
+int pasoActualHuesitos = 0; //Conteo de los pasos de interpolacioon
+double tiempoInicioHuesitos = 0.0f; //Momento de inicio de animacion
+double tiempoUltimoPasoHuesitos = 0.0f; //Momento del ultimo keyframe
+bool teclaGAnterior = false; //Para accionar la animacion
+//Quien se va a usar 1 - yoshi, 2 - huesitos
+int yoshi = 1; 
 //Variable global------------------------------------------------------------------------
 valoresYoshi rotsYoshi = 
 {
@@ -228,12 +242,20 @@ valoresYoshi rotsYoshi =
 	0.0f,0.0f,
 	0.0f,0.0f
 };
+valoresYoshi rotsHuesitos =
+{
+	0.0f,0.0f,
+	0.0f,0.0f,
+	0.0f,0.0f,
+	0.0f,0.0f,
+	0.0f,0.0f
+};
+
 #include "KeyframeYoshis.h"
 //Caminar
 GLfloat fasePaso = 0.0f;          // avanza solo mientras caminas
 GLfloat intensidadCorrer = 0.0f;  // 0 = quieto, 1 = corriendo (transición suave)
 
-glm::vec3 posicionHuesitos(15.547f,0.47702f,-16.07f);
 glm::vec3 posicionToad(3.0f, 0.43065f, -3.0f);
 
 glm::vec3 Light1 = glm::vec3(0);
@@ -388,6 +410,7 @@ int main()
 	Model bateMadera((char*)"Modelos/Bates/Madera/MaderaBate.obj");
 	Model bateHmmm((char*)"Modelos/Bates/bate/bateHmm.obj");
 	Bates bates = { &bateStel ,&bateAl ,&bateMadera ,&bateHmmm };
+	Model pelota((char*)"Modelos/Pelotas/pelota.obj");
 
 	//Bloques de Publico-----------------------------------------------------------------
 	 // piso 1 (4.83f para el piso 2)
@@ -555,7 +578,9 @@ int main()
 	}
 	stbi_image_free(image);
 
-	bateoAqui(); //Carga la animacion
+	bateoAqui(tiempoAnimacionYoshi,posicionPersonaje,KeyFrame); //Carga la animacion yoshi
+	//lanzamiento(tiempoAnimacionYoshi, posicionPersonaje, KeyFrame);
+	lanzamiento(tiempoAnimacionHuesitos, posicionHuesitos, KeyFrameHuesitos); //Carga huesitos
 	// Game loop-------------------------------------------------------------------------
 	while (!glfwWindowShouldClose(window))
 	{
@@ -786,26 +811,44 @@ int main()
 		glm::mat4 baseJugador(1.0f);
 		baseJugador = glm::translate(baseJugador, posicionPersonaje + glm::vec3(0.0f, 1.159f, 0.0f));
 		baseJugador = glm::rotate(baseJugador, glm::radians(-camera.GetYaw() + 90.0f + 200.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		glm::mat4 modelMano(1.0f);
+		glm::mat4 modelManoYoshi(1.0f);
+		glm::mat4 modelManoHuesitos(1.0f);
 		corredoresA.agregar(noCorrA);
 		corredoresB.agregar(noCorrB);
 
 		corredoresA.dibujar(modelLoc, lightingShader, tiempoActual, baseJugador, 1);
 		corredoresB.dibujar(modelLoc, lightingShader, tiempoActual, baseJugador, 2);
+		glm::mat4 huesitoss(1.0f);
+		huesitoss = glm::translate(huesitoss, posicionHuesitos);
 
-		if (!play) {
+		if (!playYoshi) {
 			dibujarYoshi(modelLoc, lightingShader, partes, baseJugador, rotacionBrazo, 0.0f,
-				rotacionBrazo, rotPierna, modelMano);
+				rotacionBrazo, rotPierna, modelManoYoshi);
+
 		}
 		else
 		{
-			dibujarYoshiKeyframe(modelLoc, lightingShader,partes,baseJugador,modelMano);
-			playAnimation();
+			dibujarYoshiKeyframe(modelLoc, lightingShader,partes,baseJugador, modelManoYoshi,1);
+			playAnimation(playYoshi,playIndexYoshi,KeyFrame,posicionPersonaje,
+				tiempoInicioYoshi,pasoActualYoshi,rotsYoshi);
 		}
 
 
-		dibujarBates(modelLoc, lightingShader, modelMano, noBate, bates);
+		if (!playHuesitos) {
+			dibujarHuesitos(modelLoc, lightingShader, huesitos, huesitoss, rotCabeza, rotacionBrazo, 
+				rotacionBrazo, rotPierna, modelManoHuesitos, false);
+				dibujarPelota(modelLoc, lightingShader, modelManoHuesitos, pelota);
 
+		}
+		else {
+			dibujarYoshiKeyframe(modelLoc,lightingShader,huesitos,huesitoss, modelManoHuesitos,2);
+			playAnimation(playHuesitos,playIndexHuesitos,KeyFrameHuesitos,posicionHuesitos,
+				tiempoInicioHuesitos,pasoActualHuesitos,rotsHuesitos);
+			dibujarPelota(modelLoc, lightingShader, modelManoHuesitos, pelota);
+
+		}
+
+		dibujarBates(modelLoc, lightingShader, modelManoYoshi, noBate, bates);
 
 		//model = glm::mat4(1);
 		//mainMovement(modelLoc, yoshis, lightingShader, model);
@@ -892,143 +935,144 @@ int main()
 		
 
 		//Huesitos-----------------------------------------------------------------------
-		model = glm::mat4(1);
-		model = glm::translate(model, posicionHuesitos); //Posicion inicial
+		//model = glm::mat4(1);
+		//model = glm::translate(model, posicionHuesitos); //Posicion inicial
 
-		//Cuerpo
-		//0.0f,0.68843f,0.0f
-		modelCuerpo = model = glm::translate(model, glm::vec3(0.0f,0.68843f,0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		hCuerpo.Draw(lightingShader);
+		////Cuerpo
+		////0.0f,0.68843f,0.0f
+		//modelCuerpo = model = glm::translate(model, glm::vec3(0.0f,0.68843f,0.0f));
+		//modelCuerpo = model = glm::rotate(model,glm::radians(-55.0f), glm::vec3(0.0f,1.0f,0.0f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//hCuerpo.Draw(lightingShader);
 
-		//Cabeza
-		model = glm::translate(modelCuerpo, glm::vec3(0.031647f,0.39327f,0.19935));//Pivote
-		model = glm::rotate(model, glm::radians(rotCabeza), glm::vec3(0.0f,1.0f,0.0f));
-		//Centro 0.042193,1.432,0.082021
-		model = glm::translate(model,glm::vec3(0.0f, 0.35028f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		hCabeza.Draw(lightingShader);
+		////Cabeza
+		//model = glm::translate(modelCuerpo, glm::vec3(0.031647f,0.39327f,0.19935));//Pivote
+		//model = glm::rotate(model, glm::radians(rotCabeza), glm::vec3(0.0f,1.0f,0.0f));
+		////Centro 0.042193,1.432,0.082021
+		//model = glm::translate(model,glm::vec3(0.0f, 0.35028f, 0.0f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//hCabeza.Draw(lightingShader);
 
-		//Brazo Derecho
-		model = glm::mat4(1);
-		model = translate(modelCuerpo, glm::vec3(-0.14468f,0.22898f,0.16496f));//Pivote
-		model = glm::rotate(model, glm::radians(rotacionBrazo), glm::vec3(0.0f, 1.0f, 0.0f));
-		//Centro -0.32961,0.91783,-0.063774
-		modelTemp = model = glm::translate(model, glm::vec3(-0.17352f,0.000422f,0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		hBrazoD.Draw(lightingShader);
+		////Brazo Derecho
+		//model = glm::mat4(1);
+		//model = translate(modelCuerpo, glm::vec3(-0.14468f,0.22898f,0.16496f));//Pivote
+		//model = glm::rotate(model, glm::radians(rotacionBrazo), glm::vec3(0.0f, 1.0f, 0.0f));
+		////Centro -0.32961,0.91783,-0.063774
+		//modelTemp = model = glm::translate(model, glm::vec3(-0.17352f,0.000422f,0.0f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//hBrazoD.Draw(lightingShader);
 
-		//Mano Derecha
-		model = translate(modelTemp, glm::vec3(0.0f, 0.000422f, 0.0f));//Pivote
-		model = rotate(model, glm::radians(rotacionBrazo), glm::vec3(1.0f, 1.0f, 0.0f));
-		//Centro -0.60577,0.91575,0.003662
-		model = glm::translate(model,glm::vec3(-0.27616f, -0.00208f, 0.067436f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		hManoD.Draw(lightingShader);
+		////Mano Derecha
+		//model = translate(modelTemp, glm::vec3(0.0f, 0.000422f, 0.0f));//Pivote
+		//model = rotate(model, glm::radians(rotacionBrazo), glm::vec3(1.0f, 1.0f, 0.0f));
+		////Centro -0.60577,0.91575,0.003662
+		//model = glm::translate(model,glm::vec3(-0.27616f, -0.00208f, 0.067436f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//hManoD.Draw(lightingShader);
 
-		//Brazo Izquierdo
-		model = glm::mat4(1);
-		model = translate(modelCuerpo, glm::vec3(0.18415f, 0.22898f, 0.11287f));//Pivote
-		model = glm::rotate(model, glm::radians(rotacionBrazo), glm::vec3(0.0f, 1.0f, 0.0f));
-		//Centro 0.34683,0.17093,0.91783
-		modelTemp = model = glm::translate(model, glm::vec3(0.17352f, 0.000422f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		hBrazoI.Draw(lightingShader);
-		
-		//Mano Izquierda
-		model = translate(modelTemp, glm::vec3(0.0756f, 0.0f, 0.0f));//Pivote
-		model = rotate(model, glm::radians(rotacionBrazo), glm::vec3(1.0f, 1.0f, 0.0f));
-		//Centro 0.60577,0.91575,0.003662
-		model = glm::translate(model, glm::vec3(0.24735f, -0.010089f, -0.001561f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		hManoI.Draw(lightingShader);
+		////Brazo Izquierdo
+		//model = glm::mat4(1);
+		//model = translate(modelCuerpo, glm::vec3(0.18415f, 0.22898f, 0.11287f));//Pivote
+		//model = glm::rotate(model, glm::radians(rotacionBrazo), glm::vec3(0.0f, 1.0f, 0.0f));
+		////Centro 0.34683,0.17093,0.91783
+		//modelTemp = model = glm::translate(model, glm::vec3(0.17352f, 0.000422f, 0.0f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//hBrazoI.Draw(lightingShader);
+		//
+		////Mano Izquierda
+		//model = translate(modelTemp, glm::vec3(0.0756f, 0.0f, 0.0f));//Pivote
+		//model = rotate(model, glm::radians(rotacionBrazo), glm::vec3(1.0f, 1.0f, 0.0f));
+		////Centro 0.60577,0.91575,0.003662
+		//model = glm::translate(model, glm::vec3(0.24735f, -0.010089f, -0.001561f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//hManoI.Draw(lightingShader);
 
-		//Piernas
-		//Derecha
-		model = glm::mat4(1);
-		//0.0f,0.68843f,0.0f a -0.17231,0.63268,0.043567
-		model = translate(modelCuerpo, glm::vec3(-0.17231f,-0.05575f,0.04356f));
-		model = rotate(model, glm::radians(rotPierna), glm::vec3(1.0f, 0.0f, 0.0f));
-		//Centro 0.60577,0.91575,0.003662
-		model = glm::translate(model, glm::vec3(0.0f, -0.38253f, 0.075f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		hPataD.Draw(lightingShader);
+		////Piernas
+		////Derecha
+		//model = glm::mat4(1);
+		////0.0f,0.68843f,0.0f a -0.17231,0.63268,0.043567
+		//model = translate(modelCuerpo, glm::vec3(-0.17231f,-0.05575f,0.04356f));
+		//model = rotate(model, glm::radians(rotPierna), glm::vec3(1.0f, 0.0f, 0.0f));
+		////Centro 0.60577,0.91575,0.003662
+		//model = glm::translate(model, glm::vec3(0.0f, -0.38253f, 0.075f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//hPataD.Draw(lightingShader);
 
-		//Izquierda
-		model = glm::mat4(1);
-		//0.0f,0.68843f,0.0f a 0.17747,0.63268,-0.011843
-		model = translate(modelCuerpo, glm::vec3(0.17747f, -0.05575f, -0.011843f));
-		model = rotate(model, glm::radians(rotPierna), glm::vec3(-1.0f, 0.0f, 0.0f));
-		//Centro 0.60577,0.91575,0.003662
-		model = glm::translate(model, glm::vec3(0.0f, -0.32620f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		hPataD.Draw(lightingShader);
+		////Izquierda
+		//model = glm::mat4(1);
+		////0.0f,0.68843f,0.0f a 0.17747,0.63268,-0.011843
+		//model = translate(modelCuerpo, glm::vec3(0.17747f, -0.05575f, -0.011843f));
+		//model = rotate(model, glm::radians(rotPierna), glm::vec3(-1.0f, 0.0f, 0.0f));
+		////Centro 0.60577,0.91575,0.003662
+		//model = glm::translate(model, glm::vec3(0.0f, -0.32620f, 0.0f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//hPataD.Draw(lightingShader);
 
-		//Toad Referee-------------------------------------------------------------------
-		model = glm::mat4(1);
-		modelCuerpo = model = translate(model, posicionToad);
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		tBody.Draw(lightingShader);
+		////Toad Referee-------------------------------------------------------------------
+		//model = glm::mat4(1);
+		//modelCuerpo = model = translate(model, posicionToad);
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//tBody.Draw(lightingShader);
 
-		//Cabeza
-		model = translate(modelCuerpo, glm::vec3(0.0f,0.5323f,0.0f));
-		model = rotate(model, glm::radians(rotCabeza), glm::vec3(0.0f, 1.0f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		tCabeza.Draw(lightingShader);
+		////Cabeza
+		//model = translate(modelCuerpo, glm::vec3(0.0f,0.5323f,0.0f));
+		//model = rotate(model, glm::radians(rotCabeza), glm::vec3(0.0f, 1.0f, 0.0f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//tCabeza.Draw(lightingShader);
 
-		//Patas
-		//Derecha
-		model = translate(modelCuerpo, glm::vec3(-0.23112f,0.18446f,0.094799f));
-		model = rotate(model, glm::radians(rotPierna), glm::vec3(1.0f, 0.0f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		tPataD.Draw(lightingShader);
-		//Izquierda
-		model = translate(modelCuerpo, glm::vec3(0.23112f, 0.18446f, -0.094799f));
-		model = rotate(model, glm::radians(rotPierna), glm::vec3(-1.0f, 0.0f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		tPataI.Draw(lightingShader);
+		////Patas
+		////Derecha
+		//model = translate(modelCuerpo, glm::vec3(-0.23112f,0.18446f,0.094799f));
+		//model = rotate(model, glm::radians(rotPierna), glm::vec3(1.0f, 0.0f, 0.0f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//tPataD.Draw(lightingShader);
+		////Izquierda
+		//model = translate(modelCuerpo, glm::vec3(0.23112f, 0.18446f, -0.094799f));
+		//model = rotate(model, glm::radians(rotPierna), glm::vec3(-1.0f, 0.0f, 0.0f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//tPataI.Draw(lightingShader);
 
-		//Brazos
-		//Derecho
-		model = translate(modelCuerpo, glm::vec3(-0.16343f, 0.46262f, 0.0f));
-		model = rotate(model, glm::radians(rotacionBrazo), glm::vec3(0.0f, 1.0f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		tManoD.Draw(lightingShader);
-		//Izquierda
-		model = translate(modelCuerpo, glm::vec3(0.16343f, 0.46262f, 0.0f));
-		model = rotate(model, glm::radians(rotacionBrazo), glm::vec3(0.0f, -1.0f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		tManoI.Draw(lightingShader);
+		////Brazos
+		////Derecho
+		//model = translate(modelCuerpo, glm::vec3(-0.16343f, 0.46262f, 0.0f));
+		//model = rotate(model, glm::radians(rotacionBrazo), glm::vec3(0.0f, 1.0f, 0.0f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//tManoD.Draw(lightingShader);
+		////Izquierda
+		//model = translate(modelCuerpo, glm::vec3(0.16343f, 0.46262f, 0.0f));
+		//model = rotate(model, glm::radians(rotacionBrazo), glm::vec3(0.0f, -1.0f, 0.0f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//tManoI.Draw(lightingShader);
 
-		glBindVertexArray(0);
-		//glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
-		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		//glDisable(GL_BLEND);  //Desactiva el canal alfa 
+		//glBindVertexArray(0);
+		////glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
+		////glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		////glDisable(GL_BLEND);  //Desactiva el canal alfa 
 
-		// Also draw the lamp object, again binding the appropriate shader
-		lampShader.Use();
-		// Get location objects for the matrices on the lamp shader (these could be different on a different shader)
-		modelLoc = glGetUniformLocation(lampShader.Program, "model");
-		viewLoc = glGetUniformLocation(lampShader.Program, "view");
-		projLoc = glGetUniformLocation(lampShader.Program, "projection");
+		//// Also draw the lamp object, again binding the appropriate shader
+		//lampShader.Use();
+		//// Get location objects for the matrices on the lamp shader (these could be different on a different shader)
+		//modelLoc = glGetUniformLocation(lampShader.Program, "model");
+		//viewLoc = glGetUniformLocation(lampShader.Program, "view");
+		//projLoc = glGetUniformLocation(lampShader.Program, "projection");
 
-		// Set matrices
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-		model = glm::mat4(1);
-		model = glm::translate(model, lightPos);
-		model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		// Draw the light object (using light's vertex attributes)
-		for (GLuint i = 0; i < 30; i++)
-		{
-			model = glm::mat4(1);
-			model = glm::translate(model, pointLightPositions[i]);
-			model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
-			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-			glBindVertexArray(VAO);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}
+		//// Set matrices
+		//glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+		//glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+		//model = glm::mat4(1);
+		//model = glm::translate(model, lightPos);
+		//model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//// Draw the light object (using light's vertex attributes)
+		//for (GLuint i = 0; i < 30; i++)
+		//{
+		//	model = glm::mat4(1);
+		//	model = glm::translate(model, pointLightPositions[i]);
+		//	model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
+		//	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//	glBindVertexArray(VAO);
+		//	glDrawArrays(GL_TRIANGLES, 0, 36);
+		//}
 		glBindVertexArray(0);
 
 		if (spotOn) //Animacion de luz spotlight-----------------------------------------
@@ -1206,12 +1250,13 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 	//Imprime centro corredores----------------------------------------------------------
 	if (key == GLFW_KEY_F)
 	{
-		if (action == GLFW_PRESS && !teclaFAnterior && !play)
+		if (action == GLFW_PRESS && !teclaFAnterior && !playYoshi)
 		{
 			std::cout << "centro: " << ajuste->centro.x << ", " << ajuste->centro.y << ", "
 				<< ajuste->centro.z << "Inicia Bateo" << endl;
 			estado = 1;
-			startAnimation();
+			startAnimation(playIndexYoshi,KeyFrame,posicionPersonaje,pasoActualYoshi,
+				tiempoInicioYoshi,tiempoUltimoPasoYoshi,playYoshi,1);
 			//estado = 0;
 		}
 		if (action == GLFW_PRESS)
@@ -1219,6 +1264,21 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 
 		if (action == GLFW_RELEASE)
 			teclaFAnterior = false;
+	}
+	if(key == GLFW_KEY_G)
+	{
+		if (action == GLFW_PRESS && !teclaGAnterior && !playHuesitos)
+		{
+			std::cout << "Inicia Lanzamiento: " << endl;
+			startAnimation(playIndexHuesitos, KeyFrameHuesitos, posicionHuesitos, pasoActualHuesitos,
+				tiempoInicioHuesitos,tiempoUltimoPasoHuesitos,playHuesitos,2);
+			//estado = 0;
+		}
+		if (action == GLFW_PRESS)
+			teclaGAnterior = true;
+
+		if (action == GLFW_RELEASE)
+			teclaGAnterior = false;
 	}
 	
 	//Zonas------------------------------------------------------------------------------

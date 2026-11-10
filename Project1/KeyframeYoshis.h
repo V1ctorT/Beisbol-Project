@@ -34,10 +34,11 @@ typedef struct _frame
 
 } FRAME;
 
-std::vector<FRAME> KeyFrame;
+std::vector<FRAME> KeyFrame; //Yoshi
+std::vector<FRAME> KeyFrameHuesitos;
 
 //Guarda un keyframe---------------------------------------------------------------------
-void saveFrame(void)
+void saveFrame(std::vector<FRAME>& KeyFrame, glm::vec3& posicionPersonaje, float& tiempoAnimacion, valoresYoshi& rotsYoshi)
 {
     FRAME frame{};
 
@@ -57,7 +58,7 @@ void saveFrame(void)
 }
 
 //Guarda animacion en archivo------------------------------------------------------------
-bool saveAnimation()
+bool saveAnimation(std::vector<FRAME>& KeyFrame)
 {
     std::string nombreArchivo; // 1. Creamos el string que almacenará el nombre
 
@@ -107,7 +108,7 @@ bool saveAnimation()
     return true;
 }
 
-bool loadAnimation()
+bool loadAnimation(std::vector<FRAME>& KeyFrame)
 {
     std::string nombreArchivo; // 1. Creamos el string que almacenará el nombre
 
@@ -173,7 +174,7 @@ bool loadAnimation()
     return true;
 }
 
-void resetElements(void)
+void resetElements(std::vector<FRAME>& KeyFrame, glm::vec3& posicionPersonaje,int yoshi)
 {
     if (KeyFrame.empty())
         return;
@@ -184,11 +185,16 @@ void resetElements(void)
     posicionPersonaje.z = KeyFrame[0].posZ;
 
     // Rotaciones
-    rotsYoshi = KeyFrame[0].rotaciones;
+    if (yoshi == 1) {
+        rotsYoshi = KeyFrame[0].rotaciones;
+    }
+    else if (yoshi == 2) {
+        rotsHuesitos = KeyFrame[0].rotaciones;
+    }
 }
 
-valoresYoshi calcularIncrementos(valoresYoshi actual,
-    valoresYoshi siguiente)
+valoresYoshi calcularIncrementos(valoresYoshi& actual,
+    valoresYoshi& siguiente)
 {
     float pasos = 190;
     valoresYoshi inc{};
@@ -211,7 +217,7 @@ valoresYoshi calcularIncrementos(valoresYoshi actual,
     return inc;
 }
 
-void interpolation(void)
+void interpolation(std::vector<FRAME>& KeyFrame, int& playIndex)
 {
     float pasos = 190;
 
@@ -238,7 +244,8 @@ void interpolation(void)
     );
 }
 
-void startAnimation(void)
+void startAnimation(int& playIndex, std::vector<FRAME>& KeyFrame, glm::vec3& posicionPersonaje,
+    int& pasoActual, double& tiempoInicio, double& tiempoUltimoPaso, bool& play, int yoshi)
 {
     if (KeyFrame.size() < 2)
         return;
@@ -246,17 +253,18 @@ void startAnimation(void)
     playIndex = 0;
     pasoActual = 0;
 
-    resetElements();
+    resetElements(KeyFrame,posicionPersonaje,yoshi);
 
     tiempoInicio = glfwGetTime();
     tiempoUltimoPaso = tiempoInicio;
 
-    interpolation();
+    interpolation(KeyFrame,playIndex);
 
     play = true;
 }
 
-void aplicarIncrementos(void)
+void aplicarIncrementos(int& playIndex, std::vector<FRAME>& KeyFrame, glm::vec3& posicionPersonaje, 
+    valoresYoshi& rotsYoshi)
 {
     FRAME& f = KeyFrame[playIndex];
 
@@ -285,7 +293,8 @@ void aplicarIncrementos(void)
     rotsYoshi.rotHandI += f.incrementos.rotHandI;
 }
 
-void playAnimation(void)
+void playAnimation(bool& play,int& playIndex, std::vector<FRAME>& KeyFrame, glm::vec3& posicionPersonaje,
+    double& tiempoInicio, int& pasoActual, valoresYoshi& rotsYoshi)
 {
     float pasos = 190;
 
@@ -318,7 +327,7 @@ void playAnimation(void)
     // Ejecutar los incrementos pendientes
     while (pasoActual < pasosObjetivo)
     {
-        aplicarIncrementos();
+        aplicarIncrementos(playIndex,KeyFrame,posicionPersonaje, rotsYoshi);
         pasoActual++;
     }
 
@@ -347,69 +356,237 @@ void playAnimation(void)
 
         tiempoInicio += deltaTiempo;
 
-        interpolation();
+        interpolation(KeyFrame,playIndex);
     }
 }
 
 inline void dibujarYoshiKeyframe(GLint modelLoc, Shader& shader, const PartesYoshi& p, glm::mat4& base,
-    glm::mat4& modelMano)
+    glm::mat4& modelMano, int yoshi)
 {
+    if (yoshi == 1) {
+        glm::mat4 modelCuerpo = base;
+        glm::mat4 model = base, modelTemp;
 
-    glm::mat4 modelCuerpo = base;
-    glm::mat4 model = base, modelTemp;
-
-    // Cuerpo y cabeza (mismo pivote)
-    modelCuerpo = model = glm::rotate(model, glm::radians(rotsYoshi.rotBody), glm::vec3(0.0f, 1.0f, 0.0f));
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-    p.cuerpo->Draw(shader);
-    model = glm::rotate(model, glm::radians(rotsYoshi.rotHead), glm::vec3(0.0f, 1.0f, 0.0f));
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-    p.cabeza->Draw(shader);
+        // Cuerpo y cabeza (mismo pivote)
+        modelCuerpo = model = glm::rotate(model, glm::radians(rotsYoshi.rotBody), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        p.cuerpo->Draw(shader);
+        model = glm::rotate(model, glm::radians(rotsYoshi.rotHead), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        p.cabeza->Draw(shader);
 
 
-    // Brazo izquierdo + mano
-    model = glm::translate(modelCuerpo, glm::vec3(-0.26443f, -0.12442f, -0.015195f));
-    model = glm::rotate(model, glm::radians(rotsYoshi.rotArmI_Y), glm::vec3(0.0f, 1.0f, 0.0f));
-    model = glm::rotate(model, glm::radians(rotsYoshi.rotArmI_Z), glm::vec3(0.0f, 0.0f, 1.0f));   // alzar
-    modelTemp = model = glm::translate(model, glm::vec3(-0.15271f, 0.0f, -0.037633f));
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-    p.brazoL->Draw(shader);
+        // Brazo izquierdo + mano
+        model = glm::translate(modelCuerpo, glm::vec3(-0.26443f, -0.12442f, -0.015195f));
+        model = glm::rotate(model, glm::radians(rotsYoshi.rotArmI_Y), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(rotsYoshi.rotArmI_Z), glm::vec3(0.0f, 0.0f, 1.0f));   // alzar
+        modelTemp = model = glm::translate(model, glm::vec3(-0.15271f, 0.0f, -0.037633f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        p.brazoL->Draw(shader);
 
-    model = glm::translate(modelTemp, glm::vec3(-0.12210f, -0.00470f, -0.037183f));
-    model = glm::rotate(model, glm::radians(rotsYoshi.rotHandI), glm::vec3(1.0f, 0.0f, 0.0f));
-    model = glm::translate(model, glm::vec3(-0.17918f, -0.04711f, -0.087989f));
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-    p.manoL->Draw(shader);
+        model = glm::translate(modelTemp, glm::vec3(-0.12210f, -0.00470f, -0.037183f));
+        model = glm::rotate(model, glm::radians(rotsYoshi.rotHandI), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::translate(model, glm::vec3(-0.17918f, -0.04711f, -0.087989f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        p.manoL->Draw(shader);
 
-    // Brazo derecho + mano
-    model = glm::translate(modelCuerpo, glm::vec3(0.23581f, -0.14962f, 0.11884f));
-    model = glm::rotate(model, glm::radians(rotsYoshi.rotArmD_Y), glm::vec3(0.0f, 1.0f, 0.0f));
-    model = glm::rotate(model, glm::radians(rotsYoshi.rotArmD_Z), glm::vec3(0.0f, 0.0f, 1.0f));    // alzar
-    modelTemp = model = glm::translate(model, glm::vec3(0.12805f, 0.01920f, 0.05665f));
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-    p.brazoR->Draw(shader);
+        // Brazo derecho + mano
+        model = glm::translate(modelCuerpo, glm::vec3(0.23581f, -0.14962f, 0.11884f));
+        model = glm::rotate(model, glm::radians(rotsYoshi.rotArmD_Y), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(rotsYoshi.rotArmD_Z), glm::vec3(0.0f, 0.0f, 1.0f));    // alzar
+        modelTemp = model = glm::translate(model, glm::vec3(0.12805f, 0.01920f, 0.05665f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        p.brazoR->Draw(shader);
 
-    model = glm::translate(modelTemp, glm::vec3(0.13382f, 0.00130f, 0.05046f));
-    model = glm::rotate(model, glm::radians(rotsYoshi.rotHandD), glm::vec3(1.0f, 0.0f, 0.0f));
-    modelMano = model = glm::translate(model, glm::vec3(0.22834f, -0.06276f, 0.02576f));
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-    p.manoR->Draw(shader);
+        model = glm::translate(modelTemp, glm::vec3(0.13382f, 0.00130f, 0.05046f));
+        model = glm::rotate(model, glm::radians(rotsYoshi.rotHandD), glm::vec3(1.0f, 0.0f, 0.0f));
+        modelMano = model = glm::translate(model, glm::vec3(0.22834f, -0.06276f, 0.02576f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        p.manoR->Draw(shader);
 
-    // Piernas
-    model = glm::translate(modelCuerpo, glm::vec3(-0.25734f, -0.70411f, 0.066808f));
-    model = glm::rotate(model, glm::radians(rotsYoshi.rotLegI), glm::vec3(1.0f, 0.0f, 0.0f));
-    model = glm::translate(model, glm::vec3(-0.01991f, -0.31619f, -0.090853f));
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-    p.piernaL->Draw(shader);
+        // Piernas
+        model = glm::translate(modelCuerpo, glm::vec3(-0.25734f, -0.70411f, 0.066808f));
+        model = glm::rotate(model, glm::radians(rotsYoshi.rotLegI), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::translate(model, glm::vec3(-0.01991f, -0.31619f, -0.090853f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        p.piernaL->Draw(shader);
 
-    model = glm::translate(modelCuerpo, glm::vec3(0.17779f, -0.68234f, 0.21343f));
-    model = glm::rotate(model, glm::radians(rotsYoshi.rotLegD), glm::vec3(1.0f, 0.0f, 0.0f));
-    model = glm::translate(model, glm::vec3(0.06489f, -0.33566f, -0.07942f));
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-    p.piernaR->Draw(shader);
+        model = glm::translate(modelCuerpo, glm::vec3(0.17779f, -0.68234f, 0.21343f));
+        model = glm::rotate(model, glm::radians(rotsYoshi.rotLegD), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::translate(model, glm::vec3(0.06489f, -0.33566f, -0.07942f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        p.piernaR->Draw(shader);
+    }
+    else if (yoshi == 2)
+    {
+        glm::mat4 modelCuerpo = base;
+        glm::mat4 model = base, modelTemp;
+
+        //// CUERPO
+        modelCuerpo = glm::rotate(model,glm::radians(rotsHuesitos.rotBody), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(
+            modelLoc, 1, GL_FALSE, glm::value_ptr(modelCuerpo) );
+        p.cuerpo->Draw(shader);
+        // CABEZA
+        model = glm::translate(
+            modelCuerpo,
+            glm::vec3(0.031647f, 0.39327f, 0.19935f));
+        model = glm::rotate(model,glm::radians(rotsHuesitos.rotHead),glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::translate(
+        model,glm::vec3(0.0f, 0.35028f, 0.0f));
+        glUniformMatrix4fv(
+            modelLoc, 1, GL_FALSE, glm::value_ptr(model)
+        );
+        p.cabeza->Draw(shader);
+
+        // BRAZO DERECHO
+        model = glm::translate(
+            modelCuerpo,
+            glm::vec3(-0.14468f, 0.22898f, 0.16496f)
+        );
+
+        model = glm::rotate(
+            model,
+            glm::radians(rotsHuesitos.rotArmD_Y),
+            glm::vec3(0.0f, 1.0f, 0.0f)
+        );
+        model = glm::rotate(
+            model,
+            glm::radians(rotsHuesitos.rotArmD_Z),
+            glm::vec3(0.0f, 0.0f, 1.0f)
+        );
+
+        modelTemp = model = glm::translate(
+            model,
+            glm::vec3(-0.17352f, 0.000422f, 0.0f)
+        );
+
+        glUniformMatrix4fv(
+            modelLoc, 1, GL_FALSE, glm::value_ptr(model)
+        );
+        p.brazoR->Draw(shader);
+
+        // MANO DERECHA
+        model = glm::translate(
+            modelTemp,
+            glm::vec3(0.0f, 0.000422f, 0.0f)
+        );
+
+        model = glm::rotate(
+            model,
+            glm::radians(rotsHuesitos.rotHandD),
+            glm::vec3(1.0f, 0.0f, 0.0f)
+        );
+
+        model = glm::translate(
+            model,
+            glm::vec3(-0.27616f, -0.00208f, 0.067436f)
+        );
+
+        modelMano = model;
+
+        glUniformMatrix4fv(
+            modelLoc, 1, GL_FALSE, glm::value_ptr(model)
+        );
+        p.manoR->Draw(shader);
+
+        // BRAZO IZQUIERDO
+        model = glm::translate(
+            modelCuerpo,
+            glm::vec3(0.18415f, 0.22898f, 0.11287f)
+        );
+
+        model = glm::rotate(
+            model,
+            glm::radians(rotsHuesitos.rotArmI_Y),
+            glm::vec3(0.0f, 1.0f, 0.0f)
+        );
+        model = glm::rotate(
+            model,
+            glm::radians(rotsHuesitos.rotArmI_Z),
+            glm::vec3(0.0f, 0.0f, 1.0f)
+        );
+
+        modelTemp = model = glm::translate(
+            model,
+            glm::vec3(0.17352f, 0.000422f, 0.0f)
+        );
+
+        glUniformMatrix4fv(
+            modelLoc, 1, GL_FALSE, glm::value_ptr(model)
+        );
+        p.brazoL->Draw(shader);
+
+        // MANO IZQUIERDA
+        model = glm::translate(
+            modelTemp,
+            glm::vec3(0.0756f, 0.0f, 0.0f)
+        );
+
+        model = glm::rotate(
+            model,
+            glm::radians(rotsHuesitos.rotHandI),
+            glm::vec3(1.0f, 0.0f, 0.0f)
+        );
+
+        model = glm::translate(
+            model,
+            glm::vec3(0.24735f, -0.010089f, -0.001561f)
+        );
+
+        glUniformMatrix4fv(
+            modelLoc, 1, GL_FALSE, glm::value_ptr(model)
+        );
+        p.manoL->Draw(shader);
+
+        // PIERNA DERECHA
+        model = glm::translate(
+            modelCuerpo,
+            glm::vec3(-0.17231f, -0.05575f, 0.04356f)
+        );
+
+        model = glm::rotate(
+            model,
+            glm::radians(rotsHuesitos.rotLegD),
+            glm::vec3(1.0f, 0.0f, 0.0f)
+        );
+
+        model = glm::translate(
+            model,
+            glm::vec3(0.0f, -0.38253f, 0.075f)
+        );
+
+        glUniformMatrix4fv(
+            modelLoc, 1, GL_FALSE, glm::value_ptr(model)
+        );
+        p.piernaR->Draw(shader);
+
+        // PIERNA IZQUIERDA
+        model = glm::translate(
+            modelCuerpo,
+            glm::vec3(0.17747f, -0.05575f, -0.011843f)
+        );
+
+        model = glm::rotate(
+            model,
+            glm::radians(rotsHuesitos.rotLegI),
+            glm::vec3(1.0f, 0.0f, 0.0f)
+        );
+
+        model = glm::translate(
+            model,
+            glm::vec3(0.0f, -0.32620f, 0.0f)
+        );
+
+        glUniformMatrix4fv(
+            modelLoc, 1, GL_FALSE, glm::value_ptr(model)
+        );
+        p.piernaL->Draw(shader);
+    }
+    
 }
 
-void bateoAqui() {
+void bateoAqui(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vector<FRAME>& KeyFrame) {
     // KEYFRAME 1
     tiempoAnimacion = 0.0f;
     posicionPersonaje.y = 0.5f;
@@ -426,7 +603,7 @@ void bateoAqui() {
         0.0f,       // rotHandD
         0.0f        // rotHandI
     };
-    saveFrame();
+    saveFrame(KeyFrame,posicionPersonaje,tiempoAnimacion,rotsYoshi);
 
 
     // KEYFRAME 2
@@ -445,7 +622,7 @@ void bateoAqui() {
         110.0f,
         95.0f
     };
-    saveFrame();
+    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsYoshi);
 
 
     // KEYFRAME 3
@@ -464,7 +641,7 @@ void bateoAqui() {
         159.0f,
         95.0f
     };
-    saveFrame();
+    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsYoshi);
 
 
     // KEYFRAME 4
@@ -483,7 +660,7 @@ void bateoAqui() {
         166.0f,
         95.0f
     };
-    saveFrame();
+    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsYoshi);
 
 
     // KEYFRAME 5
@@ -502,7 +679,7 @@ void bateoAqui() {
         166.0f,
         95.0f
     };
-    saveFrame();
+    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsYoshi);
 
 
     // KEYFRAME 6
@@ -521,5 +698,140 @@ void bateoAqui() {
         90.0f,
         95.0f
     };
-    saveFrame();
+    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsYoshi);
+}
+
+void lanzamiento(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vector<FRAME>& KeyFrame)
+{
+    // KEYFRAME 1
+    tiempoAnimacion = 0.0f;
+    posicionHuesitos.y = 1.47702f;
+
+    rotsHuesitos = {
+        0.0f,       // rotHead
+        0.0f,       // rotBody
+        0.0f,        // rotArmD_Y
+        0.0f,       // rotArmD_Z
+        0.0f,        // rotArmI_Y
+        0.0f,        // rotArmI_Z
+        0.0f,        // rotLegD
+        0.0f,        // rotLegI
+        0.0f,        // rotHandD
+        0.0f         // rotHandI
+    };
+    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsHuesitos);
+
+
+    // KEYFRAME 2
+    tiempoAnimacion = 2.0f;
+    posicionHuesitos.y = 2.59702f;
+
+    rotsHuesitos = {
+        -12.704f,
+        178.0f,
+        0.8903f,
+        67.0f,
+        3.9609f,
+        0.0f,
+        -180.0f,
+        180.0f,
+        -22.5556f,
+        53.125f
+    };
+    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsHuesitos);
+
+
+    // KEYFRAME 3
+    tiempoAnimacion = 4.0f;
+    posicionHuesitos.y = 1.47702f;
+
+    rotsHuesitos = {
+        -36.2963f,
+        362.98f,
+        7.1221f,
+        28.0f,
+        12.2428f,
+        0.0f,
+        80.0f,
+        0.0f,
+        270.556f,
+        170.0f
+    };
+    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsHuesitos);
+
+
+    // KEYFRAME 4
+    tiempoAnimacion = 10.0f;
+    posicionHuesitos.y = 1.47702f;
+
+    rotsHuesitos = {
+        -45.37f,
+        426.798f,
+        9.4591f,
+        -11.0f,
+        16.3162f,
+        0.0f,
+        80.0f,
+        -41.0f,
+        -80.5556f,
+        232.422f
+    };
+    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsHuesitos);
+
+
+    // KEYFRAME 5
+    tiempoAnimacion = 12.0f;
+    posicionHuesitos.y = 1.47702f;
+
+    rotsHuesitos = {
+        -49.0f,
+        459.0f,
+        24.0371f,
+        -11.0f,
+        19.4444f,
+        0.0f,
+        -35.5741f,
+        -2.55146f,
+        -104.0f,
+        286.875f
+    };
+    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsHuesitos);
+
+
+    // KEYFRAME 6
+    tiempoAnimacion = 14.0f;
+    posicionHuesitos.y = 1.47702f;
+
+    rotsHuesitos = {
+        350.0f,
+        525.0f,
+        121.0f,
+        -11.0f,
+        21.0f,
+        0.0f,
+        0.0f,
+        48.0f,
+        -87.0f,
+        330.48f
+    };
+    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsHuesitos);
+
+
+    // KEYFRAME 7
+    tiempoAnimacion = 16.0f;
+    posicionHuesitos.y = 1.47702f;
+
+    rotsHuesitos = {
+        362.0f,
+        724.0f,
+        15.0f,
+        -11.0f,
+        21.0f,
+        0.0f,
+        0.0f,
+        0.0f,
+        -39.0f,
+        340.0f
+    };
+    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsHuesitos);
 }
