@@ -94,10 +94,83 @@ void soltarBate(int& noBate)
     return;
 }
 
-void dibujarPelota(GLint modelLoc, Shader& shader, glm::mat4& mano, Model& pelota)
+void dibujarPelota(
+    GLint modelLoc,
+    Shader& shader,
+    glm::mat4& mano,
+    Model& modeloPelota,
+    int& momento,
+    float deltaTime)
 {
-    mano = glm::translate(mano,glm::vec3(0.0f,-0.2f,0.0f));
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE,
-        glm::value_ptr(mano));
-    pelota.Draw(shader);
+    // 1. Comprobar si llegó el momento de lanzar
+    if (momento >= 3 && !lanzamientoDisparado)
+    {
+        // Obtener posición de la mano
+        glm::vec3 posicionMano = glm::vec3(
+            mano * glm::vec4(0.0f, -0.2f, 0.0f, 1.0f)
+        );
+
+        // Inicializar pelota desde la mano
+        pelota.posicion = posicionMano;
+
+        pelota.velocidad = glm::vec3(
+            -6.0f, 0.0f, 6.0f
+        );
+
+        pelota.aceleracion = glm::vec3(
+            0.0f, -9.81f, 0.0f
+        );
+
+        pelota.activa = true;
+        pelota.bateada = false;
+
+        lanzamientoDisparado = true;
+    }
+
+    // 2. Si todavía no se lanza, permanece en la mano
+    if (!lanzamientoDisparado)
+    {
+        glm::mat4 model = glm::translate(
+            mano,
+            glm::vec3(0.0f, -0.2f, 0.0f)
+        );
+
+        glUniformMatrix4fv(
+            modelLoc, 1, GL_FALSE,
+            glm::value_ptr(model)
+        );
+
+        modeloPelota.Draw(shader);
+    }
+    else
+    {
+        // 3. Actualizar física independientemente de momento
+        if (pelota.activa)
+        {
+            actualizarPelota(deltaTime);
+        }
+
+        // 4. Dibujar pelota en su posición física
+        if (pelota.activa)
+        {
+            glm::mat4 model(1.0f);
+
+            model = glm::translate(
+                model,
+                pelota.posicion
+            );
+
+            model = glm::scale(
+                model,
+                glm::vec3(pelota.radio)
+            );
+
+            glUniformMatrix4fv(
+                modelLoc, 1, GL_FALSE,
+                glm::value_ptr(model)
+            );
+
+            modeloPelota.Draw(shader);
+        }
+    }
 }

@@ -607,7 +607,7 @@ void bateoAqui(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vector
 
 
     // KEYFRAME 2
-    tiempoAnimacion = 1.0f;
+    tiempoAnimacion = 0.5f;
     posicionPersonaje.y = 0.5f;
 
     rotsYoshi = {
@@ -626,7 +626,7 @@ void bateoAqui(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vector
 
 
     // KEYFRAME 3
-    tiempoAnimacion = 2.0f;
+    tiempoAnimacion = 0.8f;
     posicionPersonaje.y = 0.5f;
 
     rotsYoshi = {
@@ -645,7 +645,7 @@ void bateoAqui(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vector
 
 
     // KEYFRAME 4
-    tiempoAnimacion = 3.0f;
+    tiempoAnimacion = 1.0f;
     posicionPersonaje.y = 0.5f;
 
     rotsYoshi = {
@@ -664,7 +664,7 @@ void bateoAqui(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vector
 
 
     // KEYFRAME 5
-    tiempoAnimacion = 4.0f;
+    tiempoAnimacion = 1.5f;
     posicionPersonaje.y = 1.26f;
 
     rotsYoshi = {
@@ -683,7 +683,7 @@ void bateoAqui(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vector
 
 
     // KEYFRAME 6
-    tiempoAnimacion = 5.0f;
+    tiempoAnimacion = 2.0f;
     posicionPersonaje.y = 0.5f;
 
     rotsYoshi = {
@@ -723,7 +723,7 @@ void lanzamiento(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vect
 
 
     // KEYFRAME 2
-    tiempoAnimacion = 2.0f;
+    tiempoAnimacion = 0.8f;
     posicionHuesitos.y = 2.59702f;
 
     rotsHuesitos = {
@@ -742,7 +742,7 @@ void lanzamiento(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vect
 
 
     // KEYFRAME 3
-    tiempoAnimacion = 4.0f;
+    tiempoAnimacion = 1.6f;
     posicionHuesitos.y = 1.47702f;
 
     rotsHuesitos = {
@@ -761,7 +761,7 @@ void lanzamiento(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vect
 
 
     // KEYFRAME 4
-    tiempoAnimacion = 10.0f;
+    tiempoAnimacion = 2.4f;
     posicionHuesitos.y = 1.47702f;
 
     rotsHuesitos = {
@@ -780,7 +780,7 @@ void lanzamiento(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vect
 
 
     // KEYFRAME 5
-    tiempoAnimacion = 12.0f;
+    tiempoAnimacion = 3.2f;
     posicionHuesitos.y = 1.47702f;
 
     rotsHuesitos = {
@@ -799,7 +799,7 @@ void lanzamiento(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vect
 
 
     // KEYFRAME 6
-    tiempoAnimacion = 14.0f;
+    tiempoAnimacion = 4.0f;
     posicionHuesitos.y = 1.47702f;
 
     rotsHuesitos = {
@@ -818,7 +818,7 @@ void lanzamiento(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vect
 
 
     // KEYFRAME 7
-    tiempoAnimacion = 16.0f;
+    tiempoAnimacion = 4.8f;
     posicionHuesitos.y = 1.47702f;
 
     rotsHuesitos = {

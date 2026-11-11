@@ -168,6 +168,7 @@
     <ClInclude Include="Corredores.h" />
     <ClInclude Include="KeyframeYoshis.h" />
     <ClInclude Include="Limites.h" />
+    <ClInclude Include="Pelota.h" />
     <ClInclude Include="Publico.h" />
   </ItemGroup>
   <ItemGroup>

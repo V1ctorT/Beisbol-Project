@@ -43,9 +43,8 @@ Creado por:
 #include "Corredores.h"
 int estado = 0; //0 - Caminar, 1 - Bateo, 2 - Atrapar 3 - Lanzar
 //Posicion pelota
-glm::vec3 pelota(0.0f, 0.0f, 0.0f);
-//Rutinas y Utilerias
-#include "Bateo.h"
+glm::vec3 pelotaPP(0.0f, 0.0f, 0.0f);
+bool lanzamientoDisparado = false;
 
 Publico publico;
 Corredores corredoresA, corredoresB;
@@ -252,6 +251,10 @@ valoresYoshi rotsHuesitos =
 };
 
 #include "KeyframeYoshis.h"
+//Rutinas y Utilerias
+#include "Pelota.h"
+#include "Bateo.h"
+
 //Caminar
 GLfloat fasePaso = 0.0f;          // avanza solo mientras caminas
 GLfloat intensidadCorrer = 0.0f;  // 0 = quieto, 1 = corriendo (transición suave)
@@ -837,14 +840,14 @@ int main()
 		if (!playHuesitos) {
 			dibujarHuesitos(modelLoc, lightingShader, huesitos, huesitoss, rotCabeza, rotacionBrazo, 
 				rotacionBrazo, rotPierna, modelManoHuesitos, false);
-				dibujarPelota(modelLoc, lightingShader, modelManoHuesitos, pelota);
+				dibujarPelota(modelLoc, lightingShader, modelManoHuesitos, pelota, playIndexHuesitos, deltaTime);
 
 		}
 		else {
 			dibujarYoshiKeyframe(modelLoc,lightingShader,huesitos,huesitoss, modelManoHuesitos,2);
 			playAnimation(playHuesitos,playIndexHuesitos,KeyFrameHuesitos,posicionHuesitos,
 				tiempoInicioHuesitos,pasoActualHuesitos,rotsHuesitos);
-			dibujarPelota(modelLoc, lightingShader, modelManoHuesitos, pelota);
+			dibujarPelota(modelLoc, lightingShader, modelManoHuesitos, pelota, playIndexHuesitos,deltaTime);
 
 		}
 
