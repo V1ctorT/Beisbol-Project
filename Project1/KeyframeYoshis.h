@@ -29,6 +29,19 @@ typedef struct _frame
     //Incrementos de rotacion
     valoresYoshi incrementos;
 
+    //Posicion de la pelota
+    float pelX;
+    float pelY;
+    float pelZ;
+    //Incrementos pelota
+    float incPelX;
+    float incPelY;
+    float incPelZ;
+
+    //Rotacion pelota
+    float rotPel;
+    float incPel;
+
     //Tiempo acumulado
     float tiempo;
 
@@ -38,16 +51,28 @@ std::vector<FRAME> KeyFrame; //Yoshi
 std::vector<FRAME> KeyFrameHuesitos;
 
 //Guarda un keyframe---------------------------------------------------------------------
-void saveFrame(std::vector<FRAME>& KeyFrame, glm::vec3& posicionPersonaje, float& tiempoAnimacion, valoresYoshi& rotsYoshi)
+void saveFrame(std::vector<FRAME>& KeyFrame, glm::vec3& posicionPersonaje, float& tiempoAnimacion, 
+    valoresYoshi& rotsYoshi, bool pel = false)
 {
     FRAME frame{};
-
     frame.posX = posicionPersonaje.x;
     frame.posY = posicionPersonaje.y;
     frame.posZ = posicionPersonaje.z;
 
+
     frame.rotaciones = rotsYoshi;
 
+    if (pel) {
+        frame.pelX = pelotaPosicion.x;
+        frame.pelY = pelotaPosicion.y;
+        frame.pelZ = pelotaPosicion.z;
+    }
+    else {
+        frame.pelX = pelotaPP.x;
+        frame.pelY = pelotaPP.y;
+        frame.pelZ = pelotaPP.z;
+    }
+    
     frame.tiempo = tiempoAnimacion;
 
     KeyFrame.push_back(frame);
@@ -184,11 +209,22 @@ void resetElements(std::vector<FRAME>& KeyFrame, glm::vec3& posicionPersonaje,in
     posicionPersonaje.y = KeyFrame[0].posY;
     posicionPersonaje.z = KeyFrame[0].posZ;
 
+    rotPel = KeyFrame[0].rotPel;
     // Rotaciones
     if (yoshi == 1) {
+        pelotaPosicion.x = KeyFrame[0].pelX;
+        pelotaPosicion.y = KeyFrame[0].pelY;
+        pelotaPosicion.z = KeyFrame[0].pelZ;
         rotsYoshi = KeyFrame[0].rotaciones;
     }
     else if (yoshi == 2) {
+        pelotaPP.x = KeyFrame[0].pelX;
+        pelotaPP.y = KeyFrame[0].pelY;
+        pelotaPP.z = KeyFrame[0].pelZ;
+        rotsHuesitos = KeyFrame[0].rotaciones;
+    }
+    else if (yoshi == 3) {
+        rotsYoshi = KeyFrame[0].rotaciones;
         rotsHuesitos = KeyFrame[0].rotaciones;
     }
 }
@@ -214,6 +250,8 @@ valoresYoshi calcularIncrementos(valoresYoshi& actual,
     inc.rotHandD = (siguiente.rotHandD - actual.rotHandD) / pasos;
     inc.rotHandI = (siguiente.rotHandI - actual.rotHandI) / pasos;
 
+    inc.rotValPel = (siguiente.rotValPel - actual.rotValPel) / pasos;
+
     return inc;
 }
 
@@ -236,6 +274,10 @@ void interpolation(std::vector<FRAME>& KeyFrame, int& playIndex)
     actual.incX = (siguiente.posX - actual.posX) / pasos;
     actual.incY = (siguiente.posY - actual.posY) / pasos;
     actual.incZ = (siguiente.posZ - actual.posZ) / pasos;
+    actual.incPelX = (siguiente.pelX -actual.pelX) / pasos;
+    actual.incPelY = (siguiente.pelY - actual.pelY) / pasos;
+    actual.incPelZ = (siguiente.pelZ - actual.pelZ) / pasos;
+    actual.incPel = (siguiente.rotPel - actual.rotPel) / pasos;
 
     // Rotaciones
     actual.incrementos = calcularIncrementos(
@@ -257,14 +299,38 @@ void startAnimation(int& playIndex, std::vector<FRAME>& KeyFrame, glm::vec3& pos
 
     tiempoInicio = glfwGetTime();
     tiempoUltimoPaso = tiempoInicio;
-
     interpolation(KeyFrame,playIndex);
+    play = true;
+}
+
+void startAnimation2(int& playIndex,int& playIndex2, 
+    std::vector<FRAME>& KeyFrame, std::vector<FRAME>& KeyFrame2, 
+    glm::vec3& posicionPersonaje, int& pasoActual, double& tiempoInicio, 
+    double& tiempoUltimoPaso, bool& play, int yoshi)
+{
+    if (KeyFrame.size() < 2)
+        return;
+
+    playIndex = 0;
+    pasoActual = 0;
+
+    resetElements(KeyFrame, posicionPersonaje, yoshi);
+
+    tiempoInicio = glfwGetTime();
+    tiempoUltimoPaso = tiempoInicio;
+
+    interpolation(KeyFrame, playIndex);
+    interpolation(KeyFrame2, playIndex2);
+    KeyFrame[playIndex].incPelX = KeyFrame2[playIndex2].incPelX;
+    KeyFrame[playIndex].incPelY = KeyFrame2[playIndex2].incPelY;
+    KeyFrame[playIndex].incPelZ = KeyFrame2[playIndex2].incPelZ;
 
     play = true;
 }
 
-void aplicarIncrementos(int& playIndex, std::vector<FRAME>& KeyFrame, glm::vec3& posicionPersonaje, 
-    valoresYoshi& rotsYoshi)
+
+void aplicarIncrementos(int& playIndex, std::vector<FRAME>& KeyFrame, 
+    glm::vec3& posicionPersonaje, valoresYoshi& rotsYoshi)
 {
     FRAME& f = KeyFrame[playIndex];
 
@@ -291,10 +357,15 @@ void aplicarIncrementos(int& playIndex, std::vector<FRAME>& KeyFrame, glm::vec3&
     // Manos
     rotsYoshi.rotHandD += f.incrementos.rotHandD;
     rotsYoshi.rotHandI += f.incrementos.rotHandI;
+    
+    //Pelota
+    pelotaPosicion += glm::vec3(f.incPelX, f.incPelY, f.incPelZ);
+    rotPel += f.rotPel;
 }
 
-void playAnimation(bool& play,int& playIndex, std::vector<FRAME>& KeyFrame, glm::vec3& posicionPersonaje,
-    double& tiempoInicio, int& pasoActual, valoresYoshi& rotsYoshi)
+void playAnimation(bool& play,int& playIndex, std::vector<FRAME>& KeyFrame, 
+    glm::vec3& posicionPersonaje, double& tiempoInicio, int& pasoActual, 
+    valoresYoshi& rotsYoshi)
 {
     float pasos = 190;
 
@@ -341,6 +412,8 @@ void playAnimation(bool& play,int& playIndex, std::vector<FRAME>& KeyFrame, glm:
 
         rotsYoshi = siguiente.rotaciones;
 
+        pelotaPosicion = glm::vec3(siguiente.pelX,siguiente.pelY,siguiente.pelZ);
+
         // Avanzar al siguiente keyframe
         playIndex++;
 
@@ -360,10 +433,17 @@ void playAnimation(bool& play,int& playIndex, std::vector<FRAME>& KeyFrame, glm:
     }
 }
 
-inline void dibujarYoshiKeyframe(GLint modelLoc, Shader& shader, const PartesYoshi& p, glm::mat4& base,
-    glm::mat4& modelMano, int yoshi)
+inline void dibujarYoshiKeyframe(GLint modelLoc, Shader& shader, const PartesYoshi& p, 
+    glm::mat4& base, glm::mat4& modelMano, int yoshi, Gorras& g)
 {
     if (yoshi == 1) {
+        glm::mat4 pelota(1);
+        pelota = glm::translate(pelota,pelotaPosicion);
+        pelota = glm::rotate(pelota, glm::radians(rotPel), glm::vec3(1.0f, 0.0f, 1.0f));
+        pelota = glm::scale(pelota, glm::vec3(2.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(pelota));
+        p.pelota->Draw(shader);
+
         glm::mat4 modelCuerpo = base;
         glm::mat4 model = base, modelTemp;
 
@@ -374,6 +454,12 @@ inline void dibujarYoshiKeyframe(GLint modelLoc, Shader& shader, const PartesYos
         model = glm::rotate(model, glm::radians(rotsYoshi.rotHead), glm::vec3(0.0f, 1.0f, 0.0f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         p.cabeza->Draw(shader);
+
+        model = glm::translate(modelCuerpo, glm::vec3(-0.1f, 1.0f, 0.4f));
+        model = glm::rotate(model, glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(rotsYoshi.rotHead), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        g.quico->Draw(shader);
 
 
         // Brazo izquierdo + mano
@@ -419,6 +505,14 @@ inline void dibujarYoshiKeyframe(GLint modelLoc, Shader& shader, const PartesYos
     }
     else if (yoshi == 2)
     {
+
+        glm::mat4 pelota(1);
+        pelota = glm::translate(pelota, pelotaPosicion);
+        pelota = glm::rotate(pelota, glm::radians(rotPel), glm::vec3(1.0f, 0.0f, 1.0f));
+        pelota = glm::scale(pelota, glm::vec3(2.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(pelota));
+        p.pelota->Draw(shader);
+
         glm::mat4 modelCuerpo = base;
         glm::mat4 model = base, modelTemp;
 
@@ -438,6 +532,13 @@ inline void dibujarYoshiKeyframe(GLint modelLoc, Shader& shader, const PartesYos
             modelLoc, 1, GL_FALSE, glm::value_ptr(model)
         );
         p.cabeza->Draw(shader);
+
+        //Gorro
+        model = glm::translate(modelCuerpo, glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(200.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(rotsHuesitos.rotHead), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        g.donRamon->Draw(shader);
 
         // BRAZO DERECHO
         model = glm::translate(
@@ -587,13 +688,16 @@ inline void dibujarYoshiKeyframe(GLint modelLoc, Shader& shader, const PartesYos
 }
 
 void bateoAqui(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vector<FRAME>& KeyFrame) {
-    // KEYFRAME 1
+    // 0 KEYFRAME 1 
     tiempoAnimacion = 0.0f;
-    posicionPersonaje.y = 0.5f;
+    posicionPersonaje.x = -1.73735f;
+    posicionPersonaje.y = 1.67006f;
+    posicionPersonaje.z = -0.753044f;
+    pelotaPosicion = glm::vec3(14.8709f, 1.84649f, -16.4633f);
 
     rotsYoshi = {
         0.0f,       // rotHead
-        0.0f,       // rotBody
+        -51.0f,       // rotBody
         0.0f,       // rotArmD_Y
         0.0f,       // rotArmD_Z
         0.0f,       // rotArmI_Y
@@ -603,16 +707,20 @@ void bateoAqui(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vector
         0.0f,       // rotHandD
         0.0f        // rotHandI
     };
-    saveFrame(KeyFrame,posicionPersonaje,tiempoAnimacion,rotsYoshi);
+    saveFrame(KeyFrame,posicionPersonaje,tiempoAnimacion,rotsYoshi,true);
 
 
-    // KEYFRAME 2
-    tiempoAnimacion = 0.5f;
-    posicionPersonaje.y = 0.5f;
+    // 70 KEYFRAME 2 Gira cuerpo y junta las manos
+    tiempoAnimacion = 0.2f;
+
+    posicionPersonaje.x = -1.73735f;
+    posicionPersonaje.y = 1.67006f;
+    posicionPersonaje.z = -0.753044f;
+    pelotaPosicion = glm::vec3(14.8709f, 1.84649f, -16.4633f);
 
     rotsYoshi = {
         42.5592f,
-        0.0f,
+        -51.0f,
         110.0f,
         0.0f,
         -128.0f,
@@ -622,12 +730,15 @@ void bateoAqui(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vector
         110.0f,
         95.0f
     };
-    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsYoshi);
+    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsYoshi, true);
 
 
-    // KEYFRAME 3
-    tiempoAnimacion = 0.8f;
-    posicionPersonaje.y = 0.5f;
+    // 120 KEYFRAME 3 Estira brazos
+    tiempoAnimacion = 0.4f;
+    posicionPersonaje.x = -1.73735f;
+    posicionPersonaje.y = 1.67006f;
+    posicionPersonaje.z = -0.753044f;
+    pelotaPosicion = glm::vec3(14.8709f, 1.84649f, -16.4633f);
 
     rotsYoshi = {
         69.0f,
@@ -641,12 +752,15 @@ void bateoAqui(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vector
         159.0f,
         95.0f
     };
-    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsYoshi);
+    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsYoshi, true);
 
 
-    // KEYFRAME 4
-    tiempoAnimacion = 1.0f;
-    posicionPersonaje.y = 0.5f;
+    //170 KEYFRAME 4 Gira para batear - pelota Choca
+    tiempoAnimacion = 0.8f;
+    posicionPersonaje.x = -1.73735f;
+    posicionPersonaje.y = 1.67006f;
+    posicionPersonaje.z = -0.753044f;
+    pelotaPosicion = glm::vec3(0.0f, 1.67961f, 0.0f);
 
     rotsYoshi = {
         -44.0f,
@@ -660,12 +774,15 @@ void bateoAqui(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vector
         166.0f,
         95.0f
     };
-    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsYoshi);
+    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsYoshi, true);
 
 
-    // KEYFRAME 5
-    tiempoAnimacion = 1.5f;
-    posicionPersonaje.y = 1.26f;
+    //220 KEYFRAME 5 Salto y giro (momentum del bateo)
+    tiempoAnimacion = 1.6f;
+    posicionPersonaje.x = -1.73735f;
+    posicionPersonaje.y = 2.26006f;
+    posicionPersonaje.z = -0.753044f;
+    pelotaPosicion = glm::vec3(60.6394f, 31.5427f, -72.2949f);
 
     rotsYoshi = {
         0.0f,
@@ -679,12 +796,15 @@ void bateoAqui(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vector
         166.0f,
         95.0f
     };
-    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsYoshi);
+    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsYoshi, true);
 
 
-    // KEYFRAME 6
-    tiempoAnimacion = 2.0f;
+    // 250 KEYFRAME 6 vuelve al piso
+    tiempoAnimacion = 2.4f;
+    posicionPersonaje.x = -1.73735f;
     posicionPersonaje.y = 0.5f;
+    posicionPersonaje.z = -0.753044f;
+    pelotaPosicion = glm::vec3(88.7069f, 3.43961f, -105.757);
 
     rotsYoshi = {
         0.0f,
@@ -698,7 +818,7 @@ void bateoAqui(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vector
         90.0f,
         95.0f
     };
-    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsYoshi);
+    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsYoshi, true);
 }
 
 void lanzamiento(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vector<FRAME>& KeyFrame)
@@ -706,6 +826,7 @@ void lanzamiento(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vect
     // KEYFRAME 1
     tiempoAnimacion = 0.0f;
     posicionHuesitos.y = 1.47702f;
+    pelotaPosicion = glm::vec3(14.9834f, 1.54544f, -16.4595f);
 
     rotsHuesitos = {
         0.0f,       // rotHead
@@ -719,13 +840,13 @@ void lanzamiento(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vect
         0.0f,        // rotHandD
         0.0f         // rotHandI
     };
-    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsHuesitos);
+    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsHuesitos, true);
 
 
     // KEYFRAME 2
-    tiempoAnimacion = 0.8f;
+    tiempoAnimacion = 0.5f;
     posicionHuesitos.y = 2.59702f;
-
+    pelotaPosicion = glm::vec3(15.1234f, 1.64544f, -16.5181f);
     rotsHuesitos = {
         -12.704f,
         178.0f,
@@ -738,12 +859,13 @@ void lanzamiento(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vect
         -22.5556f,
         53.125f
     };
-    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsHuesitos);
+    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsHuesitos, true);
 
 
     // KEYFRAME 3
-    tiempoAnimacion = 1.6f;
+    tiempoAnimacion = 0.8f;
     posicionHuesitos.y = 1.47702f;
+    pelotaPosicion = glm::vec3(15.1834f, 1.54544f, -16.6595f);
 
     rotsHuesitos = {
         -36.2963f,
@@ -757,12 +879,13 @@ void lanzamiento(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vect
         270.556f,
         170.0f
     };
-    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsHuesitos);
+    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsHuesitos, true);
 
 
     // KEYFRAME 4
-    tiempoAnimacion = 2.4f;
+    tiempoAnimacion = 1.2f;
     posicionHuesitos.y = 1.47702f;
+    pelotaPosicion = glm::vec3(15.1234f, 1.44544f, -16.8009f);
 
     rotsHuesitos = {
         -45.37f,
@@ -776,12 +899,13 @@ void lanzamiento(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vect
         -80.5556f,
         232.422f
     };
-    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsHuesitos);
+    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsHuesitos, true);
 
 
     // KEYFRAME 5
-    tiempoAnimacion = 3.2f;
+    tiempoAnimacion = 2.0f;
     posicionHuesitos.y = 1.47702f;
+    pelotaPosicion = glm::vec3(14.9834f, 1.54544f, -16.8595f);
 
     rotsHuesitos = {
         -49.0f,
@@ -795,12 +919,13 @@ void lanzamiento(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vect
         -104.0f,
         286.875f
     };
-    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsHuesitos);
+    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsHuesitos, true);
 
 
     // KEYFRAME 6
-    tiempoAnimacion = 4.0f;
+    tiempoAnimacion = 2.2f;
     posicionHuesitos.y = 1.47702f;
+    pelotaPosicion = glm::vec3(14.8434f, 1.64544f, -16.8009f);
 
     rotsHuesitos = {
         350.0f,
@@ -814,13 +939,13 @@ void lanzamiento(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vect
         -87.0f,
         330.48f
     };
-    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsHuesitos);
+    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsHuesitos, true);
 
 
     // KEYFRAME 7
-    tiempoAnimacion = 4.8f;
+    tiempoAnimacion = 2.8f;
     posicionHuesitos.y = 1.47702f;
-
+    pelotaPosicion = glm::vec3(14.9834f, 1.54544f, -16.6595f);
     rotsHuesitos = {
         362.0f,
         724.0f,
@@ -833,5 +958,5 @@ void lanzamiento(float& tiempoAnimacion, glm::vec3& posicionPersonaje, std::vect
         -39.0f,
         340.0f
     };
-    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsHuesitos);
+    saveFrame(KeyFrame, posicionPersonaje, tiempoAnimacion, rotsHuesitos, true);
 }

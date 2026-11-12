@@ -12,22 +12,29 @@
 
 
 struct PartesYoshi {
-    Model* cuerpo, * cabeza, * brazoL, * manoL, * brazoR, * manoR, * piernaL, * piernaR;
+    Model* cuerpo, * cabeza, * brazoL, * manoL, * brazoR, * manoR, * piernaL, * piernaR, *pelota;
+};
+struct Gorras {
+    Model* quico, * donRamon, * referee, *amarillo, *azul;
 };
 
-
 // swingBrazo: balanceo adelante/atrás (correr)   alzarBrazo: levantar brazos (0 = a los lados, 90 = rectos hacia arriba)
-inline void dibujarYoshi(GLint modelLoc, Shader& shader, const PartesYoshi& p, const glm::mat4& base,
-    GLfloat swingBrazo, GLfloat alzarBrazo, GLfloat rotMano, GLfloat rotPierna,
-    glm::mat4& modelMano,bool simple = false)
+inline void dibujarYoshi(GLint modelLoc, Shader& shader, const PartesYoshi& p, 
+    glm::mat4& base,GLfloat swingBrazo, GLfloat alzarBrazo, GLfloat rotMano, 
+    GLfloat rotPierna,glm::mat4& modelMano,Gorras& g,bool simple = false)
 {
-    const glm::mat4 modelCuerpo = base;
+    glm::mat4 modelCuerpo = base;
     glm::mat4 model = base, modelTemp;
 
     // Cuerpo y cabeza (mismo pivote)
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
     p.cuerpo->Draw(shader);
     p.cabeza->Draw(shader);
+    //Gorro
+    model = glm::translate(modelCuerpo, glm::vec3(-0.1f, 1.0f, 0.4f));
+    model = glm::rotate(model, glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+    g.quico->Draw(shader);
 
     if (simple) return;
 
@@ -83,6 +90,7 @@ inline void dibujarHuesitos(
     GLfloat rotMano,
     GLfloat rotPierna,
     glm::mat4& modelMano,
+    Gorras& g,
     bool simple = false)
 {
 
@@ -112,7 +120,6 @@ inline void dibujarHuesitos(
         glm::radians(rotCabeza),
         glm::vec3(0.0f, 1.0f, 0.0f)
     );
-
     model = glm::translate(
         model,
         glm::vec3(0.0f, 0.35028f, 0.0f)
@@ -122,6 +129,15 @@ inline void dibujarHuesitos(
         modelLoc, 1, GL_FALSE, glm::value_ptr(model)
     );
     p.cabeza->Draw(shader);
+
+
+    //Gorro
+    model = glm::translate(modelCuerpo, glm::vec3(0.0f, 1.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(rotCabeza), glm::vec3(0.0f, 1.0f, 0.0f));
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+    g.donRamon->Draw(shader);
+
 
     if (simple) return;
 
@@ -307,7 +323,8 @@ public:
 
     // Llamar con el shader de iluminación ya activo
     void dibujar(GLint modelLoc, Shader& shader,
-        const glm::vec3& camPos, const glm::vec3& camFront, GLfloat tiempo)
+        const glm::vec3& camPos, const glm::vec3& camFront, 
+        GLfloat tiempo, Gorras& g)
     {
         for (const auto& e : lista)
         {
@@ -332,7 +349,8 @@ public:
             m = glm::rotate(m, glm::radians(e.rotY), glm::vec3(0.0f, 1.0f, 0.0f));
             m = glm::scale(m, glm::vec3(e.escala));
             glm::mat4 modelMano(1);
-            dibujarYoshi(modelLoc, shader, partes, m, 0.0f, alzar, 0.0f, 0.0f, modelMano,simple);
+            dibujarYoshi(modelLoc, shader, partes, m, 0.0f, alzar, 0.0f, 0.0f, modelMano,
+                g,simple);
         }
     }
 

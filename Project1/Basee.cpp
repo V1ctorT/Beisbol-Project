@@ -33,6 +33,7 @@ Creado por:
 #include <glm/gtc/type_ptr.hpp>
 //Load Models
 #include "SOIL2/SOIL2.h"
+glm::vec3 pelotaPosicion(0.0f, 0.0f, 0.0f);
 
 //Librerias para Carga de modelos y camara-----------------------------------------------
 #include "Shader.h"
@@ -40,6 +41,9 @@ Creado por:
 #include "Model.h"
 //Animaciones de publico y corredores----------------------------------------------------
 #include "Publico.h"
+glm::mat4 m(1);
+glm::vec3 tra(0.0f,0.0f,0.0f);
+
 #include "Corredores.h"
 int estado = 0; //0 - Caminar, 1 - Bateo, 2 - Atrapar 3 - Lanzar
 //Posicion pelota
@@ -67,7 +71,9 @@ void imprimirPosicion(glm::vec3 posiciones[], int size);
 
 //Limite de movimiento de la camara
 void limiteCamara();
-int modoC = 0;
+//0 yoshi, 1 tercera persona
+//3 pelota 2 huesitos lanzador 
+int modoC = 0; 
 
 //Rutinas
 void rutLanzar();
@@ -83,7 +89,7 @@ const GLuint WIDTH = 1920, HEIGHT = 1080;
 int SCREEN_WIDTH = WIDTH, SCREEN_HEIGHT = HEIGHT;
 
 // Camera--------------------------------------------------------------------------------
-Camera  camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera  camera(glm::vec3(0.0f,0.0f,0.0f));
 GLfloat lastX = WIDTH / 2.0;
 GLfloat lastY = HEIGHT / 2.0;
 bool keys[1024];
@@ -95,11 +101,11 @@ bool active;
 // Posiciones de Las Luces---------------------------------------------------------------
 glm::vec3 pointLightPositions[] = {
 	//Lampara1
-	glm::vec3(73.534f, 49.302f, 20.756f),
+	glm::vec3(40.7534f, 46.5365f, 52.7199f),
 
-	glm::vec3(-65.747f,46.411f ,27.069f ),
+	glm::vec3(-52.2116f,46.4115 ,-40.2842f ),
 
-	glm::vec3(-35.122f, 40.505f, -100.63f),
+	glm::vec3(59.7414f, 40.5053f, -108.932f),
 
 
 	glm::vec3(73.534f, 46.536f, 20.756f),
@@ -188,7 +194,7 @@ float vertices[] = {
 };
 
 //Posicion del Personaje Principal------------------------------------------------------
-glm::vec3 posicionPersonaje(0.0f, 0.5f, 0.0f);
+glm::vec3 posicionPersonaje(0.0f, 0.0f, 0.0f);
 int corredor = -1;
 glm::vec3 posicionHuesitos(15.547f, 3.47702f, -16.07f);
 
@@ -213,6 +219,8 @@ struct valoresYoshi {
 
 	float rotHandD;
 	float rotHandI;
+
+	float rotValPel;
 };
 //Animacion Keyframe Yoshi---------------------------------------------------------------
 int playIndexYoshi = 0; //KeyFrame Actual
@@ -232,6 +240,8 @@ double tiempoUltimoPasoHuesitos = 0.0f; //Momento del ultimo keyframe
 bool teclaGAnterior = false; //Para accionar la animacion
 //Quien se va a usar 1 - yoshi, 2 - huesitos
 int yoshi = 1; 
+bool secuenciaActiva = false;
+bool yoshiIniciado = false;
 //Variable global------------------------------------------------------------------------
 valoresYoshi rotsYoshi = 
 {
@@ -239,7 +249,8 @@ valoresYoshi rotsYoshi =
 	0.0f,0.0f,
 	0.0f,0.0f,
 	0.0f,0.0f,
-	0.0f,0.0f
+	0.0f,0.0f,
+	0.0f
 };
 valoresYoshi rotsHuesitos =
 {
@@ -247,9 +258,10 @@ valoresYoshi rotsHuesitos =
 	0.0f,0.0f,
 	0.0f,0.0f,
 	0.0f,0.0f,
-	0.0f,0.0f
+	0.0f,0.0f,
+	0.0f
 };
-
+float rotPel = 0.0f;
 #include "KeyframeYoshis.h"
 //Rutinas y Utilerias
 #include "Pelota.h"
@@ -365,7 +377,7 @@ int main()
 
 	//-----------------------------------------------------------------------------------
 	//Carga de Modelos
-	
+
 	//Model pisooo((char*)"Modelos/Estadio/PisoBase.obj");
 	//Model base((char*)"Modelos/Bases/Base.obj");
 	//Model base2((char*)"Modelos/Bases/Base2.obj");
@@ -376,6 +388,15 @@ int main()
 	//Personajes-------------------------------------------------------------------------
 	Model yoshis((char*)"Modelos/YoshiOBJ/yoshi.obj"); //Completo
 	Model huesittos2((char*)"Modelos/YoshiOBJ/Red Dry Bones/bloody_karon.obj"); //Completo
+	//Pelotas----------------------------------------------------------------------------
+	Model pelotaa((char*)"Modelos/Pelotas/pelota.obj");
+	//Gorras-----------------------------------------------------------------------------
+	Model quico((char*)"Modelos/Publico/Gorras/Quico_Gorra.obj");
+	Model donRamon((char*)"Modelos/Publico/Gorras/Don_Ramon_Gorra.obj");
+	Model referee((char*)"Modelos/Publico/Gorras/Referee.obj");
+	Model amarillo((char*)"Modelos/Publico/Gorras/CascoAmarillo.obj");
+	Model azul((char*)"Modelos/Publico/Gorras/CascoAzul.obj");
+	Gorras gorras = {&quico,&donRamon,&referee, &amarillo, &azul};
 	//Yoshi------------------------------------------------------------------------------
 	Model yoshiH((char*)"Modelos/YoshiOBJ/yoshi_Partes/YCabeza.obj");
 	Model yoshiCuerpo((char*)"Modelos/YoshiOBJ/yoshi_Partes/YCuerpo.obj");
@@ -386,7 +407,7 @@ int main()
 	Model yoPierna_L((char*)"Modelos/YoshiOBJ/yoshi_Partes/Y_LegI.obj");
 	Model yoPierna_R((char*)"Modelos/YoshiOBJ/yoshi_Partes/YoLegDer.obj");
 	PartesYoshi partes = { &yoshiCuerpo, &yoshiH, &yoBrazo_L, &yoL_hand,
-					   &yoBrazo_R, &yoD_hand, &yoPierna_L, &yoPierna_R };
+					   &yoBrazo_R, &yoD_hand, &yoPierna_L, &yoPierna_R, &pelotaa };
 	//Huesitos---------------------------------------------------------------------------
 	Model hCabeza((char*)"Modelos/YoshiOBJ/huesitos_Partes/HCabeza.obj");
 	Model hCuerpo((char*)"Modelos/YoshiOBJ/huesitos_Partes/HCuerpo.obj");
@@ -397,7 +418,7 @@ int main()
 	Model hPataI((char*)"Modelos/YoshiOBJ/huesitos_Partes/HPataI.obj");
 	Model hPataD((char*)"Modelos/YoshiOBJ/huesitos_Partes/HPataD.obj");
 	PartesYoshi huesitos = {&hCuerpo,&hCabeza,&hBrazoI,&hManoI,&hBrazoD,
-		&hManoD,&hPataI,& hPataD};
+		&hManoD,&hPataI,& hPataD,& pelotaa };
 	//Toad-------------------------------------------------------------------------------
 	Model tBody((char*)"Modelos/Publico/Toad/Toad_Body.obj");
 	Model tCabeza((char*)"Modelos/Publico/Toad/Toad_Head.obj");
@@ -584,6 +605,7 @@ int main()
 	bateoAqui(tiempoAnimacionYoshi,posicionPersonaje,KeyFrame); //Carga la animacion yoshi
 	//lanzamiento(tiempoAnimacionYoshi, posicionPersonaje, KeyFrame);
 	lanzamiento(tiempoAnimacionHuesitos, posicionHuesitos, KeyFrameHuesitos); //Carga huesitos
+	/*completo(tiempoAnimacionYoshi, posicionPersonaje, KeyFrame, KeyFrameHuesitos);*/
 	// Game loop-------------------------------------------------------------------------
 	while (!glfwWindowShouldClose(window))
 	{
@@ -609,13 +631,27 @@ int main()
 		glfwPollEvents();
 		DoMovement();
 		ambientacion();
-		if (modoC == 1) {
-			camera.UpdatePivote(posicionPersonaje, 5.0f, 1.5f);
-		}
-		else
+		//0 yoshi, 1 tercera persona
+		//3 pelota 2 huesitos lanzador 
+		switch (modoC) 
 		{
-			camera.PrimeraPersona(posicionPersonaje);
+			case 0://Primera Persona
+				camera.PrimeraPersona(posicionPersonaje);
+				break;
+			case 1://Yoshi tercera persona
+				camera.UpdatePivote(posicionPersonaje, 5.0f, 1.5f);
+				break;
+			case 2: //Pelota
+				camera.UpdatePivote(pelotaPosicion, 5.0f, 1.5f);
+				break;
+			case 3: //Huesitos lanzador
+				camera.UpdatePivote(posicionHuesitos, 5.0f, 1.5f);
+				break;
+			default: // Por si toma un valor inesperado
+				camera.PrimeraPersona(posicionPersonaje);
+				break;
 		}
+		
 
 		// Clear the colorbuffer
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -786,11 +822,8 @@ int main()
 		estadio.Draw(lightingShader);
 
 		publico.actualizar(deltaTime);
-		publico.dibujar(modelLoc, lightingShader, camera.GetPosition(), camera.GetFront(), tiempoActual);
-
-
-
-
+		publico.dibujar(modelLoc, lightingShader, camera.GetPosition(), camera.GetFront(), 
+			tiempoActual, gorras);
 		/*
 		Si gorro = 1
 			Yoshi Gorra de kiko
@@ -819,36 +852,117 @@ int main()
 		corredoresA.agregar(noCorrA);
 		corredoresB.agregar(noCorrB);
 
-		corredoresA.dibujar(modelLoc, lightingShader, tiempoActual, baseJugador, 1);
-		corredoresB.dibujar(modelLoc, lightingShader, tiempoActual, baseJugador, 2);
+		corredoresA.dibujar(modelLoc, lightingShader, tiempoActual, baseJugador, 1,gorras);
+		corredoresB.dibujar(modelLoc, lightingShader, tiempoActual, baseJugador, 2,gorras);
 		glm::mat4 huesitoss(1.0f);
 		huesitoss = glm::translate(huesitoss, posicionHuesitos);
 
-		if (!playYoshi) {
-			dibujarYoshi(modelLoc, lightingShader, partes, baseJugador, rotacionBrazo, 0.0f,
-				rotacionBrazo, rotPierna, modelManoYoshi);
+		// =====================================================
+		// HUESITOS: PRIMERO REALIZA EL LANZAMIENTO
+		// =====================================================
 
+		if (!playHuesitos)
+		{
+			// Dibujo jerárquico normal
+			dibujarHuesitos(
+				modelLoc, lightingShader,
+				huesitos, huesitoss,
+				rotCabeza, rotacionBrazo,
+				rotacionBrazo, rotPierna,
+				modelManoHuesitos, gorras, false
+			);
 		}
 		else
 		{
-			dibujarYoshiKeyframe(modelLoc, lightingShader,partes,baseJugador, modelManoYoshi,1);
-			playAnimation(playYoshi,playIndexYoshi,KeyFrame,posicionPersonaje,
-				tiempoInicioYoshi,pasoActualYoshi,rotsYoshi);
+			// Dibujo mediante keyframes
+			dibujarYoshiKeyframe(
+				modelLoc, lightingShader,
+				huesitos, huesitoss,
+				modelManoHuesitos, 2, gorras
+			);
+
+			// Actualizar animación de Huesitos
+			playAnimation(
+				playHuesitos,
+				playIndexHuesitos,
+				KeyFrameHuesitos,
+				posicionHuesitos,
+				tiempoInicioHuesitos,
+				pasoActualHuesitos,
+				rotsHuesitos
+			);
 		}
 
 
-		if (!playHuesitos) {
-			dibujarHuesitos(modelLoc, lightingShader, huesitos, huesitoss, rotCabeza, rotacionBrazo, 
-				rotacionBrazo, rotPierna, modelManoHuesitos, false);
-				dibujarPelota(modelLoc, lightingShader, modelManoHuesitos, pelota, playIndexHuesitos, deltaTime);
+		// =====================================================
+		// YOSHI: COMIENZA CUANDO HUESITOS TERMINA
+		// =====================================================
 
+		// Detectar finalización de Huesitos e iniciar Yoshi
+		if (secuenciaActiva && !playHuesitos && !yoshiIniciado)
+		{
+			std::cout << "Inicia Bateo de Yoshi" << endl;
+
+			startAnimation(
+				playIndexYoshi,
+				KeyFrame,
+				posicionPersonaje,
+				pasoActualYoshi,
+				tiempoInicioYoshi,
+				tiempoUltimoPasoYoshi,
+				playYoshi,
+				1
+			);
+
+			yoshiIniciado = true;
 		}
-		else {
-			dibujarYoshiKeyframe(modelLoc,lightingShader,huesitos,huesitoss, modelManoHuesitos,2);
-			playAnimation(playHuesitos,playIndexHuesitos,KeyFrameHuesitos,posicionHuesitos,
-				tiempoInicioHuesitos,pasoActualHuesitos,rotsHuesitos);
-			dibujarPelota(modelLoc, lightingShader, modelManoHuesitos, pelota, playIndexHuesitos,deltaTime);
 
+
+		// =====================================================
+		// YOSHI: ANIMACIÓN DE BATEO
+		// =====================================================
+
+		if (!playYoshi)
+		{
+			// Dibujo jerárquico normal
+			dibujarYoshi(
+				modelLoc, lightingShader,
+				partes, baseJugador,
+				rotacionBrazo, 0.0f,
+				rotacionBrazo, rotPierna,
+				modelManoYoshi, gorras
+			);
+		}
+		else
+		{
+			// Dibujo mediante keyframes
+			dibujarYoshiKeyframe(
+				modelLoc, lightingShader,
+				partes, baseJugador,
+				modelManoYoshi, 1, gorras
+			);
+
+			// Actualizar animación de Yoshi
+			playAnimation(
+				playYoshi,
+				playIndexYoshi,
+				KeyFrame,
+				posicionPersonaje,
+				tiempoInicioYoshi,
+				pasoActualYoshi,
+				rotsYoshi
+			);
+		}
+
+
+		// =====================================================
+		// FINALIZACIÓN DE LA SECUENCIA
+		// =====================================================
+
+		if (secuenciaActiva && yoshiIniciado && !playYoshi)
+		{
+			secuenciaActiva = false;
+			std::cout << "Secuencia completa" << endl;
 		}
 
 		dibujarBates(modelLoc, lightingShader, modelManoYoshi, noBate, bates);
@@ -1186,11 +1300,6 @@ void DoMovement()
 		camera.ProcessKeyboard(RESET, deltaTime);
 	}
 	
-	if (keys[GLFW_KEY_Q] || keys[GLFW_KEY_LEFT])
-	{
-		camera.ProcessKeyboard(DOWN, deltaTime);
-
-	}
 
 
 	if (keys[GLFW_KEY_T] )
@@ -1233,14 +1342,7 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 	//Cambiar de modo de camara con C----------------------------------------------------
 	if (keys[GLFW_KEY_C] && action == GLFW_PRESS)
 	{
-		if (modoC == 0)
-		{
-			modoC = 1;
-		}
-		else if (modoC == 1)
-		{
-			modoC = 0;
-		}
+		modoC = (modoC + 1) % 4;
 	}
 	//Accionar el publico----------------------------------------------------------------
 	if (key == GLFW_KEY_P && action == GLFW_PRESS)
@@ -1268,15 +1370,46 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 		if (action == GLFW_RELEASE)
 			teclaFAnterior = false;
 	}
+	//Lanzamiento de la pelota-----------------------------------------------------------
 	if(key == GLFW_KEY_G)
 	{
-		if (action == GLFW_PRESS && !teclaGAnterior && !playHuesitos)
+		if (action == GLFW_PRESS && !teclaGAnterior && !secuenciaActiva)
 		{
 			std::cout << "Inicia Lanzamiento: " << endl;
-			startAnimation(playIndexHuesitos, KeyFrameHuesitos, posicionHuesitos, pasoActualHuesitos,
-				tiempoInicioHuesitos,tiempoUltimoPasoHuesitos,playHuesitos,2);
-			//estado = 0;
+
+			startAnimation(
+				playIndexHuesitos,
+				KeyFrameHuesitos,
+				posicionHuesitos,
+				pasoActualHuesitos,
+				tiempoInicioHuesitos,
+				tiempoUltimoPasoHuesitos,
+				playHuesitos,
+				2
+			);
+
+			secuenciaActiva = true;
+			yoshiIniciado = false;
 		}
+	}
+
+	if (key == GLFW_KEY_Q)
+	{
+		if (action == GLFW_PRESS && !teclaGAnterior && !playHuesitos && !teclaFAnterior && !playYoshi)
+		{
+			std::cout << "Inicia Animacion: " << endl;
+			//Animacion completa
+			startAnimation2(playIndexHuesitos,playIndexYoshi, KeyFrameHuesitos, KeyFrame,
+				posicionHuesitos, pasoActualHuesitos,
+				tiempoInicioHuesitos, tiempoUltimoPasoHuesitos, playHuesitos, 3);
+			
+		}
+		if (action == GLFW_PRESS)
+			teclaFAnterior = true;
+
+		if (action == GLFW_RELEASE)
+			teclaFAnterior = false;
+			//estado = 0;
 		if (action == GLFW_PRESS)
 			teclaGAnterior = true;
 
@@ -1326,6 +1459,7 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 	{
 		estado = 0;
 		soltarBate(noBate);
+		noBate = -1;
 	}
 	//Animacion de Bateo
 	
@@ -1346,7 +1480,9 @@ void MouseCallback(GLFWwindow *window, double xPos, double yPos)
 	lastX = xPos;
 	lastY = yPos;
 
-	camera.ProcessMouseMovement(xOffset, yOffset, true, modoC, posicionPersonaje);
+
+
+	camera.ProcessMouseMovement(xOffset, yOffset, pelotaPosicion,true, modoC);
 }
 
 

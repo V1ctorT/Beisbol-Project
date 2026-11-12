@@ -1,12 +1,32 @@
-# Blender 5.2.3 LTS MTL File: 'SMestadio.blend'
+# Blender 5.3.0 MTL File: 'SMestadio.blend'
 # www.blender.org
 
-newmtl acmat_0
-Ns 128.000031
+newmtl black
+Ns 0.015069
 Ka 1.000000 1.000000 1.000000
-Ks 0.200000 0.200000 0.200000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
-map_Kd Don_Ramon.png
+map_Kd ../../Stadium/sta01b_84.png
+
+newmtl green
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd ../../Stadium/textures/green_baseColor.jpg
+
+newmtl material
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd ../../Stadium/textures/material_baseColor.jpg

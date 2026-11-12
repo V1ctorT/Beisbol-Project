@@ -1,27 +1,497 @@
-# Blender 3.3.15 MTL File: 'None'
+# Blender 5.3.0 MTL File: 'SMestadio.blend'
 # www.blender.org
 
-newmtl Tex_0004_0.dds
+newmtl NemuMat32
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
 illum 1
-map_Kd sta01b_1.png
+map_Kd ../Publico/super-mario-64-toad/cap.png
 
-newmtl Tex_0005_0.dds
+newmtl NemuMat32.001
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
 illum 1
-map_Kd sta01b_2.png
+map_Kd ../Publico/super-mario-64-toad/cap.png
 
-newmtl Tex_0006_0.dds
+newmtl NemuMat32.002
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/cap.png
+
+newmtl NemuMat32.003
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/cap.png
+
+newmtl NemuMat32.004
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/cap.png
+
+newmtl NemuMat32.005
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/cap.png
+
+newmtl NemuMat32.006
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/cap.png
+
+newmtl NemuMat32.007
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/cap.png
+
+newmtl NemuMat44
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/26E73DFA_fix.png
+
+newmtl NemuMat44.001
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/26E73DFA_fix.png
+
+newmtl NemuMat44.002
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/26E73DFA_fix.png
+
+newmtl NemuMat44.003
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/26E73DFA_fix.png
+
+newmtl NemuMat44.004
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/26E73DFA_fix.png
+
+newmtl NemuMat44.005
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/26E73DFA_fix.png
+
+newmtl NemuMat44.006
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/26E73DFA_fix.png
+
+newmtl NemuMat44.007
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/26E73DFA_fix.png
+
+newmtl NemuMat45
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/1C72995D_fix.png
+
+newmtl NemuMat45.001
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/1C72995D_fix.png
+
+newmtl NemuMat45.002
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/1C72995D_fix.png
+
+newmtl NemuMat45.003
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/1C72995D_fix.png
+
+newmtl NemuMat45.004
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/1C72995D_fix.png
+
+newmtl NemuMat45.005
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/1C72995D_fix.png
+
+newmtl NemuMat45.006
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/1C72995D_fix.png
+
+newmtl NemuMat45.007
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/1C72995D_fix.png
+
+newmtl NemuMat47
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/vest.png
+
+newmtl NemuMat47.001
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/vest.png
+
+newmtl NemuMat47.002
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/vest.png
+
+newmtl NemuMat47.003
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/vest.png
+
+newmtl NemuMat47.004
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/vest.png
+
+newmtl NemuMat47.005
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/vest.png
+
+newmtl NemuMat47.006
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/vest.png
+
+newmtl NemuMat47.007
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/vest.png
+
+newmtl NemuMat49
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/skin.png
+
+newmtl NemuMat49.001
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/skin.png
+
+newmtl NemuMat49.002
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/skin.png
+
+newmtl NemuMat49.003
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/skin.png
+
+newmtl NemuMat49.004
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/skin.png
+
+newmtl NemuMat49.005
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/skin.png
+
+newmtl NemuMat49.006
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/skin.png
+
+newmtl NemuMat49.007
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/skin.png
+
+newmtl NemuMat50
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/shoe.png
+
+newmtl NemuMat50.001
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/shoe.png
+
+newmtl NemuMat50.002
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/shoe.png
+
+newmtl NemuMat50.003
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/shoe.png
+
+newmtl NemuMat50.004
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/shoe.png
+
+newmtl NemuMat50.005
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/shoe.png
+
+newmtl NemuMat50.006
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/shoe.png
+
+newmtl NemuMat50.007
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/super-mario-64-toad/shoe.png
+
+newmtl Pasto.002
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Campo.png
+
+newmtl Tex_0006_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -31,7 +501,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_3.png
 
-newmtl Tex_0006_0.dds_1
+newmtl Tex_0006_0.dds_1.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -41,7 +511,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_3.png
 
-newmtl Tex_0006_0.dds_2
+newmtl Tex_0006_0.dds_2.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -51,7 +521,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_3.png
 
-newmtl Tex_0009_0.dds
+newmtl Tex_0009_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -61,7 +531,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_6.png
 
-newmtl Tex_0009_0.dds_1
+newmtl Tex_0009_0.dds_1.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -71,7 +541,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_6.png
 
-newmtl Tex_0009_0.dds_2
+newmtl Tex_0009_0.dds_2.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -81,7 +551,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_6.png
 
-newmtl Tex_0011_0.dds
+newmtl Tex_0011_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -91,7 +561,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0011_0.dds_1
+newmtl Tex_0011_0.dds_1.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -101,7 +571,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0011_0.dds_10
+newmtl Tex_0011_0.dds_10.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -111,7 +581,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0011_0.dds_11
+newmtl Tex_0011_0.dds_11.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -121,7 +591,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0011_0.dds_12
+newmtl Tex_0011_0.dds_12.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -131,7 +601,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0011_0.dds_13
+newmtl Tex_0011_0.dds_13.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -141,7 +611,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0011_0.dds_14
+newmtl Tex_0011_0.dds_14.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -151,7 +621,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0011_0.dds_15
+newmtl Tex_0011_0.dds_15.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -161,7 +631,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0011_0.dds_16
+newmtl Tex_0011_0.dds_16.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -171,7 +641,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0011_0.dds_17
+newmtl Tex_0011_0.dds_17.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -181,7 +651,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0011_0.dds_18
+newmtl Tex_0011_0.dds_18.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -191,7 +661,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0011_0.dds_19
+newmtl Tex_0011_0.dds_19.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -201,7 +671,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0011_0.dds_2
+newmtl Tex_0011_0.dds_2.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -211,7 +681,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0011_0.dds_20
+newmtl Tex_0011_0.dds_20.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -221,7 +691,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0011_0.dds_21
+newmtl Tex_0011_0.dds_21.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -231,7 +701,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0011_0.dds_22
+newmtl Tex_0011_0.dds_22.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -241,7 +711,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0011_0.dds_23
+newmtl Tex_0011_0.dds_23.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -251,7 +721,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0011_0.dds_24
+newmtl Tex_0011_0.dds_24.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -261,7 +731,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0011_0.dds_25
+newmtl Tex_0011_0.dds_25.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -271,7 +741,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0011_0.dds_26
+newmtl Tex_0011_0.dds_26.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -281,7 +751,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0011_0.dds_3
+newmtl Tex_0011_0.dds_3.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -291,7 +761,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0011_0.dds_4
+newmtl Tex_0011_0.dds_4.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -301,7 +771,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0011_0.dds_5
+newmtl Tex_0011_0.dds_5.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -311,7 +781,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0011_0.dds_6
+newmtl Tex_0011_0.dds_6.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -321,7 +791,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0011_0.dds_7
+newmtl Tex_0011_0.dds_7.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -331,7 +801,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0011_0.dds_9
+newmtl Tex_0011_0.dds_9.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -341,7 +811,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_8.png
 
-newmtl Tex_0013_0.dds
+newmtl Tex_0013_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -351,7 +821,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_10.png
 
-newmtl Tex_0014_0.dds
+newmtl Tex_0014_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -361,7 +831,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_11.png
 
-newmtl Tex_0015_0.dds
+newmtl Tex_0015_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -371,7 +841,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_12.png
 
-newmtl Tex_0015_0.dds_1
+newmtl Tex_0015_0.dds_1.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -381,37 +851,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_12.png
 
-newmtl Tex_0016_0.dds
-Ns 0.000000
-Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 1
-map_Kd sta01b_13.png
-
-newmtl Tex_0017_0.dds
-Ns 0.000000
-Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 1
-map_Kd sta01b_14.png
-
-newmtl Tex_0018_0.dds
-Ns 0.000000
-Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 1
-map_Kd sta01b_15.png
-
-newmtl Tex_0019_0.dds
+newmtl Tex_0019_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -421,7 +861,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_16.png
 
-newmtl Tex_0020_0.dds
+newmtl Tex_0020_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -431,7 +871,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_17.png
 
-newmtl Tex_0021_0.dds
+newmtl Tex_0021_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -441,7 +881,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_18.png
 
-newmtl Tex_0022_0.dds
+newmtl Tex_0022_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -451,7 +891,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_19.png
 
-newmtl Tex_0023_0.dds
+newmtl Tex_0023_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -461,7 +901,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_20.png
 
-newmtl Tex_0024_0.dds
+newmtl Tex_0024_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -471,7 +911,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_21.png
 
-newmtl Tex_0025_0.dds
+newmtl Tex_0025_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -481,7 +921,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_22.png
 
-newmtl Tex_0026_0.dds
+newmtl Tex_0026_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -491,7 +931,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_23.png
 
-newmtl Tex_0027_0.dds
+newmtl Tex_0027_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -501,7 +941,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_24.png
 
-newmtl Tex_0027_0.dds_1
+newmtl Tex_0027_0.dds_1.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -511,17 +951,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_24.png
 
-newmtl Tex_0027_0.dds_2
-Ns 0.000000
-Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 1
-map_Kd sta01b_24.png
-
-newmtl Tex_0028_0.dds
+newmtl Tex_0028_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -531,7 +961,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_25.png
 
-newmtl Tex_0029_0.dds
+newmtl Tex_0029_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -541,7 +971,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_26.png
 
-newmtl Tex_0030_0.dds
+newmtl Tex_0030_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -551,7 +981,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_27.png
 
-newmtl Tex_0031_0.dds
+newmtl Tex_0031_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -561,7 +991,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_28.png
 
-newmtl Tex_0032_0.dds
+newmtl Tex_0032_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -571,7 +1001,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_29.png
 
-newmtl Tex_0033_0.dds
+newmtl Tex_0033_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -581,7 +1011,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_30.png
 
-newmtl Tex_0034_0.dds
+newmtl Tex_0034_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -591,7 +1021,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_31.png
 
-newmtl Tex_0035_0.dds
+newmtl Tex_0035_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -601,7 +1031,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_32.png
 
-newmtl Tex_0036_0.dds
+newmtl Tex_0036_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -611,7 +1041,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_33.png
 
-newmtl Tex_0037_0.dds
+newmtl Tex_0037_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -621,7 +1051,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_34.png
 
-newmtl Tex_0038_0.dds
+newmtl Tex_0038_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -631,7 +1061,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_35.png
 
-newmtl Tex_0039_0.dds
+newmtl Tex_0039_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -641,7 +1071,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_36.png
 
-newmtl Tex_0040_0.dds
+newmtl Tex_0040_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -651,7 +1081,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_37.png
 
-newmtl Tex_0041_0.dds
+newmtl Tex_0041_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -661,7 +1091,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_38.png
 
-newmtl Tex_0042_0.dds
+newmtl Tex_0042_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -671,7 +1101,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_39.png
 
-newmtl Tex_0043_0.dds
+newmtl Tex_0043_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -681,7 +1111,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_40.png
 
-newmtl Tex_0044_0.dds
+newmtl Tex_0044_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -691,27 +1121,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_41.png
 
-newmtl Tex_0044_0.dds_1
-Ns 0.000000
-Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 1
-map_Kd sta01b_64.png
-
-newmtl Tex_0044_0.dds_2
-Ns 0.000000
-Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 1
-map_Kd sta01b_64.png
-
-newmtl Tex_0045_0.dds
+newmtl Tex_0045_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -721,7 +1131,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_42.png
 
-newmtl Tex_0046_0.dds
+newmtl Tex_0046_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -731,7 +1141,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_43.png
 
-newmtl Tex_0047_0.dds
+newmtl Tex_0047_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -741,7 +1151,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_44.png
 
-newmtl Tex_0048_0.dds
+newmtl Tex_0048_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -751,7 +1161,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_45.png
 
-newmtl Tex_0049_0.dds
+newmtl Tex_0049_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -761,7 +1171,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_46.png
 
-newmtl Tex_0050_0.dds
+newmtl Tex_0050_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -771,7 +1181,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_47.png
 
-newmtl Tex_0051_0.dds
+newmtl Tex_0051_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -781,7 +1191,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_48.png
 
-newmtl Tex_0052_0.dds
+newmtl Tex_0052_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -791,7 +1201,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_49.png
 
-newmtl Tex_0053_0.dds
+newmtl Tex_0053_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -801,7 +1211,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_50.png
 
-newmtl Tex_0054_0.dds
+newmtl Tex_0054_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -811,7 +1221,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_51.png
 
-newmtl Tex_0055_0.dds
+newmtl Tex_0055_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -821,7 +1231,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_52.png
 
-newmtl Tex_0056_0.dds
+newmtl Tex_0056_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -831,7 +1241,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_53.png
 
-newmtl Tex_0057_0.dds
+newmtl Tex_0057_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -841,7 +1251,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_54.png
 
-newmtl Tex_0058_0.dds
+newmtl Tex_0058_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -851,7 +1261,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_55.png
 
-newmtl Tex_0059_0.dds
+newmtl Tex_0059_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -861,7 +1271,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_56.png
 
-newmtl Tex_0060_0.dds
+newmtl Tex_0060_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -871,7 +1281,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_57.png
 
-newmtl Tex_0061_0.dds
+newmtl Tex_0061_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -881,7 +1291,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_58.png
 
-newmtl Tex_0062_0.dds
+newmtl Tex_0062_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -891,7 +1301,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_59.png
 
-newmtl Tex_0063_0.dds
+newmtl Tex_0063_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -901,7 +1311,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_60.png
 
-newmtl Tex_0064_0.dds
+newmtl Tex_0064_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -911,7 +1321,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_61.png
 
-newmtl Tex_0065_0.dds
+newmtl Tex_0065_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -921,7 +1331,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_62.png
 
-newmtl Tex_0066_0.dds
+newmtl Tex_0066_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -931,7 +1341,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_63.png
 
-newmtl Tex_0067_0.dds
+newmtl Tex_0067_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -941,7 +1351,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_64.png
 
-newmtl Tex_0068_0.dds
+newmtl Tex_0068_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -951,7 +1361,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_65.png
 
-newmtl Tex_0069_0.dds
+newmtl Tex_0069_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -961,7 +1371,7 @@ d 1.000000
 illum 1
 map_Kd sta01b_66.png
 
-newmtl Tex_0070_0.dds
+newmtl Tex_0070_0.dds.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -971,262 +1381,368 @@ d 1.000000
 illum 1
 map_Kd sta01b_67.png
 
-newmtl Tex_0071_0.dds
-Ns 0.000000
+newmtl TowelCotton001_1K.001
+Ns 1000.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
-illum 1
-map_Kd sta01b_68.png
+illum 2
+map_Kd TowelCotton001.png
 
-newmtl Tex_0072_0.dds
-Ns 0.000000
+newmtl lambert1.003
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
-illum 1
-map_Kd sta01b_69.png
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
 
-newmtl Tex_0073_0.dds
-Ns 0.000000
+newmtl lambert1.005
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
-illum 1
-map_Kd sta01b_70.png
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
 
-newmtl Tex_0074_0.dds
-Ns 0.000000
+newmtl lambert1.006
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
-illum 1
-map_Kd sta01b_71.png
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
 
-newmtl Tex_0075_0.dds
-Ns 0.000000
+newmtl lambert1.007
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
-illum 1
-map_Kd sta01b_72.png
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
 
-newmtl Tex_0075_0.dds_1
-Ns 0.000000
+newmtl lambert1.008
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
-illum 1
-map_Kd sta01b_72.png
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
 
-newmtl Tex_0076_0.dds
-Ns 0.000000
+newmtl lambert1.009
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
-illum 1
-map_Kd sta01b_73.png
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
 
-newmtl Tex_0076_0.dds_1
-Ns 0.000000
+newmtl lambert1.010
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
-illum 1
-map_Kd sta01b_73.png
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
 
-newmtl Tex_0077_0.dds
-Ns 0.000000
+newmtl lambert1.011
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
-illum 1
-map_Kd sta01b_74.png
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
 
-newmtl Tex_0077_0.dds_1
-Ns 0.000000
+newmtl lambert1.012
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
-illum 1
-map_Kd sta01b_74.png
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
 
-newmtl Tex_0078_0.dds
-Ns 0.000000
+newmtl lambert1.013
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
-illum 1
-map_Kd sta01b_75.png
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
 
-newmtl Tex_0078_0.dds_1
-Ns 0.000000
+newmtl lambert1.014
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
-illum 1
-map_Kd sta01b_75.png
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
 
-newmtl Tex_0079_0.dds
-Ns 0.000000
+newmtl lambert1.015
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
-illum 1
-map_Kd sta01b_76.png
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
 
-newmtl Tex_0080_0.dds
-Ns 0.000000
+newmtl lambert1.016
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
-illum 1
-map_Kd sta01b_77.png
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
 
-newmtl Tex_0081_0.dds
-Ns 0.000000
+newmtl lambert1.017
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
-illum 1
-map_Kd sta01b_78.png
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
 
-newmtl Tex_0082_0.dds_2
-Ns 0.000000
+newmtl lambert1.018
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
-illum 1
-map_Kd sta01b_79.png
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
 
-newmtl Tex_0082_0.dds_3
-Ns 0.000000
+newmtl lambert1.019
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
-illum 1
-map_Kd sta01b_79.png
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
 
-newmtl Tex_0083_0.dds_1
-Ns 0.000000
+newmtl lambert1.020
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
-illum 1
-map_Kd sta01b_80.png
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
 
-newmtl Tex_0084_0.dds_1
-Ns 0.000000
+newmtl lambert1.021
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
-illum 1
-map_Kd sta01b_81.png
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
 
-newmtl Tex_0085_0.dds_1
-Ns 0.000000
+newmtl lambert1.022
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
-illum 1
-map_Kd sta01b_82.png
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
 
-newmtl Tex_0086_0.dds
-Ns 0.000000
+newmtl lambert1.023
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
-illum 1
-map_Kd sta01b_83.png
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
 
-newmtl Tex_0087_0.dds_2
-Ns 0.000000
+newmtl lambert1.024
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
-illum 1
-map_Kd sta01b_84.png
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
 
-newmtl Tex_0087_0.dds_3
-Ns 0.000000
+newmtl lambert1.025
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
-illum 1
-map_Kd sta01b_84.png
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
 
-newmtl Tex_0088_0.dds_2
-Ns 0.000000
+newmtl lambert1.026
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
-illum 1
-map_Kd sta01b_85.png
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
 
-newmtl Tex_0088_0.dds_3
-Ns 0.000000
+newmtl lambert1.027
+Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
-illum 1
-map_Kd sta01b_85.png
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
 
-newmtl Tex_0089_0.dds_1
+newmtl lambert1.028
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
+
+newmtl lambert1.029
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd textures/lambert1_baseColor.jpg
+map_Bump -bm 1.000000 textures/lambert1_normal.jpg
+
+newmtl mc_001_referee__4_-_Default.001
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
 Ke 0.000000 0.000000 0.000000
-Ni 1.450000
+Ni 1.500000
 d 1.000000
 illum 1
-map_Kd sta01b_86.png
+map_Kd ../Publico/referee-minion/mc_referee_df.png
+
+newmtl mc_001_referee__4_-_Default.002
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/referee-minion/mc_referee_df.png
+
+newmtl mc_001_referee__4_-_Default.003
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/referee-minion/mc_referee_df.png
+
+newmtl mc_001_referee__4_-_Default.004
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/referee-minion/mc_referee_df.png
+
+newmtl mc_001_referee__4_-_Default.005
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/referee-minion/mc_referee_df.png
+
+newmtl mc_001_referee__4_-_Default.006
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/referee-minion/mc_referee_df.png
+
+newmtl mc_001_referee__4_-_Default.007
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd ../Publico/referee-minion/mc_referee_df.png

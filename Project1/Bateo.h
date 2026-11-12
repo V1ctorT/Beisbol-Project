@@ -73,7 +73,7 @@ void dibujarBates(GLint modelLoc, Shader& shader, glm::mat4& mano, int& noBate, 
 int detectarBate(glm::vec3 posicionPersonaje)
 {
     glm::vec3 posicionActual = posicionPersonaje +
-        glm::vec3(0.0f, 1.159f, 0.0f);
+        glm::vec3(0.0f, 0.5f, 0.0f);
 
     for (int i = 0; i < 4; i++)
     {
