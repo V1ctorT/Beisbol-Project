@@ -1,14 +1,7 @@
 /* 
 -----------------------------------------------------------------------------------------
   OpenGL 3.3 Proyecto Final
-  Beisbol -
-  
-  Funciones Principales
-  Bateo de la Pelota
-
-  Modo Espectador desde el Estadio
-
-  Minijuegos de Practica
+  Beisbol
 
 Creado por:
 	Guadalupe Isabela De la Fuente Flores
@@ -34,7 +27,6 @@ Creado por:
 //Load Models
 #include "SOIL2/SOIL2.h"
 glm::vec3 pelotaPosicion(0.0f, 0.0f, 0.0f);
-
 //Librerias para Carga de modelos y camara-----------------------------------------------
 #include "Shader.h"
 #include "Camera.h"
@@ -43,7 +35,6 @@ glm::vec3 pelotaPosicion(0.0f, 0.0f, 0.0f);
 #include "Publico.h"
 glm::mat4 m(1);
 glm::vec3 tra(0.0f,0.0f,0.0f);
-
 #include "Corredores.h"
 int estado = 0; //0 - Caminar, 1 - Bateo, 2 - Atrapar 3 - Lanzar
 //Posicion pelota
@@ -102,11 +93,8 @@ bool active;
 glm::vec3 pointLightPositions[] = {
 	//Lampara1
 	glm::vec3(40.7534f, 46.5365f, 52.7199f),
-
 	glm::vec3(-52.2116f,46.4115 ,-40.2842f ),
-
 	glm::vec3(59.7414f, 40.5053f, -108.932f),
-
 
 	glm::vec3(73.534f, 46.536f, 20.756f),
 	glm::vec3(73.534f, 43.771f, 20.756f),
@@ -207,21 +195,17 @@ GLfloat rotCabeza = 0.0f;
 struct valoresYoshi {
 	float rotHead;
 	float rotBody;
-
 	float rotArmD_Y;
 	float rotArmD_Z;
-
 	float rotArmI_Y;
 	float rotArmI_Z;
-
 	float rotLegD;
 	float rotLegI;
-
 	float rotHandD;
 	float rotHandI;
-
 	float rotValPel;
 };
+
 //Animacion Keyframe Yoshi---------------------------------------------------------------
 int playIndexYoshi = 0; //KeyFrame Actual
 float tiempoAnimacionYoshi = 0.0f;
@@ -230,6 +214,7 @@ int pasoActualYoshi = 0; //Conteo de los pasos de interpolacioon
 double tiempoInicioYoshi = 0.0f; //Momento de inicio de animacion
 double tiempoUltimoPasoYoshi = 0.0f; //Momento del ultimo keyframe
 bool teclaFAnterior = false; //Para accionar la animacion
+
 //Animacion KeyFrame Huesitos------------------------------------------------------------
 int playIndexHuesitos = 0; //KeyFrame Actual
 float tiempoAnimacionHuesitos = 0.0f;
@@ -242,6 +227,7 @@ bool teclaGAnterior = false; //Para accionar la animacion
 int yoshi = 1; 
 bool secuenciaActiva = false;
 bool yoshiIniciado = false;
+
 //Variable global------------------------------------------------------------------------
 valoresYoshi rotsYoshi = 
 {
@@ -262,6 +248,7 @@ valoresYoshi rotsHuesitos =
 	0.0f
 };
 float rotPel = 0.0f;
+
 #include "KeyframeYoshis.h"
 //Rutinas y Utilerias
 #include "Pelota.h"
@@ -271,6 +258,7 @@ float rotPel = 0.0f;
 GLfloat fasePaso = 0.0f;          // avanza solo mientras caminas
 GLfloat intensidadCorrer = 0.0f;  // 0 = quieto, 1 = corriendo (transición suave)
 
+//Toad
 glm::vec3 posicionToad(3.0f, 0.43065f, -3.0f);
 
 glm::vec3 Light1 = glm::vec3(0);
@@ -283,12 +271,13 @@ glm::vec3 colorLamparas(1.0f, 1.0f, 0.0f);
 //Bate Actual
 int noBate = -1;
 
+//Luces Fiestaa
 struct ConfigFiesta
 {
 	glm::vec3 postes[3] = {
-	glm::vec3(70.768f,  7.6772f, -112.43f),
-	glm::vec3(88.346f,  7.6772f, -100.52f),
-	glm::vec3(106.8f,   7.6772f, -88.04f)
+	glm::vec3(70.768f,  7.6772f, -112.43f), //posición 1er poste
+	glm::vec3(88.346f,  7.6772f, -100.52f), //posición 2do poste
+	glm::vec3(106.8f,   7.6772f, -88.04f) //posición 3er poste
 	};
 	glm::vec3 colores[3] = {
 		glm::vec3(1.0f, 0.1f, 0.1f),   // poste 1: rojo
@@ -311,11 +300,7 @@ struct ConfigFiesta
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
 GLfloat lastFrame = 0.0f;  	// Time of last frame
 
-
 //Publico
-//void publicodf(GLint modelLoc, Model& modelo, Shader& shader, glm::mat4 model);
-//void dibujarPublico();
-
 //Posiciones Publico
 glm::vec3 publicos[] = {
 	glm::vec3(0.0f, 0.0f, 0.0f)
@@ -327,11 +312,6 @@ int main()
 	//Creacion del contexto de OpenGL y GLFW---------------------------------------------
 	// Init GLFW
 	glfwInit();
-	// Set all the required options for GLFW
-	/*glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);*/
 	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 	// Create a GLFWwindow object that we can use for GLFW's functions
 	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Beisbol Proyecto", nullptr, nullptr);
@@ -346,7 +326,6 @@ int main()
 	}
 
 	glfwMakeContextCurrent(window);
-
 	glfwGetFramebufferSize(window, &SCREEN_WIDTH, &SCREEN_HEIGHT);
 
 	// Set the required callback functions
@@ -359,6 +338,7 @@ int main()
 
 	// Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
 	glewExperimental = GL_TRUE;
+
 	// Initialize GLEW to setup the OpenGL Function pointers
 	if (GLEW_OK != glewInit())
 	{
@@ -369,7 +349,6 @@ int main()
 	// Define the viewport dimensions
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-
 	//Carga de Shaders ------------------------------------------------------------------
 	Shader lightingShader("Shader/lighting.vs", "Shader/lighting.frag");
 	Shader lampShader("Shader/lamp.vs", "Shader/lamp.frag");
@@ -377,19 +356,15 @@ int main()
 
 	//-----------------------------------------------------------------------------------
 	//Carga de Modelos
-
-	//Model pisooo((char*)"Modelos/Estadio/PisoBase.obj");
-	//Model base((char*)"Modelos/Bases/Base.obj");
-	//Model base2((char*)"Modelos/Bases/Base2.obj");
-	//Model base0((char*)"Modelos/Bases/BaseOg.obj");
 	Model estadio((char*)"Modelos/Stadium/SMestadio.obj");
-
 
 	//Personajes-------------------------------------------------------------------------
 	Model yoshis((char*)"Modelos/YoshiOBJ/yoshi.obj"); //Completo
 	Model huesittos2((char*)"Modelos/YoshiOBJ/Red Dry Bones/bloody_karon.obj"); //Completo
+
 	//Pelotas----------------------------------------------------------------------------
 	Model pelotaa((char*)"Modelos/Pelotas/pelota.obj");
+
 	//Gorras-----------------------------------------------------------------------------
 	Model quico((char*)"Modelos/Publico/Gorras/Quico_Gorra.obj");
 	Model donRamon((char*)"Modelos/Publico/Gorras/Don_Ramon_Gorra.obj");
@@ -397,6 +372,7 @@ int main()
 	Model amarillo((char*)"Modelos/Publico/Gorras/CascoAmarillo.obj");
 	Model azul((char*)"Modelos/Publico/Gorras/CascoAzul.obj");
 	Gorras gorras = {&quico,&donRamon,&referee, &amarillo, &azul};
+
 	//Yoshi------------------------------------------------------------------------------
 	Model yoshiH((char*)"Modelos/YoshiOBJ/yoshi_Partes/YCabeza.obj");
 	Model yoshiCuerpo((char*)"Modelos/YoshiOBJ/yoshi_Partes/YCuerpo.obj");
@@ -408,6 +384,7 @@ int main()
 	Model yoPierna_R((char*)"Modelos/YoshiOBJ/yoshi_Partes/YoLegDer.obj");
 	PartesYoshi partes = { &yoshiCuerpo, &yoshiH, &yoBrazo_L, &yoL_hand,
 					   &yoBrazo_R, &yoD_hand, &yoPierna_L, &yoPierna_R, &pelotaa };
+
 	//Huesitos---------------------------------------------------------------------------
 	Model hCabeza((char*)"Modelos/YoshiOBJ/huesitos_Partes/HCabeza.obj");
 	Model hCuerpo((char*)"Modelos/YoshiOBJ/huesitos_Partes/HCuerpo.obj");
@@ -419,6 +396,7 @@ int main()
 	Model hPataD((char*)"Modelos/YoshiOBJ/huesitos_Partes/HPataD.obj");
 	PartesYoshi huesitos = {&hCuerpo,&hCabeza,&hBrazoI,&hManoI,&hBrazoD,
 		&hManoD,&hPataI,& hPataD,& pelotaa };
+
 	//Toad-------------------------------------------------------------------------------
 	Model tBody((char*)"Modelos/Publico/Toad/Toad_Body.obj");
 	Model tCabeza((char*)"Modelos/Publico/Toad/Toad_Head.obj");
@@ -437,7 +415,7 @@ int main()
 	Model pelota((char*)"Modelos/Pelotas/pelota.obj");
 
 	//Bloques de Publico-----------------------------------------------------------------
-	 // piso 1 (4.83f para el piso 2)
+	// piso 1 (4.83f para el piso 2)
 	const GLfloat YC = 1.0f;           // altura del Yoshi corriendo sobre el piso 1
 	publico.init(partes);
 
@@ -492,9 +470,11 @@ int main()
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
 	// Position attribute
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
+
 	// normal attribute
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
@@ -502,15 +482,17 @@ int main()
 	//Configuracion de luces tipo spootlight---------------------------------------------
 	// Cono para los haces: punta en (0,0,0), base en y = -1 con radio 1
 	std::vector<float> cono;
-	const int SEG = 24;
+	const int SEG = 24; //Número de segmentos que formarán la base circular del cono
 	for (int i = 0; i < SEG; i++)
 	{
 		float a0 = glm::two_pi<float>() * i / SEG;
-		float a1 = glm::two_pi<float>() * (i + 1) / SEG;
+		float a1 = glm::two_pi<float>() * (i + 1) / SEG; //Calcula el ángulo inicial y final de cada segmento
 		cono.insert(cono.end(), { 0.0f, 0.0f, 0.0f,
 								  cosf(a0), -1.0f, sinf(a0),
-								  cosf(a1), -1.0f, sinf(a1) });
+								  cosf(a1), -1.0f, sinf(a1) }); //Agrega tres vértices por cada triángulo
 	}
+
+	//Identificadores del VAO y VBO que almacenarán la geometría del cono
 	GLuint coneVAO, coneVBO;
 	glGenVertexArrays(1, &coneVAO);
 	glGenBuffers(1, &coneVBO);
@@ -543,28 +525,21 @@ int main()
 		0, 1, 3,
 		1, 2, 3
 	};
+
 	//Atributos de imagen----------------------------------------------------------------
 	GLuint VBO_UI, VAO_UI, EBO_UI;
 	glGenVertexArrays(1, &VAO_UI);
 	glGenBuffers(1, &VBO_UI);
 	glGenBuffers(1, &EBO_UI);
-
 	glBindVertexArray(VAO_UI);
-
 	glBindBuffer(GL_ARRAY_BUFFER, VBO_UI);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(verticesUI), verticesUI, GL_STATIC_DRAW);
-
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_UI);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesUI), indicesUI, GL_STATIC_DRAW);
 
 	// Posición
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-
-	// Color
-	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,
-	//	8 * sizeof(float), (void*)(3 * sizeof(float)));
-	//glEnableVertexAttribArray(1);
 
 	// Coordenadas de textura
 	glVertexAttribPointer(1,2, GL_FLOAT, GL_FALSE,
@@ -573,7 +548,7 @@ int main()
 	glBindVertexArray(0);
 
 	//Carga de Imagen -------------------------------------------------------------------
-		// Load textures
+	// Load textures
 	GLuint texture1;
 	glGenTextures(1, &texture1);
 	glBindTexture(GL_TEXTURE_2D, texture1);
@@ -586,6 +561,7 @@ int main()
 	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
 	// Diffuse map
 	image = stbi_load("Interfaz/Interfaz.png", &textureWidth, &textureHeight, &nrChannels, 0);
 	glBindTexture(GL_TEXTURE_2D, texture1);
@@ -602,10 +578,12 @@ int main()
 	}
 	stbi_image_free(image);
 
+	//Animaciones KeyFrame----------------------------------------------------------------
 	bateoAqui(tiempoAnimacionYoshi,posicionPersonaje,KeyFrame); //Carga la animacion yoshi
 	//lanzamiento(tiempoAnimacionYoshi, posicionPersonaje, KeyFrame);
 	lanzamiento(tiempoAnimacionHuesitos, posicionHuesitos, KeyFrameHuesitos); //Carga huesitos
 	/*completo(tiempoAnimacionYoshi, posicionPersonaje, KeyFrame, KeyFrameHuesitos);*/
+
 	// Game loop-------------------------------------------------------------------------
 	while (!glfwWindowShouldClose(window))
 	{
@@ -620,6 +598,7 @@ int main()
 			//imprimirPosicion(pointLightPositions, 4);
 		}
 
+		//Matriz de proyeccion
 		glm::mat4 projection = glm::perspective(camera.GetZoom(), (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 500.0f);
 
 		// Calculate deltatime of current frame
@@ -651,7 +630,6 @@ int main()
 				camera.PrimeraPersona(posicionPersonaje);
 				break;
 		}
-		
 
 		// Clear the colorbuffer
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -670,7 +648,6 @@ int main()
 
 
 		// Directional light-------------------------------------------------------------
-
 		//Luces para cada momento del dia
 		// Direccion de la luz
 		glm::vec3 direcciones[] = {
@@ -704,12 +681,16 @@ int main()
 		bool spotOn = (estadoLuces == 2);
 		bool generalOn = (estadoLuces == 3);
 
+		//Asigna el color de las lámparas si están encendidas
+		//Si están apagadas, establece el color negro (sin iluminación)
 		glm::vec3 lightColor = lamparasOn ? colorLamparas : glm::vec3(0.0f);
 
 		glm::vec3 amb = ambient[ambiente];
 		glm::vec3 dif = diffuse[ambiente];
 		glm::vec3 spe = specular[ambiente];
 
+		//Si está activada la iluminación general, reemplaza los valores
+		//de iluminación por intensidades uniformes
 		if (generalOn)
 		{
 			amb = glm::vec3(0.45f);
@@ -717,21 +698,23 @@ int main()
 			spe = glm::vec3(0.5f);
 		}
 
+		// Envía al shader la dirección de la luz direccional
+		// y sus componentes ambiental, difusa y especular
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.direction"), direcciones[ambiente].x, direcciones[ambiente].y, direcciones[ambiente].z);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.ambient"), amb.x, amb.y, amb.z);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.diffuse"), dif.x, dif.y, dif.z);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.specular"), spe.x, spe.y, spe.z);
 
-
+		//Configuración de la primera luz puntual
+		//Envía su posición, color y componentes de iluminación al shader
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].position"), pointLightPositions[0].x, pointLightPositions[0].y, pointLightPositions[0].z);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].ambient"), lightColor.x, lightColor.y, lightColor.z);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].diffuse"), lightColor.x, lightColor.y, lightColor.z);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].specular"), lightColor.x, lightColor.y, lightColor.z);
+		//Define los factores de atenuación de la segunda luz puntual.
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].constant"), 1.0f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].linear"), 0.007f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].quadratic"), 0.001f);
-
-
 
 		// Point light 2
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].position"), pointLightPositions[1].x, pointLightPositions[1].y, pointLightPositions[1].z);
@@ -768,12 +751,21 @@ int main()
 		{
 			std::string s = "spotLights[" + std::to_string(i) + "].";
 
+			//Calcula el ángulo de giro de cada reflector según el tiempo transcurrido,
+			//la velocidad de movimiento y un desfase para separarlos entre sí
 			GLfloat ang = tiempoActual * fiesta.velocidadGiro + i * 2.094f;
+
+			//Calcula el punto hacia donde se dirige cada reflector,
+			//realizando un movimiento circular alrededor del objetivo
 			glm::vec3 punto = fiesta.objetivo + glm::vec3(cos(ang) * fiesta.radioBarrido, 0.0f,
 				sin(ang) * fiesta.radioBarrido);
+
+			// Calcula el vector normalizado que indica la dirección del reflector,
+			// desde la posición del poste hasta el punto de destino
 			glm::vec3 dirSpot = glm::normalize(punto - fiesta.postes[i]);
 
 			glm::vec3 colorSpot = fiesta.colores[i] * fiesta.intensidad;
+			//negro si están apagados
 			if (!spotOn) colorSpot = glm::vec3(0.0f);
 
 			dirsHaz[i] = dirSpot;
@@ -787,13 +779,15 @@ int main()
 			glUniform1f(glGetUniformLocation(lightingShader.Program, (s + "constant").c_str()), 1.0f);
 			glUniform1f(glGetUniformLocation(lightingShader.Program, (s + "linear").c_str()), fiesta.linear);
 			glUniform1f(glGetUniformLocation(lightingShader.Program, (s + "quadratic").c_str()), fiesta.quadratic);
+			//Define el ángulo interno de apertura del reflector en radianes
 			glUniform1f(glGetUniformLocation(lightingShader.Program, (s + "cutOff").c_str()), glm::cos(glm::radians(fiesta.apertura)));
+			//Define el ángulo externo del reflector, considerando el suavizado
+			//para generar una transición gradual en los bordes del haz
 			glUniform1f(glGetUniformLocation(lightingShader.Program, (s + "outerCutOff").c_str()), glm::cos(glm::radians(fiesta.apertura + fiesta.suavizado)));
 		}
 
 		// Set material properties
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 16.0f);
-
 
 		// Create camera transformations
 		glm::mat4 view;
@@ -807,7 +801,6 @@ int main()
 		// Pass the matrices to the shader
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-
 
 		glm::mat4 model(1);
 		glm::mat4 modelTemp(1);
@@ -844,16 +837,22 @@ int main()
 		GLfloat rotacionBrazo = sin(fasePaso) * 25.0f * intensidadCorrer;
 		rotPierna = rotacionBrazo * 3.0f;
 
+		// Configuración de posición y orientación del jugador
 		glm::mat4 baseJugador(1.0f);
 		baseJugador = glm::translate(baseJugador, posicionPersonaje + glm::vec3(0.0f, 1.159f, 0.0f));
 		baseJugador = glm::rotate(baseJugador, glm::radians(-camera.GetYaw() + 90.0f + 200.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		
+		// Inicialización de las matrices de transformación de las manos
 		glm::mat4 modelManoYoshi(1.0f);
 		glm::mat4 modelManoHuesitos(1.0f);
+		
+		// Registro y dibujo de los corredores de ambos equipos
 		corredoresA.agregar(noCorrA);
 		corredoresB.agregar(noCorrB);
-
 		corredoresA.dibujar(modelLoc, lightingShader, tiempoActual, baseJugador, 1,gorras);
 		corredoresB.dibujar(modelLoc, lightingShader, tiempoActual, baseJugador, 2,gorras);
+
+		// Configuración de la posición del modelo de Huesitos
 		glm::mat4 huesitoss(1.0f);
 		huesitoss = glm::translate(huesitoss, posicionHuesitos);
 
@@ -892,7 +891,6 @@ int main()
 				rotsHuesitos
 			);
 		}
-
 
 		// =====================================================
 		// YOSHI: COMIENZA CUANDO HUESITOS TERMINA
@@ -954,7 +952,6 @@ int main()
 			);
 		}
 
-
 		// =====================================================
 		// FINALIZACIÓN DE LA SECUENCIA
 		// =====================================================
@@ -966,258 +963,39 @@ int main()
 		}
 
 		dibujarBates(modelLoc, lightingShader, modelManoYoshi, noBate, bates);
-
-		//model = glm::mat4(1);
-		//mainMovement(modelLoc, yoshis, lightingShader, model);
-		////model = glm::translate(model, glm::vec3((sin(tiempoActual * 4.0f)) * 5.0f ,2.0f,0.0f));
-		//model = glm::translate(model, glm::vec3(0.0f, 2.0f, 0.0f));
-
-
-		////Rotacion de Brazos
-		//rotacionBrazo = sin(tiempoActual * 4.0f) * 25.0f;
-		//rotCabeza = sin(tiempoActual * 4.0f) * 30.0f;
-
-		////Cuerpo de Yoshi
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//yoshiCuerpo.Draw(lightingShader);
-
-		////Cabeza de Yoshi Tienen el mismo lugar de pivote
-		//modelCuerpo = modelTemp = model;
-		//model = glm::rotate(model, glm::radians(rotCabeza), glm::vec3(0.0f, 1.0f, 0.0f));
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//yoshiH.Draw(lightingShader);
-
-		////Gorro
-		//// Model = translare 0,0.5,0
-		////Gorro.Draw(lightingShader);
-
-		////Brazo Izquierdo de Yoshi
-		//model = glm::translate(modelTemp, glm::vec3(-0.26443f, -0.12442f, -0.015195f));//pivote
-		//model = glm::rotate(model, glm::radians(rotacionBrazo), glm::vec3(0.0f, 1.0f, 0.0f));
-		////-0.41714f, -0.12442f, -0.052828f Centro del modelo
-		//modelTemp = model = glm::translate(model, glm::vec3(-0.15271f, 0.0f, -0.037633f));//centro
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//yoBrazo_L.Draw(lightingShader);
-
-		////Mano Izquierda de Yoshi
-		//model = glm::translate(modelTemp, glm::vec3(-0.12210f,-0.00470f,-0.037183f));
-		//model = glm::rotate(model, glm::radians(rotacionBrazo), glm::vec3(1.0f, 0.0f, 0.0f));
-		////-0.71842, -0.17623, -0.178 Centro del modelo
-		//model = glm::translate(model, glm::vec3(-0.17918f,-0.04711f,-0.087989f));
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//yoL_hand.Draw(lightingShader);
-
-		//model = modelCuerpo;
-
-		////Brazo Derecho de Yoshi
-		//model = glm::translate(modelCuerpo, glm::vec3(0.23581f,-0.14962f,0.11884f));//pivote
-		//model = glm::rotate(model, glm::radians(rotacionBrazo), glm::vec3(0.0f, -1.0f, 0.0f));
-		////0.36386f, -0.13042f,0.17549f Centro del modelo
-		//modelTemp = model = glm::translate(model, glm::vec3(0.12805f,0.01920f,0.05665f));//centro
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//yoBrazo_R.Draw(lightingShader);
-
-		////Mano Derecha de Yoshi
-		//model = glm::translate(modelTemp, glm::vec3(0.13382f, 0.00130f, 0.05046f)); //Pivote de la mano
-		//model = glm::rotate(model, glm::radians(rotacionBrazo), glm::vec3(1.0f, 0.0f, 0.0f));
-		////0.22834f, -0.06276f, 0.02576f
-		//model = glm::translate(model, glm::vec3(0.22834f, -0.06276f, 0.02576f)); //Centro de la mano
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//yoD_hand.Draw(lightingShader);
-
-		//model = modelCuerpo;
-
-		//rotPierna = rotacionBrazo * 3.0f;
-		////Piernas de Yoshi
-		////Izquierda
-		//model = glm::translate(model, glm::vec3(-0.25734f, -0.70411f, 0.066808f));
-		//model = glm::rotate(model, glm::radians(rotPierna), glm::vec3(1.0f, 0.0f, 0.0f));
-		////-0.27725, -1.0203, -0.024045
-		//model = glm::translate(model, glm::vec3(-0.01991f, -0.31619f, -0.090853f)); //Centro de la pierna
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//yoPierna_L.Draw(lightingShader);
-
-		////Derecha
-		//model = modelCuerpo;
-		//model = glm::translate(model, glm::vec3(0.17779f,-0.68234f,0.21343f));
-		//model = glm::rotate(model, glm::radians(-rotPierna), glm::vec3(1.0f, 0.0f, 0.0f));
-		////0.24268, -1.018, 0.13401 
-		//model = glm::translate(model, glm::vec3(0.06489f, -0.33566f, -0.07942f)); //Centro de la pierna
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//yoPierna_R.Draw(lightingShader);
-
-		if (lanzar) {
-
-		}
 		
-
-		//Huesitos-----------------------------------------------------------------------
-		//model = glm::mat4(1);
-		//model = glm::translate(model, posicionHuesitos); //Posicion inicial
-
-		////Cuerpo
-		////0.0f,0.68843f,0.0f
-		//modelCuerpo = model = glm::translate(model, glm::vec3(0.0f,0.68843f,0.0f));
-		//modelCuerpo = model = glm::rotate(model,glm::radians(-55.0f), glm::vec3(0.0f,1.0f,0.0f));
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//hCuerpo.Draw(lightingShader);
-
-		////Cabeza
-		//model = glm::translate(modelCuerpo, glm::vec3(0.031647f,0.39327f,0.19935));//Pivote
-		//model = glm::rotate(model, glm::radians(rotCabeza), glm::vec3(0.0f,1.0f,0.0f));
-		////Centro 0.042193,1.432,0.082021
-		//model = glm::translate(model,glm::vec3(0.0f, 0.35028f, 0.0f));
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//hCabeza.Draw(lightingShader);
-
-		////Brazo Derecho
-		//model = glm::mat4(1);
-		//model = translate(modelCuerpo, glm::vec3(-0.14468f,0.22898f,0.16496f));//Pivote
-		//model = glm::rotate(model, glm::radians(rotacionBrazo), glm::vec3(0.0f, 1.0f, 0.0f));
-		////Centro -0.32961,0.91783,-0.063774
-		//modelTemp = model = glm::translate(model, glm::vec3(-0.17352f,0.000422f,0.0f));
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//hBrazoD.Draw(lightingShader);
-
-		////Mano Derecha
-		//model = translate(modelTemp, glm::vec3(0.0f, 0.000422f, 0.0f));//Pivote
-		//model = rotate(model, glm::radians(rotacionBrazo), glm::vec3(1.0f, 1.0f, 0.0f));
-		////Centro -0.60577,0.91575,0.003662
-		//model = glm::translate(model,glm::vec3(-0.27616f, -0.00208f, 0.067436f));
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//hManoD.Draw(lightingShader);
-
-		////Brazo Izquierdo
-		//model = glm::mat4(1);
-		//model = translate(modelCuerpo, glm::vec3(0.18415f, 0.22898f, 0.11287f));//Pivote
-		//model = glm::rotate(model, glm::radians(rotacionBrazo), glm::vec3(0.0f, 1.0f, 0.0f));
-		////Centro 0.34683,0.17093,0.91783
-		//modelTemp = model = glm::translate(model, glm::vec3(0.17352f, 0.000422f, 0.0f));
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//hBrazoI.Draw(lightingShader);
-		//
-		////Mano Izquierda
-		//model = translate(modelTemp, glm::vec3(0.0756f, 0.0f, 0.0f));//Pivote
-		//model = rotate(model, glm::radians(rotacionBrazo), glm::vec3(1.0f, 1.0f, 0.0f));
-		////Centro 0.60577,0.91575,0.003662
-		//model = glm::translate(model, glm::vec3(0.24735f, -0.010089f, -0.001561f));
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//hManoI.Draw(lightingShader);
-
-		////Piernas
-		////Derecha
-		//model = glm::mat4(1);
-		////0.0f,0.68843f,0.0f a -0.17231,0.63268,0.043567
-		//model = translate(modelCuerpo, glm::vec3(-0.17231f,-0.05575f,0.04356f));
-		//model = rotate(model, glm::radians(rotPierna), glm::vec3(1.0f, 0.0f, 0.0f));
-		////Centro 0.60577,0.91575,0.003662
-		//model = glm::translate(model, glm::vec3(0.0f, -0.38253f, 0.075f));
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//hPataD.Draw(lightingShader);
-
-		////Izquierda
-		//model = glm::mat4(1);
-		////0.0f,0.68843f,0.0f a 0.17747,0.63268,-0.011843
-		//model = translate(modelCuerpo, glm::vec3(0.17747f, -0.05575f, -0.011843f));
-		//model = rotate(model, glm::radians(rotPierna), glm::vec3(-1.0f, 0.0f, 0.0f));
-		////Centro 0.60577,0.91575,0.003662
-		//model = glm::translate(model, glm::vec3(0.0f, -0.32620f, 0.0f));
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//hPataD.Draw(lightingShader);
-
-		////Toad Referee-------------------------------------------------------------------
-		//model = glm::mat4(1);
-		//modelCuerpo = model = translate(model, posicionToad);
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//tBody.Draw(lightingShader);
-
-		////Cabeza
-		//model = translate(modelCuerpo, glm::vec3(0.0f,0.5323f,0.0f));
-		//model = rotate(model, glm::radians(rotCabeza), glm::vec3(0.0f, 1.0f, 0.0f));
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//tCabeza.Draw(lightingShader);
-
-		////Patas
-		////Derecha
-		//model = translate(modelCuerpo, glm::vec3(-0.23112f,0.18446f,0.094799f));
-		//model = rotate(model, glm::radians(rotPierna), glm::vec3(1.0f, 0.0f, 0.0f));
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//tPataD.Draw(lightingShader);
-		////Izquierda
-		//model = translate(modelCuerpo, glm::vec3(0.23112f, 0.18446f, -0.094799f));
-		//model = rotate(model, glm::radians(rotPierna), glm::vec3(-1.0f, 0.0f, 0.0f));
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//tPataI.Draw(lightingShader);
-
-		////Brazos
-		////Derecho
-		//model = translate(modelCuerpo, glm::vec3(-0.16343f, 0.46262f, 0.0f));
-		//model = rotate(model, glm::radians(rotacionBrazo), glm::vec3(0.0f, 1.0f, 0.0f));
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//tManoD.Draw(lightingShader);
-		////Izquierda
-		//model = translate(modelCuerpo, glm::vec3(0.16343f, 0.46262f, 0.0f));
-		//model = rotate(model, glm::radians(rotacionBrazo), glm::vec3(0.0f, -1.0f, 0.0f));
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//tManoI.Draw(lightingShader);
-
-		//glBindVertexArray(0);
-		////glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
-		////glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		////glDisable(GL_BLEND);  //Desactiva el canal alfa 
-
-		//// Also draw the lamp object, again binding the appropriate shader
-		//lampShader.Use();
-		//// Get location objects for the matrices on the lamp shader (these could be different on a different shader)
-		//modelLoc = glGetUniformLocation(lampShader.Program, "model");
-		//viewLoc = glGetUniformLocation(lampShader.Program, "view");
-		//projLoc = glGetUniformLocation(lampShader.Program, "projection");
-
-		//// Set matrices
-		//glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		//glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-		//model = glm::mat4(1);
-		//model = glm::translate(model, lightPos);
-		//model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//// Draw the light object (using light's vertex attributes)
-		//for (GLuint i = 0; i < 30; i++)
-		//{
-		//	model = glm::mat4(1);
-		//	model = glm::translate(model, pointLightPositions[i]);
-		//	model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
-		//	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//	glBindVertexArray(VAO);
-		//	glDrawArrays(GL_TRIANGLES, 0, 36);
-		//}
 		glBindVertexArray(0);
 
 		if (spotOn) //Animacion de luz spotlight-----------------------------------------
 		{
+			// Configuración del shader y envío de las matrices de cámara
 			beamShader.Use();
 			glUniformMatrix4fv(glGetUniformLocation(beamShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 			glUniformMatrix4fv(glGetUniformLocation(beamShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
+			// Activación de la transparencia y configuración de profundidad
+			// para representar los haces de luz sin ocultar otros objetos
 			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE);   // suma de luz
-			glDepthMask(GL_FALSE);               // no tapa lo que está detrás
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+			glDepthMask(GL_FALSE);
 
+			// Dibujo de los tres haces de luz mediante el modelo de cono
 			glBindVertexArray(coneVAO);
 			for (int i = 0; i < 3; i++)
 			{
-				// girar el cono (que apunta a -Y) hacia dirsHaz[i]
+				// Cálculo de la rotación y dimensiones del cono según la dirección del reflector
 				glm::vec3 eje = glm::cross(glm::vec3(0, -1, 0), dirsHaz[i]);
 				GLfloat ang = acos(glm::clamp(glm::dot(glm::vec3(0, -1, 0), dirsHaz[i]), -1.0f, 1.0f));
-
 				GLfloat radio = largoHaz[i] * tan(glm::radians(fiesta.aperturaHaz));
 
+				// Aplicación de transformaciones de posición, rotación y escala al cono
 				glm::mat4 m(1.0f);
 				m = glm::translate(m, fiesta.postes[i]);
 				if (glm::length(eje) > 0.0001f)
 					m = glm::rotate(m, ang, glm::normalize(eje));
 				m = glm::scale(m, glm::vec3(radio, largoHaz[i], radio));
 
-
+				// Envío de propiedades visuales del haz al shader y dibujo de sus triángulos
 				glUniformMatrix4fv(glGetUniformLocation(beamShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(m));
 				glUniform3f(glGetUniformLocation(beamShader.Program, "beamColor"),
 					fiesta.colores[i].x, fiesta.colores[i].y, fiesta.colores[i].z);
@@ -1225,8 +1003,9 @@ int main()
 				glDrawArrays(GL_TRIANGLES, 0, SEG * 3);
 
 			}
-			glBindVertexArray(0);
 
+			// Liberación del VAO y restauración de la configuración de profundidad y transparencia
+			glBindVertexArray(0);
 			glDepthMask(GL_TRUE);
 			glDisable(GL_BLEND);
 		}
@@ -1243,11 +1022,10 @@ int main()
 	// Terminate GLFW, clearing any resources allocated by GLFW.
 	glfwTerminate();
 
-
-
 	return 0;
 }
 
+//Lucees
 void ambientacion() {
 	//Ambiente
 	if (keys[GLFW_KEY_1])
@@ -1271,6 +1049,7 @@ void resize(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
+// Impresión de las posiciones actuales de la cámara y del personaje en consola
 void imprimirPosicion(glm::vec3 posiciones[], int size)
 {
 	system("cls");
@@ -1285,7 +1064,6 @@ void imprimirPosicion(glm::vec3 posiciones[], int size)
 void DoMovement()
 {
 	// Camera controls--------------------------------------------------------------
-
 	glm::vec3 direccion = camera.GetFront();
 	direccion.y = 0.0f;
 	direccion = glm::normalize(direccion);
@@ -1294,24 +1072,11 @@ void DoMovement()
 
 	moverPersonaje(direccion,derecha);
 
-
+	// Restablecimiento de la posición y orientación de la cámara al presionar R
 	if(keys[GLFW_KEY_R])
 	{
 		camera.ProcessKeyboard(RESET, deltaTime);
 	}
-	
-
-
-	if (keys[GLFW_KEY_T] )
-	{
-
-	}
-
-	if (keys[GLFW_KEY_Y] )
-	{
-
-	}
-	
 }
 
 // Is called whenever a key is pressed/released via GLFW
@@ -1352,6 +1117,7 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 	//Ajuste de Corredores---------------------------------------------------------------
 	if (key == GLFW_KEY_TAB && action == GLFW_PRESS)
 		ajuste = (ajuste == &corredoresA) ? &corredoresB : &corredoresA;
+
 	//Imprime centro corredores----------------------------------------------------------
 	if (key == GLFW_KEY_F)
 	{
@@ -1370,6 +1136,7 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 		if (action == GLFW_RELEASE)
 			teclaFAnterior = false;
 	}
+
 	//Lanzamiento de la pelota-----------------------------------------------------------
 	if(key == GLFW_KEY_G)
 	{
@@ -1474,40 +1241,23 @@ void MouseCallback(GLFWwindow *window, double xPos, double yPos)
 		firstMouse = false;
 	}
 
+	// Cálculo del desplazamiento del mouse en ambos ejes
 	GLfloat xOffset = xPos - lastX;
-	GLfloat yOffset = lastY - yPos;  // Reversed since y-coordinates go from bottom to left
+	GLfloat yOffset = lastY - yPos;
 
 	lastX = xPos;
 	lastY = yPos;
 
-
-
 	camera.ProcessMouseMovement(xOffset, yOffset, pelotaPosicion,true, modoC);
 }
-
 
 void mainMovement(GLint modelLoc, Model& modelo, Shader& shader, glm::mat4 model) 
 {
 
+	// Activación del shader y aplicación de las transformaciones del modelo
 	shader.Use();
 	model = glm::translate(model, posicionPersonaje);
 	model = glm::rotate(model, glm::radians(-camera.GetYaw() + 90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 	modelo.Draw(shader);
 }
-
-//Animaciones
-/*
-	Correr -\
-	
-	Lanzar Pelota
-
-	Recoger Pelota
-
-	Isa
-	Publico J Bandera que acciona el publico
-		Salten J
-		Aplaudan J
-
-
-*/

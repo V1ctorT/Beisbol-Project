@@ -168,8 +168,12 @@
     <ClInclude Include="Corredores.h" />
     <ClInclude Include="KeyframeYoshis.h" />
     <ClInclude Include="Limites.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="Pelota.h" />
     <ClInclude Include="Publico.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Basee.cpp" />

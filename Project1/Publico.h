@@ -26,11 +26,12 @@ inline void dibujarYoshi(GLint modelLoc, Shader& shader, const PartesYoshi& p,
     glm::mat4 modelCuerpo = base;
     glm::mat4 model = base, modelTemp;
 
-    // Cuerpo y cabeza (mismo pivote)
+    // Estas piezas usan la transformación base del personaje
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
     p.cuerpo->Draw(shader);
     p.cabeza->Draw(shader);
-    //Gorro
+
+    // Se coloca sobre la cabeza y comparte su rotación
     model = glm::translate(modelCuerpo, glm::vec3(-0.1f, 1.0f, 0.4f));
     model = glm::rotate(model, glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
@@ -38,7 +39,8 @@ inline void dibujarYoshi(GLint modelLoc, Shader& shader, const PartesYoshi& p,
 
     if (simple) return;
 
-    // Brazo izquierdo + mano
+    // Se parte del pivote del hombro, se aplican las rotaciones y después
+    // se coloca la mano respecto al extremo del brazo
     model = glm::translate(modelCuerpo, glm::vec3(-0.26443f, -0.12442f, -0.015195f));
     model = glm::rotate(model, glm::radians(swingBrazo), glm::vec3(0.0f, 1.0f, 0.0f));
     model = glm::rotate(model, glm::radians(-alzarBrazo), glm::vec3(0.0f, 0.0f, 1.0f));   // alzar
@@ -66,7 +68,8 @@ inline void dibujarYoshi(GLint modelLoc, Shader& shader, const PartesYoshi& p,
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
     p.manoR->Draw(shader);
 
-    // Piernas
+    // Cada pierna rota desde su punto de unión con el cuerpo para simular
+    // el movimiento al caminar o correr
     model = glm::translate(modelCuerpo, glm::vec3(-0.25734f, -0.70411f, 0.066808f));
     model = glm::rotate(model, glm::radians(rotPierna), glm::vec3(1.0f, 0.0f, 0.0f));
     model = glm::translate(model, glm::vec3(-0.01991f, -0.31619f, -0.090853f));
@@ -98,6 +101,7 @@ inline void dibujarHuesitos(
     glm::mat4 model = base, modelTemp;
 
     //// CUERPO
+    // Se gira el modelo 180 grados sobre el eje Y para orientarlo
     model = modelCuerpo = glm::rotate(
         base,
         glm::radians(-180.0f),
@@ -110,6 +114,8 @@ inline void dibujarHuesitos(
     p.cuerpo->Draw(shader);
 
     // CABEZA
+    // La cabeza se desplaza hasta el cuello, gira sobre su pivote y vuelve
+    // a desplazarse para conservar la posición correcta del modelo
     model = glm::translate(
         modelCuerpo,
         glm::vec3(0.031647f, 0.39327f, 0.19935f)
@@ -132,6 +138,8 @@ inline void dibujarHuesitos(
 
 
     //Gorro
+    // Primero se transforma el brazo desde el hombro y luego se coloca
+    // la mano tomando como referencia la transformación del brazo
     model = glm::translate(modelCuerpo, glm::vec3(0.0f, 1.0f, 0.0f));
     model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     model = glm::rotate(model, glm::radians(rotCabeza), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -232,6 +240,7 @@ inline void dibujarHuesitos(
     p.manoL->Draw(shader);
 
     // PIERNA DERECHA
+    // La rotación se aplica desde la unión de la pierna con el torso
     model = glm::translate(
         modelCuerpo,
         glm::vec3(-0.17231f, -0.05575f, 0.04356f)
@@ -276,6 +285,8 @@ inline void dibujarHuesitos(
     p.piernaL->Draw(shader);
 }
 
+// Guarda la posición, orientación, fase de animación y escala individual
+// La fase permite que los espectadores no salten exactamente al mismo tiempo
 struct Espectador {
     glm::vec3 pos;
     GLfloat rotY;     // hacia dónde mira (grados)
@@ -289,10 +300,13 @@ public:
     GLfloat distMax = 120.0f;   // más lejos que esto no se dibuja
     GLfloat distLOD = 60.0f;    // más lejos que esto: solo cuerpo y cabeza
 
+    // Guarda las referencias a los modelos que utilizarán los espectadores
     void init(const PartesYoshi& p) { partes = p; }
 
     GLfloat alturaYoshi = 1.159f;   // del piso al origen del torso (escala 1)
 
+    // Coloca 'n' espectadores entre dos puntos. Cada uno recibe una pequeña
+    // variación aleatoria de escala y una fase distinta para su animación
     void agregarLado(glm::vec3 ini, glm::vec3 fin, int n, GLfloat rotY)
     {
         for (int i = 0; i < n; i++) {
@@ -312,8 +326,11 @@ public:
         agregarLado(ini, fin, 8, rotY);  
     }
 
+    // Cambia entre el estado normal y el estado de celebración
     void alternar() { aplaudiendo = !aplaudiendo; }
 
+    // Suaviza el cambio de intensidad de la animación usando el tiempo
+    // transcurrido entre fotogramas (dt)
     void actualizar(GLfloat dt)
     {
         GLfloat objetivo = aplaudiendo ? 1.0f : 0.0f;
@@ -321,7 +338,9 @@ public:
         if (fabs(intensidad - objetivo) < 0.001f) intensidad = objetivo;
     }
 
-    // Llamar con el shader de iluminación ya activo
+    // Debe llamarse con el shader de iluminación activado.
+    // Para cada espectador calcula distancia, visibilidad, nivel de detalle
+    // y movimiento; finalmente construye su matriz y dibuja el modelo
     void dibujar(GLint modelLoc, Shader& shader,
         const glm::vec3& camPos, const glm::vec3& camFront, 
         GLfloat tiempo, Gorras& g)
@@ -331,9 +350,14 @@ public:
             glm::vec3 d = e.pos - camPos;
             GLfloat dist = glm::length(d);
 
+            // Descarta espectadores demasiado lejanos o que quedan detrás
+            // de la cámara (salvo los que están muy cerca)
             if (dist > distMax) continue;
             if (dist > 5.0f && glm::dot(glm::normalize(d), camFront) < -0.2f) continue;
 
+            // Los espectadores lejanos se dibujan en modo simplificado.
+            // Durante la celebración se calcula el salto y, si hay detalle,
+            // también la elevación de los brazos
             bool simple = (dist > distLOD);
             GLfloat salto = 0.0f, alzar = 0.0f;
 
@@ -344,6 +368,8 @@ public:
                     alzar = intensidad * (90.0f + 20.0f * sin(tiempo * 10.0f + e.fase * 0.5f));
             }
 
+            // Transformación final: posición, salto, orientación
+            // y escala. Se reutiliza la función de dibujo de Yoshi
             glm::mat4 m(1.0f);
             m = glm::translate(m, e.pos + glm::vec3(0.0f, salto, 0.0f));
             m = glm::rotate(m, glm::radians(e.rotY), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -354,6 +380,9 @@ public:
         }
     }
 
+    // partes: modelos compartidos por todos los espectadores
+    // lista: espectadores creados
+    // aplaudiendo e intensidad: estado y transición de la animación
 private:
     PartesYoshi partes;
     std::vector<Espectador> lista;
